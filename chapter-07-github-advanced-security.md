@@ -1,0 +1,633 @@
+# 第7章：GitHub Advanced Securityとの連携
+
+## 7.1 Code scanningの設定
+
+### GitHub Advanced Securityとは
+- エンタープライズ向けセキュリティ機能セット
+- Code scanning（静的解析）
+- Secret scanning（機密情報検出）
+- Dependency scanning（依存関係の脆弱性）
+
+### Code scanningの有効化
+
+#### 基本設定
+1. リポジトリSettings → Security & analysis
+2. Code scanningの「Set up」をクリック
+3. CodeQLを選択
+
+#### CodeQL設定ファイル
+`.github/workflows/codeql-analysis.yml`:
+```yaml
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '30 1 * * 0'  # 毎週日曜日1:30
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python', 'javascript' ]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        queries: +security-extended,+security-and-quality
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{ matrix.language }}"
+```
+
+### カスタムクエリの作成
+
+#### Python用カスタムクエリ
+`.github/codeql/ml-security.ql`:
+```ql
+/**
+ * @name Unsafe model loading
+ * @description Loading ML models from untrusted sources
+ * @kind problem
+ * @problem.severity warning
+ * @id python/unsafe-model-loading
+ */
+
+import python
+import semmle.python.dataflow.new.DataFlow
+
+from DataFlow::CallCfgNode call
+where
+  call.getFunction().pointsTo().getClass().getName() in 
+    ["torch.load", "pickle.load", "joblib.load"] and
+  not call.getArg(0).getALocalSource() instanceof DataFlow::LiteralNode
+select call, "Loading model from potentially untrusted source"
+```
+
+### スキャン結果の解釈
+
+#### セキュリティアラートダッシュボード
+```
+Security → Code scanning alerts
+
+High severity (3)
+├── SQL injection in user query
+├── Path traversal in file operations  
+└── Unsafe deserialization
+
+Medium severity (5)
+├── Hardcoded credentials
+├── Weak cryptography
+└── ...
+```
+
+#### アラートの詳細情報
+```markdown
+## Path traversal in file upload
+
+**Severity**: High
+**File**: src/upload.py:45
+**Rule**: py/path-injection
+
+### Problem
+User input is used to construct a file path without validation:
+```python
+filename = request.form['filename']
+filepath = os.path.join(UPLOAD_DIR, filename)  # Vulnerable!
+```
+
+### Fix
+Validate and sanitize the filename:
+```python
+filename = secure_filename(request.form['filename'])
+filepath = os.path.join(UPLOAD_DIR, filename)
+```
+
+### References
+- CWE-22: Path Traversal
+- OWASP: Path Traversal
+```
+
+## 7.2 Secret scanningの活用
+
+### Secret scanningの仕組み
+- コミット履歴を含む全体をスキャン
+- 既知のシークレットパターンを検出
+- パートナープログラムで自動無効化
+
+### 検出可能なシークレットタイプ
+```yaml
+supported_secrets:
+  - AWS Access Keys
+  - Azure Storage Keys
+  - Google Cloud Keys
+  - GitHub Personal Access Tokens
+  - Stripe API Keys
+  - PyPI API Tokens
+  - Docker Hub Tokens
+  - Slack Webhooks
+  - Database Connection Strings
+  # 他150種類以上
+```
+
+### カスタムパターンの定義
+`.github/secret_scanning.yml`:
+```yaml
+patterns:
+  - name: Internal API Key
+    pattern: 'INTERNAL_API_KEY_[A-Z0-9]{32}'
+    
+  - name: ML Model Registry Token
+    pattern: 'mlr_[a-f0-9]{40}'
+    
+  - name: Custom Database URL
+    pattern: 'postgres://[^:]+:[^@]+@[^/]+/\w+'
+    
+paths:
+  include:
+    - "**/*.py"
+    - "**/*.js"
+    - "**/*.yml"
+    - "**/*.env*"
+    
+  exclude:
+    - "tests/fixtures/**"
+    - "docs/examples/**"
+```
+
+### シークレット検出時の対応
+
+#### 即座の対応手順
+1. **アラート確認**
+   ```bash
+   # 該当コミットの特定
+   git log --grep="<secret_pattern>"
+   ```
+
+2. **シークレットの無効化**
+   - 即座にシークレットを無効化
+   - 新しいシークレットを生成
+
+3. **履歴からの削除**
+   ```bash
+   # BFGを使用した履歴クリーニング
+   java -jar bfg.jar --delete-files <file_with_secret>
+   git reflog expire --expire=now --all
+   git gc --prune=now --aggressive
+   ```
+
+4. **Force push**（注意が必要）
+   ```bash
+   git push --force-with-lease
+   ```
+
+### プロアクティブな防止策
+
+#### Pre-commitフックの設定
+`.pre-commit-config.yaml`:
+```yaml
+repos:
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: .*\.lock$|\.secrets\.baseline$
+        
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.16.1
+    hooks:
+      - id: gitleaks
+```
+
+## 7.3 Dependency reviewの実践
+
+### 依存関係の脆弱性管理
+
+#### Dependabotの設定
+`.github/dependabot.yml`:
+```yaml
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "security-team"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    
+  # JavaScript dependencies  
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "lodash"
+        versions: ["< 4.17.21"]
+    
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+```
+
+### Dependency reviewワークフロー
+
+#### PRでの依存関係チェック
+```yaml
+name: Dependency Review
+
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          fail-on-severity: moderate
+          deny-licenses: GPL-3.0, AGPL-3.0
+          allow-ghsas: GHSA-xxxx-yyyy-zzzz
+```
+
+### ライセンスコンプライアンス
+
+#### ライセンスチェックの自動化
+```python
+# check_licenses.py
+import pkg_resources
+import json
+
+ALLOWED_LICENSES = [
+    'MIT', 'Apache-2.0', 'BSD-3-Clause', 
+    'BSD-2-Clause', 'ISC', 'Python-2.0'
+]
+
+DENIED_LICENSES = [
+    'GPL-3.0', 'AGPL-3.0', 'SSPL'
+]
+
+def check_dependencies():
+    issues = []
+    
+    for dist in pkg_resources.working_set:
+        license = get_license(dist)
+        
+        if license in DENIED_LICENSES:
+            issues.append({
+                'package': dist.project_name,
+                'version': dist.version,
+                'license': license,
+                'severity': 'high'
+            })
+        elif license not in ALLOWED_LICENSES:
+            issues.append({
+                'package': dist.project_name,
+                'version': dist.version,
+                'license': license,
+                'severity': 'medium'
+            })
+    
+    return issues
+```
+
+## 7.4 AI支援による脆弱性修正提案
+
+### 自動修正の生成
+
+#### Copilotによる修正提案
+```python
+# 脆弱なコード（CodeQLで検出）
+def read_file(filename):
+    # CWE-22: Path Traversal
+    with open(f"/var/data/{filename}", 'r') as f:
+        return f.read()
+
+# Copilot提案の修正
+def read_file(filename):
+    # Validate filename to prevent path traversal
+    if '..' in filename or filename.startswith('/'):
+        raise ValueError("Invalid filename")
+    
+    # Use pathlib for safe path construction
+    from pathlib import Path
+    safe_path = Path("/var/data") / filename
+    
+    # Ensure the resolved path is within allowed directory
+    if not safe_path.resolve().is_relative_to("/var/data"):
+        raise ValueError("Access denied")
+        
+    with open(safe_path, 'r') as f:
+        return f.read()
+```
+
+### セキュリティパッチの自動生成
+
+#### GitHub Actionsワークフロー
+```yaml
+name: Auto Security Fix
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  security-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run Security Analysis
+        id: security
+        uses: github/codeql-action/analyze@v2
+        
+      - name: Generate Fixes with AI
+        uses: github/copilot-security-fix@v1
+        with:
+          scan-results: ${{ steps.security.outputs.sarif }}
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "🔒 Auto-fix security vulnerabilities"
+          body: |
+            ## Security Fixes
+            
+            This PR contains automated security fixes generated by AI.
+            
+            ### Fixed Issues:
+            ${{ steps.security.outputs.fixed-issues }}
+            
+            Please review carefully before merging.
+          branch: security/auto-fix-${{ github.run_id }}
+          labels: security, automated
+```
+
+### 修正の検証
+
+#### セキュリティテストの自動化
+```python
+# test_security_fixes.py
+import pytest
+from security_tests import *
+
+class TestSecurityFixes:
+    
+    @pytest.mark.security
+    def test_path_traversal_fix(self):
+        """Path traversal攻撃が防げることを確認"""
+        vulnerable_inputs = [
+            "../../../etc/passwd",
+            "..\\..\\..\\windows\\system32\\config\\sam",
+            "/etc/shadow",
+            "data/../../../secret.txt"
+        ]
+        
+        for malicious_input in vulnerable_inputs:
+            with pytest.raises(ValueError):
+                read_file(malicious_input)
+    
+    @pytest.mark.security
+    def test_sql_injection_fix(self):
+        """SQLインジェクションが防げることを確認"""
+        malicious_queries = [
+            "'; DROP TABLE users; --",
+            "1' OR '1'='1",
+            "admin'--"
+        ]
+        
+        for query in malicious_queries:
+            result = search_users(query)
+            # 正常に動作し、インジェクションが起きないことを確認
+            assert isinstance(result, list)
+```
+
+## 7.5 セキュリティアラートの管理
+
+### アラートのトリアージ
+
+#### 優先順位付けマトリックス
+```python
+class SecurityTriage:
+    def __init__(self):
+        self.severity_scores = {
+            'critical': 10,
+            'high': 7,
+            'medium': 4,
+            'low': 1
+        }
+        
+        self.exploitability_scores = {
+            'publicly_exploited': 10,
+            'poc_available': 7,
+            'theoretical': 3
+        }
+        
+    def calculate_priority(self, alert):
+        base_score = self.severity_scores[alert.severity]
+        exploit_score = self.exploitability_scores[alert.exploitability]
+        
+        # ビジネスクリティカルなコンポーネントか
+        if alert.component in CRITICAL_COMPONENTS:
+            business_impact = 10
+        else:
+            business_impact = 5
+            
+        # 外部公開されているか
+        exposure = 10 if alert.is_external else 3
+        
+        priority = (base_score * 0.3 + 
+                   exploit_score * 0.3 + 
+                   business_impact * 0.2 + 
+                   exposure * 0.2)
+                   
+        return round(priority, 1)
+```
+
+### アラートの自動化
+
+#### Slackへの通知
+```python
+# security_notifier.py
+import requests
+from typing import Dict, Any
+
+class SecurityNotifier:
+    def __init__(self, webhook_url: str):
+        self.webhook_url = webhook_url
+        
+    def send_alert(self, alert: Dict[str, Any]):
+        severity_emoji = {
+            'critical': '🚨',
+            'high': '🔴',
+            'medium': '🟡',
+            'low': '🔵'
+        }
+        
+        message = {
+            "blocks": [
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": f"{severity_emoji[alert['severity']]} Security Alert"
+                    }
+                },
+                {
+                    "type": "section",
+                    "fields": [
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Repository:*\n{alert['repository']}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Severity:*\n{alert['severity'].upper()}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Type:*\n{alert['type']}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*File:*\n`{alert['file']}:{alert['line']}`"
+                        }
+                    ]
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"*Description:*\n{alert['description']}"
+                    }
+                },
+                {
+                    "type": "actions",
+                    "elements": [
+                        {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "text": "View Alert"
+                            },
+                            "url": alert['url']
+                        },
+                        {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Create Issue"
+                            },
+                            "url": f"{alert['repository']}/issues/new?title=Security: {alert['title']}"
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        requests.post(self.webhook_url, json=message)
+```
+
+### セキュリティダッシュボード
+
+#### メトリクスの可視化
+```yaml
+# security-dashboard.yml
+metrics:
+  - name: Open Security Alerts
+    query: |
+      SELECT COUNT(*) 
+      FROM security_alerts 
+      WHERE status = 'open'
+    visualization: number
+    
+  - name: Alert Trend (30 days)
+    query: |
+      SELECT DATE(created_at) as date, 
+             severity,
+             COUNT(*) as count
+      FROM security_alerts
+      WHERE created_at > NOW() - INTERVAL 30 DAY
+      GROUP BY date, severity
+    visualization: line_chart
+    
+  - name: Mean Time to Remediation
+    query: |
+      SELECT severity,
+             AVG(TIMESTAMPDIFF(HOUR, created_at, closed_at)) as mttr
+      FROM security_alerts
+      WHERE status = 'closed'
+      GROUP BY severity
+    visualization: bar_chart
+    
+  - name: Top Vulnerable Dependencies
+    query: |
+      SELECT dependency_name,
+             COUNT(*) as vulnerability_count
+      FROM dependency_vulnerabilities
+      WHERE status = 'open'
+      GROUP BY dependency_name
+      ORDER BY vulnerability_count DESC
+      LIMIT 10
+    visualization: table
+```
+
+## まとめ
+
+本章では、GitHub Advanced Securityとの連携について学習しました：
+- CodeQLで静的コード解析を実施
+- Secret scanningで機密情報の漏洩を防止
+- Dependency reviewで脆弱な依存関係を管理
+- AIを活用した自動修正提案
+- セキュリティアラートの効率的な管理
+
+次章では、アクセス権限の体系について詳しく学習します。
+
+## 確認事項
+
+- [ ] Code scanningを有効化している
+- [ ] Secret scanningのアラートに対応できる
+- [ ] Dependabotの設定を理解している
+- [ ] セキュリティアラートの優先順位付けができる
+- [ ] 自動修正ワークフローを構築できる
