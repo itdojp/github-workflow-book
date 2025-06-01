@@ -1,13 +1,16 @@
-# 第12章：CI/CDパイプライン構築
+# 第13章：CI/CDパイプライン構築
 
-## 12.1 GitHub Actionsの基本構造
+## 13.1 GitHub Actionsの基本構造とAI活用
+
+### 第2章の品質ゲートを統合したCI/CD
+本章では、第2章で学んだAI協働品質ゲートをCI/CDパイプラインに統合します。
 
 ### ワークフローの基本要素
 
-#### 基本的なワークフロー構造
+#### AI協働品質ゲート統合のワークフロー構造
 ```yaml
-# .github/workflows/ml-pipeline.yml
-name: ML Training Pipeline
+# .github/workflows/ai-collaboration-pipeline.yml
+name: AI Collaboration ML Pipeline
 
 # トリガー条件
 on:
@@ -17,6 +20,27 @@ on:
       - 'src/**'
       - 'configs/**'
       - 'requirements.txt'
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  # 第2章で学んだAI協働品質チェック
+  ai-collaboration-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check AI Collaboration Metadata
+        run: |
+          # PR説明にAI協働履歴があることを確認
+          if ! grep -q "🤖 AI協働履歴" PR_DESCRIPTION; then
+            echo "❌ AI協働履歴が記載されていません"
+            exit 1
+          fi
+          
+      - name: Validate AI Generated Code Quality  
+        run: |
+          # AI生成コード部分の品質チェック
+          python scripts/check_ai_code_quality.py
+          
   pull_request:
     branches: [ main ]
   schedule:

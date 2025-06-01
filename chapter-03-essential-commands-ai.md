@@ -1,6 +1,6 @@
-# 第2章：必須コマンドと基本操作
+# 第3章：必須コマンドとAI活用
 
-## 2.1 環境構築とGitの初期設定
+## 3.1 環境構築とGitの初期設定
 
 ### Gitのインストール
 
@@ -60,7 +60,9 @@ cat ~/.ssh/id_ed25519.pub
 ssh -T git@github.com
 ```
 
-## 2.2 基本コマンド（clone, add, commit, push, pull）
+## 3.2 基本コマンド（clone, add, commit, push, pull）とAI支援
+
+本節では、第2章で学んだAI協働の基礎を実際のGitコマンド操作に適用します。AIを効果的に活用することで、コマンド操作の効率化と品質向上を実現できます。
 
 ### clone - リポジトリの複製
 ```bash
@@ -90,6 +92,52 @@ git add .
 
 # 対話的に追加
 git add -p
+```
+
+#### AIを使った効率的なファイル選択
+第2章のCLEAR方式を使って、AIに適切なファイルの選択を依頼できます：
+
+```markdown
+## AI指示例（第2章のCLEAR方式を使用）
+
+### Context
+現在、機械学習プロジェクトでデータ前処理機能を実装中です。
+複数のファイルを変更しましたが、どれをコミットすべきか迷っています。
+
+### Logic
+`git status`の出力を分析して、以下の観点でファイルを分類してください：
+1. 本機能に直接関連するファイル
+2. テストファイル
+3. ドキュメント
+4. 一時ファイルやデバッグ用ファイル
+
+### Example
+期待する出力形式：
+```
+Modified files:
+- data/preprocessor.py (本機能)
+- tests/test_preprocessor.py (テスト)
+- README.md (ドキュメント)
+- debug_output.log (一時ファイル)
+```
+
+### Action
+適切なgit addコマンドを提案してください。
+
+### Review
+セキュリティリスクやコミット範囲の妥当性をチェックしてください。
+```
+
+**AI回答例**：
+```bash
+# 本機能とテストを一緒にコミット（推奨）
+git add data/preprocessor.py tests/test_preprocessor.py
+
+# ドキュメントは別コミットに
+git add README.md
+
+# debug_output.logは.gitignoreに追加を推奨
+echo "debug_output.log" >> .gitignore
 ```
 
 ### commit - 変更を記録

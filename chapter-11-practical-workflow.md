@@ -1,20 +1,37 @@
-# 第11章：実践的なワークフロー設計
+# 第12章：実践的なワークフロー設計
 
-## 11.1 ケーススタディ：AIモデル開発プロジェクト
+## 12.1 ケーススタディ：AI協働型モデル開発プロジェクト
+
+本章では、第2章で学んだAI協働パターンを大規模なチーム開発に適用した実例を紹介します。
 
 ### プロジェクト概要
 
-#### 画像分類モデル開発プロジェクト
+#### AI協働型画像分類モデル開発プロジェクト
 ```yaml
 project:
-  name: "ImageNet Classification Model"
-  description: "Production-grade image classification system"
+  name: "AI-Collaborative ImageNet Classification Model"
+  description: "Production-grade image classification system with AI collaboration"
   
+  # 第2章のAI協働パターンを各チームで活用
   teams:
-    - ml_research: "Model architecture development"
-    - ml_engineering: "Training pipeline and optimization"
-    - data_engineering: "Dataset preparation and augmentation"
-    - mlops: "Deployment and monitoring"
+    - ml_research: 
+        role: "Model architecture development"
+        ai_collaboration: "CLEAR方式による設計提案、論文調査支援"
+    - ml_engineering: 
+        role: "Training pipeline and optimization"
+        ai_collaboration: "コード生成、性能チューニング支援"
+    - data_engineering: 
+        role: "Dataset preparation and augmentation"
+        ai_collaboration: "データ処理パイプライン生成、品質チェック"
+    - mlops: 
+        role: "Deployment and monitoring"
+        ai_collaboration: "CI/CDパイプライン生成、監視コード作成"
+  
+  # 第2章のテンプレートを標準化
+  collaboration_standards:
+    issue_template: "第2章のAI最適化Issueテンプレートを使用"
+    pr_template: "AI協働履歴を含むPRテンプレートを使用"
+    review_process: "AI協働メトリクスによる品質測定"
     
   phases:
     1_research:
