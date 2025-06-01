@@ -218,6 +218,9 @@ python scripts/publication_manager.py --platform all
 - **Zenn Comments**: 章ごとの詳細な質問
 - **Email**: author@example.com
 
+**著者**: 株式会社アイティードゥ 太田和彦  
+**発行日**: 2025年6月1日
+
 ### 🌟 貢献・協力
 - **Pull Request**: 誤字・脱字の修正
 - **Issue**: 改善提案・新しいアイデア
@@ -250,5 +253,5 @@ python measure_productivity.py --before [導入前] --after [導入後]
 
 ---
 
-**© 2024 [Your Name]. All rights reserved.**  
+**© 2025 株式会社アイティードゥ 太田和彦. All rights reserved.**  
 **Licensed under MIT License - 商用利用可能**

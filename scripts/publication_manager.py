@@ -197,8 +197,8 @@ title: "AI開発のためのGitHubワークフロー実践ガイド"
         """全章を統合してKindle用のファイルを作成"""
         content = """# AI開発のためのGitHubワークフロー実践ガイド
 
-**著者**: [Your Name]  
-**発行年**: 2024年  
+**著者**: 株式会社アイティードゥ 太田和彦  
+**発行年**: 2025年6月1日  
 
 ---
 
@@ -325,7 +325,7 @@ title: "{title}"
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:title>AI開発のためのGitHubワークフロー実践ガイド</dc:title>
-    <dc:creator>Your Name</dc:creator>
+    <dc:creator>株式会社アイティードゥ 太田和彦</dc:creator>
     <dc:language>ja</dc:language>
     <dc:identifier id="BookId">github-workflow-ai-guide</dc:identifier>
     <dc:subject>プログラミング</dc:subject>

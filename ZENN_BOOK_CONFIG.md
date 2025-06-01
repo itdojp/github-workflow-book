@@ -5,6 +5,8 @@
 ```yaml
 title: "AI開発のためのGitHubワークフロー実践ガイド"
 summary: "AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック"
+author: "株式会社アイティードゥ 太田和彦"
+published_date: "2025-06-01"
 type: "book"
 published: true
 price: 1980  # 円（有料の場合）
@@ -138,7 +140,10 @@ summary: |-
   - 即実践可能なテンプレート・パターン
   - 測定可能なAI協働メトリクス  
   - 個人〜エンタープライズまで対応
-  - 2024年最新のAI開発環境に最適化
+  - 2025年最新のAI開発環境に最適化
+  
+  📖 著者: 株式会社アイティードゥ 太田和彦
+  📅 発行日: 2025年6月1日
 
 topics: ["github", "ai", "copilot", "workflow", "devops", "collaboration", "productivity"]
 published: true
