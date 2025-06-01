@@ -1,0 +1,133 @@
+# GitHub Pages Configuration for AI-Collaborative GitHub Workflow Book
+
+# Site settings
+title: "AI開発のためのGitHubワークフロー実践ガイド"
+description: "AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック"
+author: "Your Name"
+email: "your.email@example.com"
+baseurl: "/github-workflow-book"
+url: "https://yourusername.github.io"
+
+# Theme
+theme: minima
+# remote_theme: pmarsceill/just-the-docs  # 代替案：技術書に適したテーマ
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-toc
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+
+# Collections for organized content
+collections:
+  chapters:
+    output: true
+    permalink: /:collection/:name/
+  appendices:
+    output: true
+    permalink: /:collection/:name/
+
+# Navigation structure
+navigation:
+  - title: "はじめに"
+    url: "/introduction/"
+  - title: "第1部：AI協働時代の基礎編"
+    children:
+      - title: "第1章：GitとGitHubの基本概念"
+        url: "/chapter-01-git-github-basics/"
+      - title: "第2章：AI時代のGitHub協働基礎 ⭐"
+        url: "/chapter-02-ai-collaboration-fundamentals/"
+      - title: "第3章：必須コマンドとAI活用"
+        url: "/chapter-03-essential-commands-ai/"
+      - title: "第4章：GitHubでの協働作業入門"
+        url: "/chapter-04-github-collaboration-ai/"
+      - title: "第5章：GitHubアカウントとリポジトリ管理"
+        url: "/chapter-05-account-repository-ai/"
+  - title: "第2部：AIツール活用編"
+    children:
+      - title: "第6章：GitHub Copilotの高度な活用"
+        url: "/chapter-06-github-copilot-advanced/"
+      - title: "第7章：AI支援によるコードレビュー実践"
+        url: "/chapter-07-ai-code-review-practice/"
+      - title: "第8章：GitHub Advanced SecurityとAI統合"
+        url: "/chapter-08-github-advanced-security-ai/"
+  - title: "第3部：セキュリティと権限管理編"
+    children:
+      - title: "第9章：アクセス権限の体系"
+        url: "/chapter-09-access-permissions-ai/"
+      - title: "第10章：組織管理とチーム運用"
+        url: "/chapter-10-organization-management-ai/"
+      - title: "第11章：セキュリティ実践"
+        url: "/chapter-11-security-practice-ai/"
+  - title: "第4部：実践編（チーム開発）"
+    children:
+      - title: "第12章：実践的なワークフロー設計"
+        url: "/chapter-11-practical-workflow/"
+      - title: "第13章：CI/CDパイプライン構築"
+        url: "/chapter-12-cicd-pipeline/"
+      - title: "第14章：大規模データとモデルの管理"
+        url: "/chapter-14-large-scale-data-model-ai/"
+      - title: "第15章：GitHub Pagesでのプロジェクト公開"
+        url: "/chapter-14-github-pages/"
+  - title: "第5部：発展編（エンタープライズ対応）"
+    children:
+      - title: "第16章：外部協力者との連携"
+        url: "/chapter-15-external-collaboration/"
+      - title: "第17章：コンプライアンスとガバナンス"
+        url: "/chapter-16-compliance-governance/"
+  - title: "付録"
+    children:
+      - title: "付録A：GitHub用語集"
+        url: "/appendix-a-github-glossary/"
+      - title: "付録B：トラブルシューティング"
+        url: "/appendix-b-troubleshooting/"
+      - title: "付録C：料金プランと機能比較"
+        url: "/appendix-c-pricing-comparison/"
+      - title: "付録D：AIツールのコスト計算"
+        url: "/appendix-d-ai-cost-calculation/"
+      - title: "付録E：便利なGitエイリアス集"
+        url: "/appendix-e-git-aliases/"
+      - title: "付録F：推奨VS Code拡張機能"
+        url: "/appendix-f-vscode-extensions/"
+
+# SEO and social
+twitter:
+  username: yourusername
+  card: summary
+
+facebook:
+  app_id: 123456789
+  publisher: 123456789
+
+social:
+  name: Your Name
+  links:
+    - https://twitter.com/yourusername
+    - https://github.com/yourusername
+    - https://linkedin.com/in/yourusername
+
+# Google Analytics
+google_analytics: UA-123456789-1
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - scripts/
+  - REMAINING_AI_UPDATES.md
+  - FINAL_AI_UPDATES_SUMMARY.md

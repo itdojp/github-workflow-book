@@ -1,0 +1,175 @@
+name: Publish AI GitHub Workflow Book
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+
+    - name: Prepare publication files
+      run: |
+        python scripts/publication_manager.py --platform github_pages
+        echo "📚 GitHub Pages files prepared"
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        bundler-cache: true
+
+    - name: Create Gemfile if not exists
+      run: |
+        if [ ! -f Gemfile ]; then
+          cat > Gemfile << EOF
+        source "https://rubygems.org"
+        gem "jekyll", "~> 4.3.0"
+        gem "minima", "~> 2.5"
+        gem "jekyll-feed", "~> 0.12"
+        gem "jekyll-sitemap"
+        gem "jekyll-seo-tag"
+        gem "webrick", "~> 1.7"
+        EOF
+        fi
+
+    - name: Install Ruby dependencies
+      run: |
+        bundle config set --local path 'vendor/bundle'
+        bundle install
+
+    - name: Build with Jekyll
+      run: |
+        bundle exec jekyll build --verbose
+      env:
+        JEKYLL_ENV: production
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: ./_site
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+      if: github.ref == 'refs/heads/main'
+
+    - name: Generate publication summary
+      run: |
+        echo "# 📚 Publication Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🌐 GitHub Pages" >> $GITHUB_STEP_SUMMARY
+        echo "- Status: ✅ Deployed" >> $GITHUB_STEP_SUMMARY
+        echo "- URL: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 📱 Other Platforms" >> $GITHUB_STEP_SUMMARY
+        echo "- Kindle: Run \`python scripts/publication_manager.py --platform kindle\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Zenn: Run \`python scripts/publication_manager.py --platform zenn\`" >> $GITHUB_STEP_SUMMARY
+
+  validate-content:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Validate markdown files
+      run: |
+        echo "📝 Validating markdown files..."
+        
+        # Check for broken internal links
+        find . -name "*.md" -exec grep -l "\[.*\](.*\.md)" {} \; | while read file; do
+          echo "Checking links in $file"
+          grep -o "\[.*\]([^)]*\.md)" "$file" | sed 's/.*(\([^)]*\)).*/\1/' | while read link; do
+            if [ ! -f "$link" ] && [ ! -f "./$link" ]; then
+              echo "❌ Broken link in $file: $link"
+              exit 1
+            fi
+          done
+        done
+        
+        echo "✅ All markdown files validated"
+
+    - name: Check chapter numbering
+      run: |
+        echo "📊 Checking chapter numbering consistency..."
+        
+        # Extract chapter numbers from filenames and content
+        chapters=$(find . -name "chapter-*.md" | sort)
+        echo "Found chapters: $chapters"
+        
+        for chapter in $chapters; do
+          filename=$(basename "$chapter")
+          echo "Validating $filename"
+          
+          # Check if filename matches content title
+          if ! grep -q "# 第[0-9]\+章" "$chapter"; then
+            echo "❌ Chapter title format issue in $chapter"
+            exit 1
+          fi
+        done
+        
+        echo "✅ Chapter numbering validated"
+
+  generate-stats:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Generate book statistics
+      run: |
+        echo "# 📊 Book Statistics" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Count chapters
+        chapters=$(find . -name "chapter-*.md" | wc -l)
+        appendices=$(find . -name "appendix-*.md" | wc -l)
+        
+        echo "## 📚 Content Overview" >> $GITHUB_STEP_SUMMARY
+        echo "- Chapters: $chapters" >> $GITHUB_STEP_SUMMARY
+        echo "- Appendices: $appendices" >> $GITHUB_STEP_SUMMARY
+        
+        # Count total words (approximate)
+        total_words=$(find . -name "*.md" -not -path "./.github/*" -exec wc -w {} + | tail -1 | awk '{print $1}')
+        echo "- Total words: ~$total_words" >> $GITHUB_STEP_SUMMARY
+        
+        # Count code blocks
+        code_blocks=$(find . -name "*.md" -not -path "./.github/*" -exec grep -c '```' {} + | awk '{sum+=$1} END {print sum/2}')
+        echo "- Code examples: ~$code_blocks" >> $GITHUB_STEP_SUMMARY
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🎯 AI Collaboration Features" >> $GITHUB_STEP_SUMMARY
+        
+        # Count AI-related content
+        ai_patterns=$(find . -name "*.md" -exec grep -c -i "ai\|copilot\|claude\|chatgpt" {} + | awk '{sum+=$1} END {print sum}')
+        clear_mentions=$(find . -name "*.md" -exec grep -c "CLEAR" {} + | awk '{sum+=$1} END {print sum}')
+        
+        echo "- AI mentions: $ai_patterns" >> $GITHUB_STEP_SUMMARY
+        echo "- CLEAR framework references: $clear_mentions" >> $GITHUB_STEP_SUMMARY
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Statistics generated successfully"
