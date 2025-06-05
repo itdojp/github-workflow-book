@@ -9,8 +9,8 @@
 ## 前提条件
 
 1. **リポジトリのセットアップ**
-   - プライベートリポジトリ: `itdojp/github-workflow-book_private`
-   - パブリックリポジトリ: `itdojp/github-workflow-book_public`
+   - プライベートリポジトリ: `itdojp/github-workflow-book-private`
+   - パブリックリポジトリ: `itdojp/github-workflow-book-public`
 
 2. **必要な権限**
    - プライベートリポジトリへの Write アクセス
@@ -30,8 +30,8 @@
 2. README.mdのみで初期化（Initialize this repository with a READMEをチェック）
 3. gh-pagesブランチを作成：
    ```bash
-   git clone https://github.com/itdojp/github-workflow-book_public.git
-   cd github-workflow-book_public
+   git clone https://github.com/itdojp/github-workflow-book-public.git
+   cd github-workflow-book-public
    git checkout -b gh-pages
    git push origin gh-pages
    ```
@@ -56,7 +56,7 @@ mkdir -p assets/images
 1. GitHub の Settings > Developer settings > Personal access tokens > Tokens (classic) へアクセス
 2. "Generate new token" をクリック
 3. 以下の設定でトークンを作成：
-   - **Note**: `Deploy to github-workflow-book_public`
+   - **Note**: `Deploy to github-workflow-book-public`
    - **Expiration**: 適切な期限を設定（推奨: 90日）
    - **Scopes**: 
      - `repo` (Full control of private repositories)
@@ -97,7 +97,7 @@ jobs:
     - name: Checkout public repository
       uses: actions/checkout@v4
       with:
-        repository: itdojp/github-workflow-book_public
+        repository: itdojp/github-workflow-book-public
         token: ${{ secrets.DEPLOY_TOKEN }}
         path: public
         ref: gh-pages
@@ -150,7 +150,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         personal_token: ${{ secrets.DEPLOY_TOKEN }}
-        external_repository: itdojp/github-workflow-book_public
+        external_repository: itdojp/github-workflow-book-public
         publish_branch: gh-pages
         publish_dir: ./public
         force_orphan: true
@@ -190,7 +190,7 @@ Markdownプロジェクトの場合、Jekyll（GitHub Pagesのデフォルト）
 # GitHub Pages + Jekyll設定
 title: "AI開発のためのGitHubワークフロー実践ガイド"
 description: "GitHubとAIツールを活用した効率的な開発ワークフロー"
-baseurl: "/github-workflow-book_public"
+baseurl: "/github-workflow-book-public"
 url: "https://itdojp.github.io"
 
 # Jekyll設定

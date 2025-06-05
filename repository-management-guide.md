@@ -14,12 +14,12 @@
 
 本プロジェクトは以下の2つのリポジトリで構成されています：
 
-1. **プライベートリポジトリ** (`github-workflow-book_private`)
+1. **プライベートリポジトリ** (`github-workflow-book-private`)
    - 執筆・編集作業用
    - ドラフトや未完成のコンテンツを含む
    - 限定されたメンバーのみアクセス可能
 
-2. **パブリックリポジトリ** (`github-workflow-book_public`)
+2. **パブリックリポジトリ** (`github-workflow-book-public`)
    - 完成したコンテンツの公開用
    - 誰でも閲覧・利用可能
    - プライベートリポジトリから自動デプロイ
@@ -157,7 +157,7 @@ graph LR
 ### 重要なディレクトリとファイル
 
 ```
-github-workflow-book_private/
+github-workflow-book-private/
 ├── .github/workflows/     # GitHub Actionsワークフロー
 │   └── deploy-to-public.yml # メインのデプロイワークフロー
 ├── _layouts/             # Jekyllレイアウトテンプレート

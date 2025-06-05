@@ -28,7 +28,7 @@ jobs:
     - name: Checkout public repository
       uses: actions/checkout@v4
       with:
-        repository: itdojp/github-workflow-book_public
+        repository: itdojp/github-workflow-book-public
         token: ${{ secrets.DEPLOY_TOKEN }}
         path: public
         ref: gh-pages
@@ -97,7 +97,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         personal_token: ${{ secrets.DEPLOY_TOKEN }}
-        external_repository: itdojp/github-workflow-book_public
+        external_repository: itdojp/github-workflow-book-public
         publish_branch: gh-pages
         publish_dir: ./public
         force_orphan: true

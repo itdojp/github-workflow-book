@@ -1,6 +1,6 @@
 # AI開発のためのGitHubワークフロー実践ガイド
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://itdojp.github.io/github-workflow-book_public)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://itdojp.github.io/github-workflow-book-public)
 [![Kindle](https://img.shields.io/badge/Kindle-Available-orange)](https://amazon.com/dp/...)
 [![Zenn](https://img.shields.io/badge/Zenn-Published-blue)](https://zenn.dev/username/books/github-workflow-ai)
 
