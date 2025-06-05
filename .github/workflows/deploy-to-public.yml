@@ -10,6 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Check for required secrets
+      run: |
+        if [ -z "${{ secrets.DEPLOY_TOKEN }}" ]; then
+          echo "❌ DEPLOY_TOKEN secret is not set"
+          echo "Please set the DEPLOY_TOKEN secret in repository settings"
+          echo "See deployment-guide.md for setup instructions"
+          exit 1
+        else
+          echo "✅ DEPLOY_TOKEN secret is available"
+        fi
     - name: Checkout private repository
       uses: actions/checkout@v4
       with:
@@ -22,6 +32,22 @@ jobs:
         token: ${{ secrets.DEPLOY_TOKEN }}
         path: public
         ref: gh-pages
+      continue-on-error: true
+      
+    - name: Create public directory if checkout failed
+      run: |
+        if [ ! -d "public" ]; then
+          echo "Public repository not found or accessible. Creating directory structure..."
+          mkdir -p public
+          cd public
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          echo "# GitHub Workflow Book" > README.md
+          git add README.md
+          git commit -m "Initial commit"
+          git branch -M gh-pages
+        fi
 
     # Markdownプロジェクトのため、Node.jsセットアップとビルドは不要
 
