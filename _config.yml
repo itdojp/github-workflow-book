@@ -4,21 +4,20 @@
 title: "AI開発のためのGitHubワークフロー実践ガイド"
 description: "AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック"
 author: "株式会社アイティードゥ 太田和彦"
-email: "your.email@example.com"
+email: "knowledge@itdo.jp"
 published: "2025-06-01"
-baseurl: "/github-workflow-book"
-url: "https://yourusername.github.io"
+baseurl: "/github-workflow-book_public"
+url: "https://itdojp.github.io"
 
 # Theme
-theme: minima
-# remote_theme: pmarsceill/just-the-docs  # 代替案：技術書に適したテーマ
+# theme: minima（コメントアウト推奨）
+remote_theme: pages-themes/minimal@v0.2.0
 
 # Plugins
 plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
-  - jekyll-toc
 
 # Build settings
 markdown: kramdown
@@ -132,3 +131,8 @@ exclude:
   - scripts/
   - REMAINING_AI_UPDATES.md
   - FINAL_AI_UPDATES_SUMMARY.md
+  - .github/
+  - deployment-guide.md
+  - repository-management-guide.md
+  - CLAUDE.md
+  - DIRECTORY_STRUCTURE.md
