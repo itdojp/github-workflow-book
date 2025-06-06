@@ -56,7 +56,7 @@ Copyright (c) 2025 ITdo Japan, Inc. All rights reserved.
    - レビューを必須に（可能であれば）
 
 3. **シークレットの設定**
-   - `DEPLOY_TOKEN`: パブリックリポジトリへのデプロイ用
+   - `PUBLIC_REPO_TOKEN`: パブリックリポジトリへのデプロイ用
    - Settings > Secrets and variables > Actions で設定
 
 ### パブリックリポジトリの設定
@@ -133,7 +133,7 @@ graph LR
 ### よくある問題
 
 1. **デプロイが失敗する**
-   - DEPLOY_TOKEN が正しく設定されているか確認
+   - PUBLIC_REPO_TOKEN が正しく設定されているか確認
    - トークンの権限が適切か確認
    - ワークフローのログを確認
 

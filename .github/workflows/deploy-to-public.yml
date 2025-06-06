@@ -12,13 +12,13 @@ jobs:
     steps:
     - name: Check for required secrets
       run: |
-        if [ -z "${{ secrets.DEPLOY_TOKEN }}" ]; then
-          echo "❌ DEPLOY_TOKEN secret is not set"
-          echo "Please set the DEPLOY_TOKEN secret in repository settings"
+        if [ -z "${{ secrets.PUBLIC_REPO_TOKEN }}" ]; then
+          echo "❌ PUBLIC_REPO_TOKEN secret is not set"
+          echo "Please set the PUBLIC_REPO_TOKEN secret in repository settings"
           echo "See deployment-guide.md for setup instructions"
           exit 1
         else
-          echo "✅ DEPLOY_TOKEN secret is available"
+          echo "✅ PUBLIC_REPO_TOKEN secret is available"
         fi
     - name: Checkout private repository
       uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: itdojp/github-workflow-book-public
-        token: ${{ secrets.DEPLOY_TOKEN }}
+        token: ${{ secrets.PUBLIC_REPO_TOKEN }}
         path: public
         ref: gh-pages
       continue-on-error: true
@@ -96,7 +96,7 @@ jobs:
     - name: Deploy to public repository using peaceiris/actions-gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        personal_token: ${{ secrets.DEPLOY_TOKEN }}
+        personal_token: ${{ secrets.PUBLIC_REPO_TOKEN }}
         external_repository: itdojp/github-workflow-book-public
         publish_branch: gh-pages
         publish_dir: ./public

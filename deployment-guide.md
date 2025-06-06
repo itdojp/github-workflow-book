@@ -14,7 +14,7 @@
 
 2. **必要な権限**
    - プライベートリポジトリへの Write アクセス
-   - パブリックリポジトリへの Write アクセス（DEPLOY_TOKEN 経由）
+   - パブリックリポジトリへの Write アクセス（PUBLIC_REPO_TOKEN 経由）
 
 3. **GitHub Pages の設定**
    - パブリックリポジトリで GitHub Pages が有効化されている
@@ -68,7 +68,7 @@ mkdir -p assets/images
 1. プライベートリポジトリの Settings > Secrets and variables > Actions へアクセス
 2. "New repository secret" をクリック
 3. 以下の情報を入力：
-   - **Name**: `DEPLOY_TOKEN`
+   - **Name**: `PUBLIC_REPO_TOKEN`
    - **Value**: 先ほどコピーしたトークン
 4. "Add secret" をクリック
 
@@ -98,7 +98,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: itdojp/github-workflow-book-public
-        token: ${{ secrets.DEPLOY_TOKEN }}
+        token: ${{ secrets.PUBLIC_REPO_TOKEN }}
         path: public
         ref: gh-pages
 
@@ -149,7 +149,7 @@ jobs:
     - name: Deploy to public repository using peaceiris/actions-gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        personal_token: ${{ secrets.DEPLOY_TOKEN }}
+        personal_token: ${{ secrets.PUBLIC_REPO_TOKEN }}
         external_repository: itdojp/github-workflow-book-public
         publish_branch: gh-pages
         publish_dir: ./public
@@ -279,7 +279,7 @@ plugins:
 ### Jekyll関連の問題
 
 1. **エラー: Permission denied**
-   - DEPLOY_TOKEN が正しく設定されているか確認
+   - PUBLIC_REPO_TOKEN が正しく設定されているか確認
    - トークンに `repo` スコープがあるか確認
    - トークンの有効期限が切れていないか確認
 
@@ -314,7 +314,7 @@ plugins:
 - [ ] gh-pagesブランチを作成済み
 - [ ] GitHub Pagesを有効化済み（Settings > Pages）
 - [ ] Personal Access Tokenを作成済み
-- [ ] DEPLOY_TOKENをSecretsに設定済み
+- [ ] PUBLIC_REPO_TOKENをSecretsに設定済み
 - [ ] .github/workflows/deploy-to-public.ymlを作成済み
 - [ ] ワークフロー内のリポジトリ名を確認済み
 - [ ] _config.ymlの設定を確認済み
