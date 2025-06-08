@@ -66,34 +66,34 @@
 - 7.5 AI協働履歴を活用したレビュー効率化
 
 #### 第8章：GitHub Advanced SecurityとAI統合
-- 7.1 Code scanningの設定
-- 7.2 Secret scanningの活用
-- 7.3 Dependency reviewの実践
-- 7.4 AI支援による脆弱性修正提案
-- 7.5 セキュリティアラートの管理
+- 8.1 Code scanningの設定
+- 8.2 Secret scanningの活用
+- 8.3 Dependency reviewの実践
+- 8.4 AI支援による脆弱性修正提案
+- 8.5 セキュリティアラートの管理
 
 ### 第3部：セキュリティと権限管理編
 
 #### 第9章：アクセス権限の体系
-- 8.1 リポジトリレベルの権限（Read/Write/Admin）
-- 8.2 ブランチ保護ルールの設定
-- 8.3 CODEOWNERSによる承認フロー
-- 8.4 Required reviewersの設定
-- 8.5 権限の継承と上書き
+- 9.1 リポジトリレベルの権限（Read/Write/Admin）
+- 9.2 ブランチ保護ルールの設定
+- 9.3 CODEOWNERSによる承認フロー
+- 9.4 Required reviewersの設定
+- 9.5 権限の継承と上書き
 
 #### 第10章：組織管理とチーム運用
-- 9.1 Organizationの作成と初期設定
-- 9.2 Team構造の設計と権限継承
-- 9.3 Outside Collaboratorの管理
-- 9.4 SAML SSOとの連携
-- 9.5 監査ログの活用
+- 10.1 Organizationの作成と初期設定
+- 10.2 Team構造の設計と権限継承
+- 10.3 Outside Collaboratorの管理
+- 10.4 SAML SSOとの連携
+- 10.5 監査ログの活用
 
 #### 第11章：セキュリティ実践
-- 10.1 Secrets管理の基本
-- 10.2 Environment設定と環境変数
-- 10.3 Dependabotによる脆弱性対策
-- 10.4 Security Policyの設定
-- 10.5 セキュリティインシデント対応
+- 11.1 Secrets管理の基本
+- 11.2 Environment設定と環境変数
+- 11.3 Dependabotによる脆弱性対策
+- 11.4 Security Policyの設定
+- 11.5 セキュリティインシデント対応
 
 ### 第4部：実践編（チーム開発）
 
