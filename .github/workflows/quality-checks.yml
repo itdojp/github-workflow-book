@@ -1,0 +1,79 @@
+name: Quality Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  validate-links:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install requests beautifulsoup4 markdown
+    
+    - name: Validate internal links
+      run: |
+        if [ -f scripts/validate_links.py ]; then
+          python scripts/validate_links.py
+        else
+          echo "Link validation script not found, skipping"
+        fi
+
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check Markdown formatting
+      uses: avto-dev/markdown-lint@v1
+      with:
+        args: '**/*.md'
+        config: '.markdownlint.json'
+        ignore: 'node_modules'
+    continue-on-error: true
+
+  spell-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Spell Check
+      uses: streetsidesoftware/cspell-action@v5
+      with:
+        files: '**/*.md'
+        config: '.cspell.json'
+    continue-on-error: true
+
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Validate chapter numbering
+      run: |
+        # Check for duplicate chapter numbers
+        duplicates=$(ls chapter-*.md | sed 's/chapter-\([0-9]*\)-.*/\1/' | sort | uniq -d)
+        if [ ! -z "$duplicates" ]; then
+          echo "Error: Duplicate chapter numbers found: $duplicates"
+          exit 1
+        fi
+        
+        # Check chapter sequence
+        expected=1
+        for file in $(ls chapter-*.md | sort -V); do
+          num=$(echo $file | sed 's/chapter-\([0-9]*\)-.*/\1/' | sed 's/^0*//')
+          if [ "$num" != "$expected" ]; then
+            echo "Warning: Missing or out-of-sequence chapter $expected (found $num)"
+          fi
+          expected=$((expected + 1))
+        done
