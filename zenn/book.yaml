@@ -1,0 +1,26 @@
+title: "AI開発のためのGitHubワークフロー実践ガイド"
+summary: |
+  AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック。
+  ChatGPT、GitHub Copilot、ClaudeなどのAIツールを効果的に活用しながら、
+  チーム開発の生産性を飛躍的に向上させる方法を体系的に学べます。
+topics: ["github", "ai", "copilot", "git", "workflow"]
+published: false
+price: 0 # 0にすると無料
+chapters:
+  - introduction
+  - git-github-basics
+  - ai-collaboration-fundamentals
+  - essential-commands-ai
+  - github-collaboration-ai
+  - account-repository-ai
+  - github-copilot-advanced
+  - ai-code-review-practice
+  - github-advanced-security-ai
+  - access-permissions-ai
+  - organization-management-ai
+  - security-practice-ai
+  - practical-workflow
+  - cicd-pipeline
+  - large-scale-data-model-ai
+  - github-pages
+  - external-collaboration

@@ -1,0 +1,25 @@
+# Python dependencies for github-workflow-book-private
+
+# Core dependencies
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+markdown>=3.4.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+pytest>=7.0.0
+
+# Documentation tools
+mkdocs>=1.4.0
+mkdocs-material>=9.0.0
+
+# Utility libraries
+pyyaml>=6.0
+pathlib>=1.0.1
+click>=8.1.0
+
+# Optional: For advanced features
+pandas>=1.5.0  # For data analysis in AI metrics
+matplotlib>=3.6.0  # For generating charts
+pandoc>=2.3  # For format conversion (requires system pandoc)

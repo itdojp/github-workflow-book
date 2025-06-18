@@ -1,0 +1,52 @@
+{
+  "version": "0.2",
+  "language": "en,ja",
+  "words": [
+    "itdo",
+    "itdojp",
+    "github",
+    "copilot",
+    "claude",
+    "chatgpt",
+    "gemini",
+    "mlops",
+    "cicd",
+    "dependabot",
+    "zenn",
+    "kindle",
+    "jekyll",
+    "peaceiris",
+    "kramdown",
+    "frontmatter",
+    "mermaid",
+    "yaml",
+    "repo",
+    "repos",
+    "webhook",
+    "webhooks",
+    "gitignore",
+    "gitlab",
+    "bitbucket",
+    "devops",
+    "kubernetes",
+    "docker",
+    "terraform",
+    "ansible"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    ".git",
+    "build",
+    "dist",
+    "*.min.js",
+    "*.min.css",
+    "package-lock.json",
+    "yarn.lock"
+  ],
+  "ignoreRegExpList": [
+    "/```[\\s\\S]*?```/gm",
+    "/`[^`]+`/g",
+    "\\b[A-Z][A-Z0-9_]*\\b",
+    "\\b[a-f0-9]{7,40}\\b"
+  ]
+}
