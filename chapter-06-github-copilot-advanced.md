@@ -92,7 +92,7 @@ def preprocess_data(df):
 ]
 ```
 
-## 5.2 コード生成の効果的な使い方
+## 6.2 コード生成の効果的な使い方
 
 ### コメント駆動開発
 
@@ -160,7 +160,7 @@ def test_subtract():
     # Copilotが同様のパターンでテストケースを生成
 ```
 
-## 5.3 AIペアプログラミングのベストプラクティス
+## 6.3 AIペアプログラミングのベストプラクティス
 
 ### 効果的な使用方法
 
@@ -244,7 +244,7 @@ def parse_arguments():
     # Copilotが一般的な引数を提案
 ```
 
-## 5.4 プロンプトエンジニアリング
+## 6.4 プロンプトエンジニアリング
 
 ### 効果的なコメントの書き方
 
@@ -368,13 +368,20 @@ require_review:
 #### 最適化設定
 ```json
 {
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": false,
+        "plaintext": false
+    },
     "github.copilot.advanced": {
-        "length": 500,  // 提案の最大長
-        "temperature": 0.3,  // 創造性レベル
-        "top_p": 0.95  // 多様性
-    }
+        "length": 500
+    },
+    "editor.inlineSuggest.enabled": true,
+    "editor.suggest.preview": true
 }
 ```
+
+> **注意**: 上記の設定例は説明用です。実際のVS Code設定では、GitHub Copilotの設定項目は限定されており、`temperature`や`top_p`などのパラメータは直接設定できません。これらのパラメータはGitHub Copilotのサービス側で管理されています。
 
 ### トラブルシューティング
 

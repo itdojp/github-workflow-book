@@ -67,13 +67,13 @@ ssh -T git@github.com
 ### clone - リポジトリの複製
 ```bash
 # HTTPSを使用
-git clone https://github.com/username/repository.git
+git clone https://github.com/<your-username>/<repository-name>.git
 
 # SSHを使用（推奨）
-git clone git@github.com:username/repository.git
+git clone git@github.com:<your-username>/<repository-name>.git
 
 # 特定のディレクトリ名で複製
-git clone git@github.com:username/repository.git my-project
+git clone git@github.com:<your-username>/<repository-name>.git my-project
 ```
 
 ### add - 変更をステージングエリアに追加
@@ -197,7 +197,7 @@ git pull --rebase
 git pull origin develop
 ```
 
-## 2.3 ブランチ操作（checkout, branch, merge）
+## 3.3 ブランチ操作（checkout, branch, merge）
 
 ### branch - ブランチの管理
 ```bash
@@ -256,7 +256,7 @@ git merge --no-ff feature/important-feature
 git merge --abort
 ```
 
-## 2.4 状態確認（status, log, diff）
+## 3.4 状態確認（status, log, diff）
 
 ### status - 作業状態の確認
 ```bash
@@ -333,7 +333,7 @@ git diff --name-only
 git diff --stat
 ```
 
-## 2.5 コンフリクト解決の基本
+## 3.5 コンフリクト解決の基本
 
 ### コンフリクトの発生
 マージ時に同じ箇所が異なる内容に変更されている場合に発生。
