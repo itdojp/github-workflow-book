@@ -1,0 +1,181 @@
+{
+  "book": {
+    "title": "AI開発のためのGitHubワークフロー実践ガイド",
+    "subtitle": "AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック",
+    "description": "ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した開発手法を体系的に解説。AI時代のソフトウェア開発に必要なワークフロー、セキュリティ、ガバナンス、大規模開発の実践的ノウハウを網羅。",
+    "author": {
+      "name": "太田和彦",
+      "email": "knowledge@itdo.jp",
+      "github": "itdojp",
+      "organization": "株式会社アイティードゥ",
+      "website": "https://www.itdo.jp"
+    },
+    "license": "MIT License",
+    "repository": {
+      "public": "https://github.com/itdojp/github-workflow-book-public",
+      "private": "https://github.com/itdojp/github-workflow-book-private",
+      "zenn": "https://zenn.dev/itdojp/books/github-workflow-ai"
+    }
+  },
+  "deployment": {
+    "publicRepoUrl": "git@github.com:itdojp/github-workflow-book-public.git",
+    "publicRepoDir": "/tmp/github-workflow-book-public",
+    "branch": "gh-pages",
+    "siteUrl": "https://itdojp.github.io/github-workflow-book-public/",
+    "actionsUrl": "https://github.com/itdojp/github-workflow-book-public/actions"
+  },
+  "contentSections": [
+    {
+      "name": "introduction",
+      "title": "はじめに",
+      "directory": "introduction",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "name": "chapters",
+      "title": "本章",
+      "directory": "chapters",
+      "enabled": true,
+      "order": 2,
+      "numbering": true
+    },
+    {
+      "name": "appendices",
+      "title": "付録",
+      "directory": "appendices",
+      "enabled": true,
+      "order": 3,
+      "numbering": true,
+      "numberingPrefix": "付録"
+    },
+    {
+      "name": "afterword",
+      "title": "あとがき",
+      "directory": "afterword",
+      "enabled": false,
+      "order": 4
+    }
+  ],
+  "tableOfContents": {
+    "enabled": true,
+    "outputFile": "github-workflow-book-toc.md",
+    "title": "目次",
+    "maxDepth": 3,
+    "includeNumbers": true,
+    "autoLink": true,
+    "autoNumberChapters": false,
+    "detectExistingNumbers": true
+  },
+  "excludePatterns": [
+    "draft.md",
+    "notes.md",
+    "solutions.md",
+    "instructor.md",
+    "private.md",
+    "confidential.md",
+    "secret.md",
+    "private-to-public-deployment-guide.md",
+    "*.tmp",
+    "*.backup",
+    "*.bak",
+    ".private",
+    ".confidential",
+    "scripts/*.py",
+    "requirements.txt",
+    "zenn/"
+  ],
+  "contentExcludePatterns": [
+    "<!-- TODO:",
+    "<!-- FIXME:",
+    "<!-- PRIVATE:",
+    "<!-- SECRET:",
+    "<!-- DRAFT:",
+    "<!-- CONFIDENTIAL:",
+    "<!-- INSTRUCTOR:",
+    "<!-- INTERNAL:",
+    "<!-- SENSITIVE:",
+    "<!-- 個人情報",
+    "<!-- 機密情報"
+  ],
+  "sensitivePatterns": [
+    "(api[_-]?key|secret[_-]?key|access[_-]?token|auth[_-]?token)\\s*[=:]\\s*['\"][a-zA-Z0-9_-]{8,}['\"]",
+    "(password|passwd)\\s*[=:]\\s*['\"][^'\"\\s]{8,}['\"]",
+    "github[_-]?token\\s*[=:]\\s*['\"]ghp_[a-zA-Z0-9]{36}['\"]",
+    "aws[_-]?access[_-]?key[_-]?id\\s*[=:]\\s*['\"]AKIA[0-9A-Z]{16}['\"]",
+    "-----BEGIN [A-Z ]+PRIVATE KEY-----",
+    "(email|mail)\\s*[=:]\\s*['\"][a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}['\"]",
+    "GIT_AUTHOR_NAME\\s*=",
+    "GIT_AUTHOR_EMAIL\\s*="
+  ],
+  "publicFiles": [
+    "index.md",
+    "README.md",
+    "_config.yml",
+    "github-workflow-book-toc.md"
+  ],
+  "hotReload": {
+    "enabled": true,
+    "port": 8080,
+    "wsPort": 8081,
+    "debounceDelay": 100,
+    "watchPaths": [
+      "chapter-*.md",
+      "appendix-*.md",
+      "introduction.md",
+      "_layouts",
+      "_config.yml",
+      "index.md",
+      "README.md",
+      "assets"
+    ],
+    "ignorePatterns": [
+      "**/node_modules/**",
+      "**/public/**",
+      "**/.git/**",
+      "**/.build-meta.json",
+      "**/scripts/**",
+      "**/zenn/**"
+    ]
+  },
+  "imageOptimization": {
+    "enabled": true,
+    "quality": 85,
+    "formats": ["webp", "original"],
+    "maxWidth": 1920,
+    "stripMetadata": true,
+    "lazyLoad": true
+  },
+  "versionManagement": {
+    "enabled": true,
+    "autoCreateTags": true,
+    "autoGenerateReleaseNotes": true,
+    "semanticVersioning": true,
+    "releaseNotesInPublic": true,
+    "versionInFooter": true
+  },
+  "pdf": {
+    "engine": "pandoc",
+    "paperSize": "A4",
+    "margin": "2cm",
+    "fontSize": "11pt",
+    "fontFamily": "Noto Sans CJK JP",
+    "includeTableOfContents": true,
+    "includeCoverPage": true,
+    "language": "ja"
+  },
+  "epub": {
+    "engine": "pandoc",
+    "coverImage": null,
+    "includeTableOfContents": true,
+    "chapterLevel": 1,
+    "language": "ja",
+    "publisher": "株式会社アイティードゥ",
+    "rights": "© 2025 ITDO Inc. All rights reserved."
+  },
+  "japanese": {
+    "enableTextlint": true,
+    "enableZennFormat": true,
+    "techTermConsistency": true
+  }
+}
