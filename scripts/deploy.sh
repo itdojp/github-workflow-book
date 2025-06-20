@@ -40,19 +40,23 @@ NC='\033[0m' # No Color
 # ログ関数
 log_debug() {
     [[ ${LOG_LEVELS["DEBUG"]} -ge $CURRENT_LOG_LEVEL ]] && echo -e "${CYAN}[DEBUG]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" >&2
+    return 0
 }
 
 log_info() {
     [[ ${LOG_LEVELS["INFO"]} -ge $CURRENT_LOG_LEVEL ]] && echo -e "${GREEN}[INFO]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1"
+    return 0
 }
 
 log_warn() {
     [[ ${LOG_LEVELS["WARN"]} -ge $CURRENT_LOG_LEVEL ]] && echo -e "${YELLOW}[WARN]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" >&2
+    return 0
 }
 
 log_error() {
     echo -e "${RED}[ERROR]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" >&2
     ERROR_LOG+=("$(date '+%Y-%m-%d %H:%M:%S'): $1")
+    return 0
 }
 
 # エラーハンドリング関数
@@ -193,10 +197,38 @@ load_env_file() {
 # 設定の初期化
 PRIVATE_REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
+# 設定を読み込む
+load_deploy_config
+load_env_file
+
+# デフォルト値の設定
+PUBLIC_REPO="${PUBLIC_REPO_CONFIG:-}"
+DEPLOY_BRANCH="${DEPLOY_BRANCH_CONFIG:-gh-pages}"
+BUILD_DIR="${BUILD_DIR_CONFIG:-public}"
+
 log_debug "設定値を読み込みました" 
 log_debug "  PRIVATE_REPO_DIR: $PRIVATE_REPO_DIR"
 log_debug "  DEPLOY_BRANCH: $DEPLOY_BRANCH"
 log_debug "  BUILD_DIR: $BUILD_DIR"
+
+# URLの検証関数
+validate_repo_url() {
+    local url="$1"
+    if [[ ! "$url" =~ ^(https?://|git@) ]]; then
+        log_error "無効なリポジトリURL形式です: $url"
+        return 1
+    fi
+    
+    # GitHub URLの基本的な検証
+    if [[ "$url" =~ github\.com ]]; then
+        if [[ ! "$url" =~ github\.com[:/][^/]+/[^/.]+ ]]; then
+            log_error "無効なGitHubリポジトリURL形式です: $url"
+            return 1
+        fi
+    fi
+    
+    return 0
+}
 
 # GitHub Actions環境でのトークン自動設定
 if [ -n "${GITHUB_ACTIONS:-}" ] && [ -n "${GITHUB_TOKEN:-}" ] && [ -z "${DEPLOY_TOKEN:-}" ]; then
@@ -412,11 +444,17 @@ if [ -n "$SCAN_WARNINGS" ]; then
     if [ -z "${CI:-}" ] && [ -z "${GITHUB_ACTIONS:-}" ]; then
         echo ""
         log_warn "🛡️  Security scan detected potential issues."
-        read -p "Do you want to continue deployment despite warnings? (y/N) " -n 1 -r
-        echo ""
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            log_warn "Deployment cancelled due to security concerns"
-            exit 1
+        
+        # Skip interactive prompt when FORCE_DEPLOY is set
+        if [ "${FORCE_DEPLOY:-}" = "true" ]; then
+            log_warn "FORCE_DEPLOY is set - continuing deployment despite warnings"
+        else
+            read -p "Do you want to continue deployment despite warnings? (y/N) " -n 1 -r
+            echo ""
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                log_warn "Deployment cancelled due to security concerns"
+                exit 1
+            fi
         fi
     else
         log_warn "⚠️  CI environment: Proceeding with warnings (review recommended)"
@@ -535,12 +573,18 @@ deploy_step_commit_and_push() {
         git diff --stat HEAD~1
 
         echo ""
-        read -p "デプロイを実行しますか? (y/N) " -n 1 -r
-        echo ""
+        
+        # Skip interactive prompt when FORCE_DEPLOY is set
+        if [ "${FORCE_DEPLOY:-}" = "true" ]; then
+            log_info "FORCE_DEPLOY is set - proceeding with deployment"
+        else
+            read -p "デプロイを実行しますか? (y/N) " -n 1 -r
+            echo ""
 
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            log_warn "デプロイがキャンセルされました"
-            exit 1
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                log_warn "デプロイがキャンセルされました"
+                exit 1
+            fi
         fi
     else
         log_info "CI環境での自動デプロイを実行中..."
