@@ -5,6 +5,7 @@
   "author": "ITDO Inc. (株式会社アイティードゥ) 太田和彦 <knowledge@itdo.jp>",
   "license": "MIT",
   "scripts": {
+    "init": "node scripts/init-template.js",
     "setup:deploy": "node scripts/setup-deployment.js",
     "setup:secrets": "node scripts/setup-secrets.js",
     "secrets:check": "node scripts/setup-secrets.js check",
