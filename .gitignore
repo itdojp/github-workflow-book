@@ -1,1 +1,70 @@
 .claude/settings.local.json
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+public/
+output/
+temp/
+*.tmp
+*.backup
+*.bak
+
+# Build metadata
+.build-meta.json
+build-cache/
+.incremental-build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+*.lcov
+
+# Logs
+logs/
+*.log
+
+# Python cache (for existing Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Documentation build
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Validation reports
+validation-reports/
+content-validation-report.json
+
+# Version files
+.version
+version-*.json
+
+# Private/sensitive files
+*.private
+*.secret
+private/
+secrets/

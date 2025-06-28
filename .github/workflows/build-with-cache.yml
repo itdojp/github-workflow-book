@@ -1,0 +1,188 @@
+name: Build with Advanced Caching
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      cache-hit-npm: ${{ steps.npm-cache.outputs.cache-hit }}
+      cache-hit-build: ${{ steps.build-cache.outputs.cache-hit }}
+      build-time: ${{ steps.build-time.outputs.duration }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: 'npm'
+      
+      # 1. NPM キャッシュ
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      
+      # 2. pnpm キャッシュ (将来の対応用)
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        if: contains(github.event.head_commit.message, '[pnpm]')
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      
+      # 3. ビルド成果物キャッシュ
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        id: build-cache
+        with:
+          path: |
+            public
+            .build-meta.json
+            .build-profile.json
+            .cache
+            temp
+          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*', 'book-config.json', 'scripts/build*.js') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+      
+      # 4. Markdown処理キャッシュ
+      - name: Cache markdown processing
+        uses: actions/cache@v3
+        with:
+          path: |
+            .markdown-cache
+            .textlint-cache
+          key: ${{ runner.os }}-markdown-${{ hashFiles('src/**/*.md', '.textlintrc', '.markdownlintrc') }}
+          restore-keys: |
+            ${{ runner.os }}-markdown-
+      
+      - name: Install dependencies
+        run: |
+          if [ "${{ steps.npm-cache.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing dependencies..."
+            npm ci
+          else
+            echo "✅ Using cached dependencies"
+            # Verify the cache integrity
+            npm list --depth=0 || npm ci
+          fi
+      
+      - name: Measure build time
+        id: build-time
+        run: |
+          START_TIME=$(date +%s)
+          
+          # Select build strategy based on cache
+          if [ "${{ steps.build-cache.outputs.cache-hit }}" == "true" ] && [ -f ".build-meta.json" ]; then
+            echo "🚀 Using incremental build (cache hit)"
+            npm run build:incremental
+          else
+            echo "🔨 Running full build"
+            npm run build
+          fi
+          
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "duration=$DURATION" >> $GITHUB_OUTPUT
+          echo "⏱️  Build completed in ${DURATION}s"
+      
+      - name: Optimize cache
+        if: success()
+        run: |
+          # Remove unnecessary files from cache
+          find public -name "*.map" -type f -delete 2>/dev/null || true
+          find .cache -name "*.tmp" -type f -delete 2>/dev/null || true
+          
+          # Create cache manifest
+          cat > .cache-manifest.json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "buildTime": ${{ steps.build-time.outputs.duration }},
+            "cacheHit": {
+              "npm": ${{ steps.npm-cache.outputs.cache-hit == 'true' }},
+              "build": ${{ steps.build-cache.outputs.cache-hit == 'true' }}
+            },
+            "sizes": {
+              "nodeModules": "$(du -sh node_modules 2>/dev/null | cut -f1 || echo '0')",
+              "publicDir": "$(du -sh public 2>/dev/null | cut -f1 || echo '0')",
+              "cacheDir": "$(du -sh .cache 2>/dev/null | cut -f1 || echo '0')"
+            }
+          }
+          EOF
+          
+          echo "📋 Cache manifest created"
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: |
+            public/
+            .cache-manifest.json
+          retention-days: 7
+      
+      - name: Cache performance summary
+        if: always()
+        run: |
+          echo "## 📊 Cache Performance Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Cache Type | Status | Impact |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| NPM Dependencies | ${{ steps.npm-cache.outputs.cache-hit == 'true' && '✅ HIT' || '❌ MISS' }} | ~45s saved |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Artifacts | ${{ steps.build-cache.outputs.cache-hit == 'true' && '✅ HIT' || '❌ MISS' }} | ~30s saved |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Duration:** ${{ steps.build-time.outputs.duration }}s" >> $GITHUB_STEP_SUMMARY
+          
+          # Estimate time saved
+          if [ "${{ steps.npm-cache.outputs.cache-hit }}" == "true" ] && [ "${{ steps.build-cache.outputs.cache-hit }}" == "true" ]; then
+            echo "**Estimated Time Saved:** ~75s (from cache hits)" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.npm-cache.outputs.cache-hit }}" == "true" ]; then
+            echo "**Estimated Time Saved:** ~45s (from NPM cache)" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.build-cache.outputs.cache-hit }}" == "true" ]; then
+            echo "**Estimated Time Saved:** ~30s (from build cache)" >> $GITHUB_STEP_SUMMARY
+          fi
+  
+  # Optional: Cache warming job for scheduled runs
+  warm-cache:
+    if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[warm-cache]')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: 'npm'
+      
+      - name: Warm all caches
+        run: |
+          echo "🔥 Warming up caches..."
+          
+          # Install dependencies to warm NPM cache
+          npm ci
+          
+          # Run full build to warm build cache
+          npm run build
+          
+          echo "✅ Caches warmed successfully"
