@@ -45,8 +45,9 @@ git commit -m "Configure Git LFS tracking"
 ```ini
 # .lfsconfig
 [lfs]
-    # GitHubのLFSエンドポイント
-    url = https://github.com/org/repo.git/info/lfs
+    # GitHubのLFSエンドポイント（GitHub Enterprise Serverまたはカスタムサーバー用）
+    # 注意: GitHub.comを使用している場合、この設定は通常不要です
+    # url = https://github.com/org/repo.git/info/lfs
     
     # 同時転送数
     concurrenttransfers = 8
@@ -68,6 +69,11 @@ git commit -m "Configure Git LFS tracking"
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
 ```
+
+**注意事項：**
+- `url`設定はGitHub Enterprise ServerやセルフホストのGit LFSサーバーを使用する場合にのみ必要です
+- GitHub.comのパブリック/プライベートリポジトリでは、LFSエンドポイントは自動的に解決されるため設定不要です
+- カスタムLFSサーバーを使用する場合のみ、適切なエンドポイントURLを設定してください
 
 ### LFSの使用パターン
 
