@@ -31,7 +31,7 @@ jobs:
       - name: Check AI Collaboration Metadata
         run: |
           # PR説明にAI協働履歴があることを確認
-          if ! grep -q "🤖 AI協働履歴" PR_DESCRIPTION; then
+          if ! echo "${{ github.event.pull_request.body }}" | grep -q "🤖 AI協働履歴"; then
             echo "❌ AI協働履歴が記載されていません"
             exit 1
           fi
