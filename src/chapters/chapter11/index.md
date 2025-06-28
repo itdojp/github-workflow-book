@@ -16,7 +16,7 @@ secrets_hierarchy:
       - DOCKERHUB_TOKEN
       - NPM_AUTH_TOKEN
       - SONAR_TOKEN
-      - GITHUB_COPILOT_ORG_TOKEN  # Copilot組織設定
+      - GITHUB_COPILOT_API_TOKEN  # Copilot API利用時のトークン（Enterprise設定の自動化用）
     ai_safety:
       - scan_for_hardcoded: true
       - ai_generation_block: true
@@ -45,6 +45,10 @@ secrets_hierarchy:
       - development:
           ai_access: "full"  # 開発環境はAI支援許可
 ```
+
+**注意：GitHub Copilot APIトークンについて**
+
+`GITHUB_COPILOT_API_TOKEN`は、GitHub Copilot Enterprise環境でAPI経由での設定自動化や使用状況監視を行う場合に必要となるトークンです。一般的なCopilotの利用では不要ですが、大規模組織でのCopilot設定の一括管理や、使用統計の自動収集を行う際に使用されます。
 
 ### Secretsの作成と管理
 

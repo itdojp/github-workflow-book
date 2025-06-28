@@ -16,16 +16,24 @@ project:
   teams:
     - ml_research: 
         role: "Model architecture development"
-        ai_collaboration: "CLEAR方式による設計提案、論文調査支援"
+        ai_collaboration: "Claudeによる複数設計案の生成と評価、Perplexity/Semantic Scholar連携による論文要約と関連研究の自動抽出、実験計画の最適化提案"
+        ai_tools: ["Claude", "Perplexity", "GitHub Copilot"]
+        benefits: ["設計時間50%短縮", "論文調査効率3倍向上", "実験計画の網羅性向上"]
     - ml_engineering: 
         role: "Training pipeline and optimization"
-        ai_collaboration: "コード生成、性能チューニング支援"
+        ai_collaboration: "GitHub Copilotによるパイプラインコード生成、Claudeによるハイパーパラメータ最適化戦略の提案、バグ修正とリファクタリング支援"
+        ai_tools: ["GitHub Copilot", "Claude", "Amazon CodeWhisperer"]
+        benefits: ["コード作成時間60%短縮", "バグ発生率40%削減", "最適化精度向上"]
     - data_engineering: 
         role: "Dataset preparation and augmentation"
-        ai_collaboration: "データ処理パイプライン生成、品質チェック"
+        ai_collaboration: "Copilotによるデータ前処理コード生成、Claudeによるデータ品質チェックロジック設計、異常値検出アルゴリズムの自動生成"
+        ai_tools: ["GitHub Copilot", "Claude", "Tabnine"]
+        benefits: ["前処理時間70%短縮", "データ品質向上", "異常検出精度向上"]
     - mlops: 
         role: "Deployment and monitoring"
-        ai_collaboration: "CI/CDパイプライン生成、監視コード作成"
+        ai_collaboration: "GitHub Actionsワークフロー自動生成、監視ダッシュボードコードの生成、アラート条件の最適化提案、インフラコードのレビューと改善"
+        ai_tools: ["GitHub Copilot", "Claude", "AWS CodeGuru"]
+        benefits: ["デプロイ時間80%短縮", "監視精度向上", "運用コスト削減"]
   
   # 第2章のテンプレートを標準化
   collaboration_standards:
