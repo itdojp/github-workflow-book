@@ -1,6 +1,6 @@
-# 第15章：外部協力者との連携
+# 第16章：外部協力者との連携
 
-## 15.1 Fork & Pull Requestモデル
+## 16.1 Fork & Pull Requestモデル
 
 ### Fork & PRワークフローの基本
 
@@ -184,7 +184,7 @@ Let us know if you need any help!
 - [ ] Security considerations
 ```
 
-## 15.2 コントリビューターライセンス契約（CLA）
+## 16.2 コントリビューターライセンス契約（CLA）
 
 ### CLAの実装
 
@@ -359,7 +359,7 @@ class CLAManager:
             json.dump(self.signatures, f, indent=2)
 ```
 
-## 15.3 外部貢献者の権限管理
+## 16.3 外部貢献者の権限管理
 
 ### 段階的な権限付与
 
@@ -532,7 +532,7 @@ We recognize our contributors! Check out our [Contributors page](https://github.
 By contributing, you agree that your contributions will be licensed under the same license as the project.
 ```
 
-## 15.4 コントリビューションガイドラインの作成
+## 16.4 コントリビューションガイドラインの作成
 
 ### 技術的ガイドライン
 
@@ -783,7 +783,7 @@ class CodeReviewChecker:
                             })
 ```
 
-## 15.5 オープンソースプロジェクトの運営
+## 16.5 オープンソースプロジェクトの運営
 
 ### プロジェクトガバナンス
 
