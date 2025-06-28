@@ -150,6 +150,11 @@ git commit
 
 # ステージングをスキップして直接コミット
 git commit -am "Fix: correct validation split ratio"
+
+# ⚠️ 注意: -aオプションの使用上の注意
+# ・追跡中のファイルのみが対象（新規ファイルはステージングされない）
+# ・意図しない変更もコミットされる可能性があるため、
+#   変更内容をよく確認してから使用することを推奨
 ```
 
 #### コミットメッセージの規約
@@ -393,47 +398,90 @@ venv/
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# データセット
+# データセット（特定ディレクトリのみ除外）
 data/raw/
 data/processed/
-*.csv
-*.json
+data/cache/
+# 注意: プロジェクトによってはサンプルデータは含める場合があります
+# その場合は data/samples/ をこのリストから除外してください
+
+# 大きなデータファイル（プロジェクト要件に応じて調整）
+# *.csv  # すべてのCSVを除外する場合（要検討）
+# *.json # すべてのJSONを除外する場合（要検討）
 *.parquet
+*.h5
+*.hdf5
+
+# AI/MLライブラリ固有のキャッシュ
+# Hugging Face Transformers
+.cache/huggingface/
+transformers_cache/
+
+# PyTorch Lightning
+lightning_logs/
+.pl_cache/
+
+# TensorFlow
+tf_logs/
+.tensorflow/
+
+# MLflow
+mlruns/
+mlflow_artifacts/
+
+# Weights & Biases
+wandb/
+
+# DVC (Data Version Control)
+.dvc/cache
+.dvc/tmp
 
 # モデルファイル
-models/
-*.h5
+models/saved/
+models/checkpoints/
 *.pkl
 *.pth
+*.ckpt
 *.onnx
 checkpoints/
 
-# ログ
+# ログとメトリクス
 logs/
 *.log
 tensorboard/
+results/
 
-# 環境設定
+# 環境設定とシークレット
 .env
 .env.local
+.env.*.local
 config/secrets.yaml
+credentials.json
 
-# IDE
+# IDE設定
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# OS固有
 .DS_Store
 Thumbs.db
 
-# 実験結果
+# 実験・出力結果
 experiments/
-mlruns/
 outputs/
+artifacts/
+temp/
+tmp/
 results/
 ```
+
+> **💡 カスタマイズのガイド**: 上記は主要なAI/MLプロジェクトの共通項目をリストアップしています。プロジェクトの要件に応じて以下のように調整してください：
+> - **設定ファイル**: サンプル設定ファイルは含める場合があります
+> - **小さなデータ**: デモ用の小さなデータセットは含める場合があります  
+> - **フレームワーク固有**: 使用しないフレームワークの項目は削除可能
+> - **チーム固有**: チームの開発環境に合わせて IDE設定を調整
 
 ### .gitignoreの適用
 ```bash
