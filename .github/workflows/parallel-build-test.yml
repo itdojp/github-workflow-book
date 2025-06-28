@@ -1,0 +1,293 @@
+name: Parallel Build Test
+
+on:
+  push:
+    branches:
+      - 'fix/issue-45-*'
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      parallelism:
+        description: 'Number of parallel jobs'
+        required: false
+        default: '5'
+        type: choice
+        options:
+          - '1'
+          - '3'
+          - '5'
+          - '8'
+          - '10'
+
+jobs:
+  # Stage 1: Prepare build matrix
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      chunks: ${{ steps.set-matrix.outputs.chunks }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Analyze content structure
+        id: analyze
+        run: |
+          # Count chapters
+          CHAPTER_COUNT=$(find src/chapters -name "chapter*" -type d | wc -l)
+          echo "chapter_count=$CHAPTER_COUNT" >> $GITHUB_OUTPUT
+          
+          # Count total markdown files
+          MD_COUNT=$(find src -name "*.md" -type f | wc -l)
+          echo "md_count=$MD_COUNT" >> $GITHUB_OUTPUT
+          
+          # Calculate optimal chunk size
+          PARALLELISM=${{ inputs.parallelism || '5' }}
+          CHUNK_SIZE=$(( (MD_COUNT + PARALLELISM - 1) / PARALLELISM ))
+          echo "chunk_size=$CHUNK_SIZE" >> $GITHUB_OUTPUT
+          
+          echo "📊 Content Analysis:"
+          echo "  Chapters: $CHAPTER_COUNT"
+          echo "  Markdown files: $MD_COUNT"
+          echo "  Parallel jobs: $PARALLELISM"
+          echo "  Files per job: ~$CHUNK_SIZE"
+      
+      - name: Set build matrix
+        id: set-matrix
+        run: |
+          # Create chunks of files for parallel processing
+          PARALLELISM=${{ inputs.parallelism || '5' }}
+          
+          # Find all markdown files and create chunks
+          find src -name "*.md" -type f | sort > all-files.txt
+          
+          # Split files into chunks
+          split -n l/$PARALLELISM all-files.txt chunk-
+          
+          # Create matrix JSON
+          MATRIX_JSON='{"chunk":['
+          FIRST=true
+          INDEX=0
+          for chunk in chunk-*; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              MATRIX_JSON="$MATRIX_JSON,"
+            fi
+            MATRIX_JSON="$MATRIX_JSON\"$INDEX\""
+            echo "Chunk $INDEX: $(wc -l < $chunk) files"
+            INDEX=$((INDEX + 1))
+          done
+          MATRIX_JSON="$MATRIX_JSON]}"
+          
+          echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+          echo "chunks=$INDEX" >> $GITHUB_OUTPUT
+          
+          # Save chunks as artifacts
+          mkdir chunks
+          mv chunk-* chunks/
+      
+      - name: Upload chunk definitions
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-chunks
+          path: chunks/
+          retention-days: 1
+
+  # Stage 2: Parallel build execution
+  build-parallel:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
+      fail-fast: false
+    
+    name: Build Chunk ${{ matrix.chunk }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Download chunk definitions
+        uses: actions/download-artifact@v3
+        with:
+          name: build-chunks
+          path: chunks/
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Process chunk
+        id: build
+        run: |
+          START_TIME=$(date +%s)
+          
+          # Get files for this chunk
+          CHUNK_FILE="chunks/chunk-$(printf '%c' $(( 97 + ${{ matrix.chunk }} )))"
+          echo "Processing chunk ${{ matrix.chunk }} from $CHUNK_FILE"
+          
+          # Create output directory
+          mkdir -p public-chunk-${{ matrix.chunk }}
+          
+          # Process each file in chunk
+          PROCESSED=0
+          FAILED=0
+          
+          while IFS= read -r file; do
+            if [ -f "$file" ]; then
+              # Extract relative path
+              REL_PATH="${file#src/}"
+              OUTPUT_DIR="public-chunk-${{ matrix.chunk }}/$(dirname "$REL_PATH")"
+              mkdir -p "$OUTPUT_DIR"
+              
+              # Process file (simplified for demo)
+              if node scripts/process-single-file.js "$file" "$OUTPUT_DIR"; then
+                PROCESSED=$((PROCESSED + 1))
+                echo "✅ Processed: $file"
+              else
+                FAILED=$((FAILED + 1))
+                echo "❌ Failed: $file"
+              fi
+            fi
+          done < "$CHUNK_FILE"
+          
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          
+          echo "processed=$PROCESSED" >> $GITHUB_OUTPUT
+          echo "failed=$FAILED" >> $GITHUB_OUTPUT
+          echo "duration=$DURATION" >> $GITHUB_OUTPUT
+          
+          # Create chunk summary
+          cat > chunk-${{ matrix.chunk }}-summary.json << EOF
+          {
+            "chunk": ${{ matrix.chunk }},
+            "processed": $PROCESSED,
+            "failed": $FAILED,
+            "duration": $DURATION,
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+      
+      - name: Upload chunk output
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output-chunk-${{ matrix.chunk }}
+          path: |
+            public-chunk-${{ matrix.chunk }}/
+            chunk-${{ matrix.chunk }}-summary.json
+          retention-days: 1
+
+  # Stage 3: Merge parallel outputs
+  merge-outputs:
+    needs: [prepare, build-parallel]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download all chunks
+        uses: actions/download-artifact@v3
+        with:
+          pattern: build-output-chunk-*
+          path: chunks-output/
+      
+      - name: Merge build outputs
+        run: |
+          echo "📦 Merging ${{ needs.prepare.outputs.chunks }} chunks..."
+          
+          # Create final output directory
+          mkdir -p public
+          
+          # Merge all chunk outputs
+          for chunk_dir in chunks-output/build-output-chunk-*/; do
+            if [ -d "$chunk_dir" ]; then
+              # Find the public-chunk directory
+              PUBLIC_CHUNK=$(find "$chunk_dir" -name "public-chunk-*" -type d | head -1)
+              if [ -n "$PUBLIC_CHUNK" ]; then
+                echo "Merging: $PUBLIC_CHUNK"
+                cp -r "$PUBLIC_CHUNK"/* public/ 2>/dev/null || true
+              fi
+            fi
+          done
+          
+          # Collect statistics
+          TOTAL_PROCESSED=0
+          TOTAL_FAILED=0
+          TOTAL_DURATION=0
+          
+          for summary in chunks-output/*/chunk-*-summary.json; do
+            if [ -f "$summary" ]; then
+              PROCESSED=$(jq -r '.processed' "$summary")
+              FAILED=$(jq -r '.failed' "$summary")
+              DURATION=$(jq -r '.duration' "$summary")
+              
+              TOTAL_PROCESSED=$((TOTAL_PROCESSED + PROCESSED))
+              TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
+              TOTAL_DURATION=$((TOTAL_DURATION + DURATION))
+            fi
+          done
+          
+          # Average duration (parallel execution time)
+          AVG_DURATION=$((TOTAL_DURATION / ${{ needs.prepare.outputs.chunks }}))
+          
+          echo "## 📊 Parallel Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Files Processed | $TOTAL_PROCESSED |" >> $GITHUB_STEP_SUMMARY
+          echo "| Failed Files | $TOTAL_FAILED |" >> $GITHUB_STEP_SUMMARY
+          echo "| Parallel Jobs | ${{ needs.prepare.outputs.chunks }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Average Time per Job | ${AVG_DURATION}s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total CPU Time | ${TOTAL_DURATION}s |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Parallel Speedup** | **$(( TOTAL_DURATION / AVG_DURATION ))x** |" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload final build
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-build-output
+          path: public/
+          retention-days: 7
+
+  # Performance comparison job
+  performance-test:
+    needs: merge-outputs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run sequential build for comparison
+        id: sequential
+        run: |
+          START_TIME=$(date +%s)
+          npm run build
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "duration=$DURATION" >> $GITHUB_OUTPUT
+      
+      - name: Compare performance
+        run: |
+          # This would compare with the parallel build time
+          echo "## 🚀 Performance Comparison" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Type | Duration |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|----------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Sequential | ${{ steps.sequential.outputs.duration }}s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Parallel | (see above) |" >> $GITHUB_STEP_SUMMARY

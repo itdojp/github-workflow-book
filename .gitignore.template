@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+package-lock.json
+.npm/
+
+# Build output
+public/
+.build-meta.json
+/build/
+/dist/
+/output/
+/temp/
+*.pdf
+*.epub
+*.mobi
+
+# Metadata reports
+build-metadata-*.csv
+build-metadata-*.json
+build-report-*.json
+
+# Metadata reports
+build-metadata-*.csv
+build-metadata-*.json
+build-report-*.json
+
+# Validation reports
+validation-reports/
+
+# Version management (keep version-config.json but ignore comparisons)
+version-comparisons/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment and Configuration
+.env
+.env.local
+.deploy-config.json
+
+# Temporary files
+*.tmp
+*.temp
+temp-review/
+.cache/
+
+# Private and sensitive content
+secrets/
+private/
+*.key
+*.pem
+*.cert
+*.crt
+.secrets
+.private
+draft.md
+notes.md
+instructor.md
+private.md
+confidential.md
+.confidential/
+
+# Backup files that might contain sensitive data
+*.bak
+*.backup
+*~
+
+# Security and credential files
+.ssh/
+.aws/
+.gcp/
+credentials.json
+service-account.json
+
+# GitHub Pages
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+src/.safeguard-report.json

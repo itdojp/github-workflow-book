@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "preset-ja-technical-writing": {
+      "ja-no-mixed-period": {
+        "periodMark": "。",
+        "allowPeriodMarks": [".", "。"]
+      },
+      "ja-no-successive-word": false,
+      "ja-no-abusage": true,
+      "max-ten": {
+        "max": 4
+      },
+      "no-mix-dearu-desumasu": false
+    }
+  },
+  "filters": {
+    "comments": true,
+    "allowlist": {
+      "allow": [
+        "/\\[.*\\]\\(.*\\)/",
+        "/```[\\s\\S]*?```/",
+        "/`[^`]+`/",
+        "ITDO",
+        "GitHub",
+        "TODO",
+        "FIXME"
+      ]
+    }
+  }
+}
