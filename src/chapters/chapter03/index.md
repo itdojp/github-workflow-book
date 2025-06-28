@@ -48,12 +48,19 @@ git config --list
 
 #### SSH鍵の生成
 ```bash
-# SSH鍵を生成
+# SSH鍵を生成（ed25519推奨）
 ssh-keygen -t ed25519 -C "your.email@example.com"
+
+# 古いシステム対応が必要な場合のRSA
+# ssh-keygen -t rsa -b 4096 -C "your.email@example.com"
 
 # 公開鍵を表示（GitHubに登録）
 cat ~/.ssh/id_ed25519.pub
 ```
+
+> **💡 SSH鍵タイプの選択**: 
+> - **ed25519（推奨）**: 高速で安全性が高く、鍵のサイズが小さい
+> - **RSA**: 古いシステムとの互換性が必要な場合のみ使用（4096ビット推奨）
 
 #### 接続テスト
 ```bash
@@ -236,6 +243,21 @@ git checkout -- filename.py
 # リモートブランチを追跡
 git checkout -b feature/remote-feature origin/feature/remote-feature
 ```
+
+#### 💡 新しいコマンド（Git 2.23以降）
+Git 2.23以降では、`checkout`の多機能性を分割したより明確なコマンドが利用可能です：
+
+```bash
+# ブランチ切り替え専用コマンド
+git switch develop
+git switch -c feature/new-architecture  # 新ブランチ作成＋切り替え
+
+# ファイル復元専用コマンド  
+git restore filename.py                 # ワーキングディレクトリを復元
+git restore --staged filename.py        # ステージングエリアから除外
+```
+
+> **推奨**: 新しいプロジェクトでは`switch`と`restore`の使用を推奨します。これらのコマンドは操作の意図が明確で、誤操作のリスクが減ります。
 
 ### switch（新しいコマンド）
 ```bash
