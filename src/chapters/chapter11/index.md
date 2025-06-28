@@ -531,10 +531,24 @@ class VulnerabilityReporter:
         """
         
         # GraphQL APIを使用
-        result = self.github.get_graphql(
-            query,
-            variables={"owner": repo.owner.login, "name": repo.name}
+        import requests
+        
+        headers = {
+            'Authorization': f'token {self.github._Github__requester._Requester__authorizationHeader.split()[1]}',
+            'Content-Type': 'application/json'
+        }
+        
+        data = {
+            'query': query,
+            'variables': {"owner": repo.owner.login, "name": repo.name}
+        }
+        
+        response = requests.post(
+            'https://api.github.com/graphql',
+            headers=headers,
+            json=data
         )
+        result = response.json()
         
         return result['data']['repository']['vulnerabilityAlerts']['nodes']
     

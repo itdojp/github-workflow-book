@@ -111,12 +111,56 @@ def get_cached_user(user_id: int) -> Optional[User]:
 ```
 
 ### Example（具体例提示）
-期待する出力形式を具体的に示すことで、AIの回答品質が向上します。
+```markdown
+## 期待する出力形式
+以下のような形式でレポートを作成してください：
+
+### 1. 現状分析
+- 認証API応答時間: 現在XXXms
+- 同時接続ユーザー数: 最大XXX名
+- エラー発生率: XX%
+
+### 2. 問題箇所の特定
+- データベースクエリのボトルネック
+- セッション管理の非効率性
+
+### 3. 改善提案
+**優先度A（高リスク・高効果）**
+- クエリの最適化（推定改善: 30%高速化）
+
+**優先度B（中リスク・中効果）**
+- キャッシュ機能の追加（推定改善: 20%高速化）
+```
 
 ### Action（アクション明確化）
-次のステップを明確に指示します。
+```markdown
+## 次のステップ
+1. **調査フェーズ（1日）**
+   - 現状のパフォーマンス測定
+   - ボトルネック箇所の特定
+
+2. **設計フェーズ（2日）**
+   - 改善案の詳細設計
+   - 影響範囲の分析
+
+3. **実装フェーズ（3日）**
+   - 優先度Aの実装
+   - テスト実行
+
+4. **検証フェーズ（1日）**
+   - パフォーマンス測定
+   - レビューとドキュメント更新
+```
 
 ### Review（レビューポイント）
+```markdown
+## レビュー基準
+- **技術的正確性**: 提案された解決策が技術的に実現可能か
+- **影響範囲**: 他の機能への影響が適切に考慮されているか
+- **パフォーマンス**: 期待される改善効果が数値で示されているか
+- **運用負荷**: 実装・運用にかかるコストが適切か
+- **セキュリティ**: セキュリティ上のリスクが考慮されているか
+```
 セルフチェック項目を含めることで、品質を保証します。
 
 ## 2.5 チームレベルでのAI協働標準化
@@ -160,6 +204,32 @@ name: AI Collaboration Quality Gates
 on:
   pull_request:
     types: [opened, synchronize]
+
+jobs:
+  ai-collaboration-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: CLEAR方式チェック
+        run: |
+          # PRの説明がCLEAR方式に従っているかチェック
+          python scripts/check_clear_format.py "${{ github.event.pull_request.body }}"
+      
+      - name: AI協働ラベルチェック
+        run: |
+          # AI生成コードのラベリングチェック
+          python scripts/check_ai_labels.py
+      
+      - name: コード品質ゲート
+        run: |
+          # 第2章の品質基準に基づくチェック
+          python scripts/ai_quality_gate.py
+          
+      - name: メトリクス収集
+        run: |
+          # AI協働効果の測定
+          python scripts/collect_ai_metrics.py
 ```
 
 ## 2.7 継続的な改善

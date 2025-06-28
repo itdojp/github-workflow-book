@@ -40,12 +40,6 @@ jobs:
         run: |
           # AI生成コード部分の品質チェック
           python scripts/check_ai_code_quality.py
-          
-  pull_request:
-    branches: [ main ]
-  schedule:
-    - cron: '0 0 * * 0'  # 毎週日曜日
-  workflow_dispatch:  # 手動実行
 
 # 環境変数
 env:
@@ -268,9 +262,8 @@ jobs:
           EOF
       
       - name: Run training
-        env:
-          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
+          export WANDB_API_KEY="${{ secrets.WANDB_API_KEY }}"
           python train.py \
             --config config.yaml \
             --output-dir ./outputs \
@@ -360,9 +353,8 @@ jobs:
         uses: ./.github/actions/setup-ml-env
       
       - name: Run experiment
-        env:
-          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
+          export WANDB_API_KEY="${{ secrets.WANDB_API_KEY }}"
           python train.py \
             --config base_config.yaml \
             --override "training.learning_rate=${{ matrix.lr }}" \
