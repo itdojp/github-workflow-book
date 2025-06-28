@@ -1,6 +1,6 @@
-# 第14章：GitHub Pagesでのプロジェクト公開
+# 第15章：GitHub Pagesでのプロジェクト公開
 
-## 14.1 GitHub Pagesの基本設定
+## 15.1 GitHub Pagesの基本設定
 
 ### GitHub Pagesとは
 
@@ -163,7 +163,7 @@ collections:
     permalink: /models/:name/
 ```
 
-## 14.2 ML/AIプロジェクトのデモページ作成
+## 15.2 ML/AIプロジェクトのデモページ作成
 
 ### インタラクティブなモデルデモ
 
@@ -423,7 +423,7 @@ class ModelConverter:
         print(f"Quantized model saved to {tflite_path}")
 ```
 
-## 14.3 ドキュメントサイトの構築
+## 15.3 ドキュメントサイトの構築
 
 ### MkDocsを使用した技術ドキュメント
 
@@ -661,7 +661,7 @@ autodoc_default_options = {
 }
 ```
 
-## 14.4 実験結果の可視化と公開
+## 15.4 実験結果の可視化と公開
 
 ### インタラクティブなダッシュボード
 
@@ -913,7 +913,7 @@ jobs:
           git push
 ```
 
-## 14.5 自動デプロイとメンテナンス
+## 15.5 自動デプロイとメンテナンス
 
 ### CI/CDパイプライン
 
