@@ -1,7 +1,5 @@
 # 第15章：GitHub Pagesでのプロジェクト公開
 
-{% include navigation.html %}
-
 ## 15.1 GitHub Pagesの基本設定
 
 ### GitHub Pagesとは
@@ -1242,5 +1240,3 @@ if __name__ == '__main__':
 - [ ] モデルをブラウザで実行できる形式に変換できる
 - [ ] ドキュメントの自動生成パイプラインを構築できる
 - [ ] パフォーマンスとアクセシビリティに配慮したサイトを作成できる
-
-{% include navigation.html %}

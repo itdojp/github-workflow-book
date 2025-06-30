@@ -1,7 +1,5 @@
 # 第6章：GitHub Copilotの高度な活用
 
-{% include navigation.html %}
-
 ## 6.1 第2章のCLEAR方式を使ったCopilot活用
 
 ### 基本設定の確認
@@ -422,5 +420,3 @@ require_review:
 - [ ] セキュリティリスクを認識している
 - [ ] 生成コードのレビュー習慣がある
 - [ ] 組織のポリシーに準拠している
-
-{% include navigation.html %}

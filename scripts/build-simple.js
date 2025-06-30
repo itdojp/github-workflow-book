@@ -208,17 +208,17 @@ class SimpleBuild {
   async generateIndex(publicDir) {
     const indexPath = path.join(publicDir, 'index.md');
     
-    // Check if index.md already exists and has substantial content
+    // Check if index.md already exists with substantial content
     try {
       const existingContent = await fs.readFile(indexPath, 'utf-8');
       if (existingContent.length > 200) {
-        this.log('既存のインデックスページを保持しました');
+        this.log('既存のindex.mdを保持します');
         return;
       }
     } catch {
-      // File doesn't exist, continue with generation
+      // File doesn't exist, generate new one
     }
-
+    
     const indexContent = `# ${this.config.book?.title || 'Book Title'}
 
 ${this.config.book?.description || 'Book description'}
@@ -270,6 +270,166 @@ exclude:
     }
   }
 
+  async generateNavigationData(srcDir, publicDir) {
+    const navigationData = {
+      chapters: [],
+      appendices: []
+    };
+
+    // Process chapters
+    const chaptersPath = path.join(srcDir, 'chapters');
+    try {
+      const chapters = await fs.readdir(chaptersPath, { withFileTypes: true });
+      const sortedChapters = chapters
+        .filter(d => d.isDirectory())
+        .sort((a, b) => {
+          const aNum = parseInt(a.name.match(/\d+/)?.[0] || '0');
+          const bNum = parseInt(b.name.match(/\d+/)?.[0] || '0');
+          return aNum - bNum;
+        });
+
+      for (const chapter of sortedChapters) {
+        const indexPath = path.join(chaptersPath, chapter.name, 'index.md');
+        try {
+          const content = await fs.readFile(indexPath, 'utf-8');
+          const titleMatch = content.match(/^#\s+(.+)$/m);
+          const title = titleMatch ? titleMatch[1] : `第${chapter.name.match(/\d+/)?.[0]}章`;
+          
+          navigationData.chapters.push({
+            title: title,
+            path: `/chapters/${chapter.name}/`
+          });
+        } catch {
+          // Skip if index.md doesn't exist
+        }
+      }
+    } catch {
+      this.log('章ディレクトリが見つかりません', 'warning');
+    }
+
+    // Process appendices
+    const appendicesPath = path.join(srcDir, 'appendices');
+    try {
+      const appendices = await fs.readdir(appendicesPath, { withFileTypes: true });
+      const sortedAppendices = appendices
+        .filter(d => d.isDirectory())
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      for (const appendix of sortedAppendices) {
+        const indexPath = path.join(appendicesPath, appendix.name, 'index.md');
+        try {
+          const content = await fs.readFile(indexPath, 'utf-8');
+          const titleMatch = content.match(/^#\s+(.+)$/m);
+          const title = titleMatch ? titleMatch[1] : `付録${appendix.name.replace('appendix-', '').toUpperCase()}`;
+          
+          navigationData.appendices.push({
+            title: title,
+            path: `/appendices/${appendix.name}/`
+          });
+        } catch {
+          // Skip if index.md doesn't exist
+        }
+      }
+    } catch {
+      this.log('付録ディレクトリが見つかりません', 'warning');
+    }
+
+    // Write navigation data
+    const dataDir = path.join(publicDir, '_data');
+    await fs.mkdir(dataDir, { recursive: true });
+    await fs.writeFile(
+      path.join(dataDir, 'navigation.yml'),
+      `# Auto-generated navigation data
+chapters:
+${navigationData.chapters.map(ch => `  - title: "${ch.title}"
+    path: "${ch.path}"`).join('\n')}
+
+appendices:
+${navigationData.appendices.map(ap => `  - title: "${ap.title}"
+    path: "${ap.path}"`).join('\n')}
+`
+    );
+    
+    this.log('ナビゲーションデータを生成しました');
+  }
+
+  async copyNavigationTemplates(publicDir) {
+    // Copy navigation include file
+    const includesDir = path.join(publicDir, '_includes');
+    await fs.mkdir(includesDir, { recursive: true });
+    
+    const navigationTemplatePath = path.join(__dirname, '..', 'templates', 'navigation', 'navigation.html');
+    try {
+      await fs.access(navigationTemplatePath);
+      await fs.copyFile(navigationTemplatePath, path.join(includesDir, 'navigation.html'));
+      this.log('ナビゲーションテンプレートをコピーしました');
+    } catch {
+      this.log('ナビゲーションテンプレートが見つかりません', 'warning');
+    }
+  }
+
+  async addNavigationToMarkdownFiles(publicDir) {
+    const addNavigation = async (dirPath) => {
+      const entries = await fs.readdir(dirPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dirPath, entry.name);
+        
+        if (entry.isDirectory()) {
+          await addNavigation(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'index.md') {
+          // Skip the root index.md
+          const relativePath = path.relative(publicDir, fullPath);
+          if (relativePath === 'index.md') continue;
+          
+          let content = await fs.readFile(fullPath, 'utf-8');
+          
+          // Check if navigation is already included
+          if (!content.includes('{% include navigation.html %}')) {
+            // Add navigation after the first heading
+            const headingMatch = content.match(/^#\s+.+$/m);
+            if (headingMatch) {
+              const headingIndex = content.indexOf(headingMatch[0]) + headingMatch[0].length;
+              content = content.slice(0, headingIndex) + '\n\n{% include navigation.html %}\n' + content.slice(headingIndex);
+            }
+            
+            // Add navigation at the end if not already there
+            if (!content.endsWith('{% include navigation.html %}')) {
+              content = content.trimEnd() + '\n\n{% include navigation.html %}\n';
+            }
+            
+            await fs.writeFile(fullPath, content, 'utf-8');
+          }
+        }
+      }
+    };
+
+    // Process chapters and appendices
+    const chaptersDir = path.join(publicDir, 'chapters');
+    const appendicesDir = path.join(publicDir, 'appendices');
+    const introDir = path.join(publicDir, 'introduction');
+    
+    try {
+      await addNavigation(chaptersDir);
+    } catch {
+      // Chapters directory doesn't exist
+    }
+    
+    try {
+      await addNavigation(appendicesDir);
+    } catch {
+      // Appendices directory doesn't exist
+    }
+    
+    try {
+      await addNavigation(introDir);
+    } catch {
+      // Introduction directory doesn't exist
+    }
+    
+    this.log('Markdownファイルにナビゲーションを追加しました');
+  }
+
   async build() {
     console.log(colors.blue('🔨 Simplified Build Process Starting...\n'));
     
@@ -281,9 +441,13 @@ exclude:
       
       await this.processContentSections(srcDir, publicDir);
       await this.copyAssets(srcDir, publicDir);
-      // Skip auto-generation of index.md to preserve custom index
-      // await this.generateIndex(publicDir);
+      await this.generateIndex(publicDir);
       await this.copyJekyllConfig(publicDir);
+      
+      // Generate navigation
+      await this.generateNavigationData(srcDir, publicDir);
+      await this.copyNavigationTemplates(publicDir);
+      await this.addNavigationToMarkdownFiles(publicDir);
       
       console.log('\n' + colors.green('✅ ビルド完了!'));
       console.log(colors.blue(`📁 出力先: ${publicDir}`));

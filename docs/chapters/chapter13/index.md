@@ -1,7 +1,5 @@
 # 第13章：CI/CDパイプライン構築
 
-{% include navigation.html %}
-
 ## 13.1 GitHub Actionsの基本構造とAI活用
 
 ### 第2章の品質ゲートを統合したCI/CD
@@ -1078,5 +1076,3 @@ class DeploymentMonitor:
 - [ ] テストとコード品質チェックを統合できる
 - [ ] デプロイメントパイプラインを構築できる
 - [ ] 監視とロールバックの仕組みを実装できる
-
-{% include navigation.html %}

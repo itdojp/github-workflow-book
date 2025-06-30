@@ -1,7 +1,5 @@
 # はじめに
 
-{% include navigation.html %}
-
 本書「AI開発のためのGitHubワークフロー実践ガイド」は、AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブックです。
 
 ## 本書の目的
@@ -58,5 +56,3 @@ ChatGPT、GitHub Copilot、Claude等のAI開発ツールの登場により、ソ
 
 株式会社アイティードゥ  
 太田和彦
-
-{% include navigation.html %}

@@ -1,7 +1,5 @@
 # 第9章：アクセス権限の体系
 
-{% include navigation.html %}
-
 ## 9.1 AI協働を考慮した権限設計
 
 ### AI協働時代の権限レベル
@@ -768,5 +766,3 @@ class PermissionAuditor:
 - [ ] CODEOWNERSファイルを作成できる
 - [ ] レビュアーの自動割り当てを設定できる
 - [ ] 権限の監査プロセスを実施できる
-
-{% include navigation.html %}

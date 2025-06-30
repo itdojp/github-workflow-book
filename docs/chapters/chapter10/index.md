@@ -1,7 +1,5 @@
 # 第10章：組織管理とチーム運用
 
-{% include navigation.html %}
-
 ## 10.1 AI協働を前提としたOrganization設計
 
 ### Organizationの作成手順
@@ -736,5 +734,3 @@ webhook_config:
 - [ ] 外部協力者の管理プロセスを確立している
 - [ ] SSO連携の仕組みを理解している（Enterprise）
 - [ ] 監査ログを活用した監視体制がある
-
-{% include navigation.html %}

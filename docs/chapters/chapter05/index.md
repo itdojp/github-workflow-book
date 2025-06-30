@@ -1,7 +1,5 @@
 # 第5章：GitHubアカウントとリポジトリ管理
 
-{% include navigation.html %}
-
 ## 5.1 AI協働に最適化されたアカウント設定
 
 ### アカウント作成と初期設定
@@ -437,5 +435,3 @@ Do NOT report security vulnerabilities through public GitHub issues.
 - [ ] Public/Privateの選択基準を理解している
 - [ ] ブランチ保護ルールを設定できる
 - [ ] 適切なREADMEを作成できる
-
-{% include navigation.html %}

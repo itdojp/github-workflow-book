@@ -1,7 +1,5 @@
 # 付録F：推奨VS Code拡張機能
 
-{% include navigation.html %}
-
 ## Git/GitHub関連
 
 ### 必須拡張機能
@@ -533,5 +531,3 @@ echo "✅ All extensions installed!"
 ```
 
 これらの拡張機能を組み合わせることで、GitHub と連携した効率的な ML 開発環境を構築できます。プロジェクトの要件に応じて必要な拡張機能を選択してください。
-
-{% include navigation.html %}

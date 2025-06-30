@@ -1,7 +1,5 @@
 # 第16章：外部協力者との連携
 
-{% include navigation.html %}
-
 ## 16.1 Fork & Pull Requestモデル
 
 ### Fork & PRワークフローの基本
@@ -1100,5 +1098,3 @@ jobs:
 - [ ] コントリビューターレベルを設計できる
 - [ ] コントリビューションガイドラインを作成できる
 - [ ] コミュニティの健全性を測定できる
-
-{% include navigation.html %}

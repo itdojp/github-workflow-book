@@ -1,7 +1,5 @@
 # 付録B：トラブルシューティングガイド
 
-{% include navigation.html %}
-
 ## 認証・接続関連
 
 ### 問題：SSHキーが認識されない
@@ -482,5 +480,3 @@ git config --global http.sslCAInfo /path/to/certificate.crt
 - GitHub Community Forum: https://github.community/
 - GitHub Documentation: https://docs.github.com/
 - Stack Overflow: https://stackoverflow.com/questions/tagged/github
-
-{% include navigation.html %}

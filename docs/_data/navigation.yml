@@ -1,6 +1,5 @@
+# Auto-generated navigation data
 chapters:
-  - title: "はじめに"
-    path: "/introduction/"
   - title: "第1章：GitとGitHubの基本概念"
     path: "/chapters/chapter01/"
   - title: "第2章：AI時代のGitHub協働基礎"
@@ -49,5 +48,5 @@ appendices:
     path: "/appendices/appendix-e/"
   - title: "付録F：推奨VS Code拡張機能"
     path: "/appendices/appendix-f/"
-  - title: "付録G：参考資料"
+  - title: "第16章：コンプライアンスとガバナンス"
     path: "/appendices/appendix-g/"

@@ -1,7 +1,5 @@
 # 第7章：AI支援によるコードレビュー実践
 
-{% include navigation.html %}
-
 ## 7.1 第2章のPRテンプレートを使った実装
 
 ### AI協働履歴を活用したレビュー
@@ -551,5 +549,3 @@ def collect_feedback(pr_id, ai_comment_id, feedback_type):
 - [ ] 人間レビューとの使い分けができる
 - [ ] セキュリティ検出機能を活用している
 - [ ] レビューワークフローを最適化している
-
-{% include navigation.html %}
