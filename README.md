@@ -1,10 +1,29 @@
 # AI開発のためのGitHubワークフロー実践ガイド
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://itdojp.github.io/github-workflow-book-public)
-[![Kindle](https://img.shields.io/badge/Kindle-Available-orange)](https://amazon.com/dp/...)
-[![Zenn](https://img.shields.io/badge/Zenn-Published-blue)](https://zenn.dev/username/books/github-workflow-ai)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://itdojp.github.io/github-workflow-book-private)
+[![Template](https://img.shields.io/badge/Template-v2.0-blue)](https://github.com/itdojp/book-publishing-template2)
+[![Zenn](https://img.shields.io/badge/Zenn-Published-blue)](https://zenn.dev/itdojp/books/github-workflow-ai)
 
 > AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック
+
+## 🎉 Book Publishing Template v2.0 移行完了
+
+このリポジトリは [Book Publishing Template v2.0](https://github.com/itdojp/book-publishing-template2) アーキテクチャに移行されました。
+
+### 🚀 新機能
+- **単一リポジトリ**: 執筆から公開まで1つのリポジトリで完結
+- **高速ビルド**: 軽量化により大幅な速度向上
+- **トークン不要**: GitHub Pages設定のみで自動デプロイ
+- **簡単セットアップ**: 複雑な設定が不要
+
+### 📋 クイックスタート
+```bash
+npm install    # 依存関係インストール
+npm run build  # ビルド
+npm run preview # ローカルプレビュー
+```
+
+詳細は [SETUP_V2.md](SETUP_V2.md) を参照してください。
 
 ## 📚 書籍概要
 

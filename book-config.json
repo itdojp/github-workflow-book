@@ -12,17 +12,13 @@
     },
     "license": "MIT License",
     "repository": {
-      "public": "https://github.com/itdojp/github-workflow-book-public",
-      "private": "https://github.com/itdojp/github-workflow-book-private",
+      "url": "https://github.com/itdojp/github-workflow-book-private",
       "zenn": "https://zenn.dev/itdojp/books/github-workflow-ai"
     }
   },
   "deployment": {
-    "publicRepoUrl": "git@github.com:itdojp/github-workflow-book-public.git",
-    "publicRepoDir": "/tmp/github-workflow-book-public",
-    "branch": "gh-pages",
-    "siteUrl": "https://itdojp.github.io/github-workflow-book-public/",
-    "actionsUrl": "https://github.com/itdojp/github-workflow-book-public/actions"
+    "sourceFolder": "docs",
+    "siteUrl": "https://itdojp.github.io/github-workflow-book-private/"
   },
   "contentSections": [
     {

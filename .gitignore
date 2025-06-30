@@ -14,6 +14,8 @@ temp/
 *.backup
 *.bak
 
+# Note: docs/ folder is NOT ignored as it's used for GitHub Pages deployment
+
 # Build metadata
 .build-meta.json
 build-cache/
