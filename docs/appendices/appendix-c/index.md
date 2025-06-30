@@ -1,5 +1,7 @@
 # 付録C：料金プランと機能比較表
 
+{% include navigation.html %}
+
 ## GitHub プラン比較（2025年版）
 
 ### 個人向けプラン
@@ -234,3 +236,5 @@ aws s3 sync models/ s3://my-ml-models/ --storage-class INTELLIGENT_TIERING
 3. **企業利用**: EnterpriseでセキュリティとコンプライアンスMadrid
 
 定期的にプランを見直し、使用状況に応じて最適化することが重要。
+
+{% include navigation.html %}

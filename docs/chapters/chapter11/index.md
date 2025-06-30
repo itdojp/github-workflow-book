@@ -1,5 +1,7 @@
 # 第11章：セキュリティ実践
 
+{% include navigation.html %}
+
 ## 11.1 AI協働時代のSecrets管理
 
 ### AI生成コードを考慮したSecrets管理
@@ -972,3 +974,5 @@ class SecurityMonitor:
 - [ ] Dependabotが有効で適切に設定されている
 - [ ] Security Policyを作成・公開している
 - [ ] インシデント対応プロセスが確立されている
+
+{% include navigation.html %}

@@ -1,5 +1,7 @@
 # 第12章：実践的なワークフロー設計
 
+{% include navigation.html %}
+
 ## 12.1 ケーススタディ：AI協働型モデル開発プロジェクト
 
 本章では、第2章で学んだAI協働パターンを大規模なチーム開発に適用した実例を紹介します。
@@ -1079,3 +1081,5 @@ python train.py --config experiment_config.yaml
 - [ ] 実験ブランチの管理方法を理解している
 - [ ] レビュープロセスを最適化できる
 - [ ] 実験結果のアーカイブと再現ができる
+
+{% include navigation.html %}

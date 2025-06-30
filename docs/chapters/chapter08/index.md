@@ -1,5 +1,7 @@
 # 第8章：GitHub Advanced SecurityとAI統合
 
+{% include navigation.html %}
+
 ## 8.1 AI生成コードのセキュリティ対策
 
 ### AI時代のGitHub Advanced Security
@@ -673,3 +675,5 @@ metrics:
 - [ ] Dependabotの設定を理解している
 - [ ] セキュリティアラートの優先順位付けができる
 - [ ] 自動修正ワークフローを構築できる
+
+{% include navigation.html %}

@@ -1,5 +1,7 @@
 # 第14章：大規模データとモデルの管理
 
+{% include navigation.html %}
+
 ## 14.1 AI協働を考慮したGit LFS設定
 
 ### AI協働時代のGit LFS
@@ -1069,3 +1071,5 @@ class AICollaborativeExperimentTracker:
 - [ ] モデルレジストリを活用できる
 - [ ] データアクセス制御を実装できる
 - [ ] 実験結果を体系的に管理できる
+
+{% include navigation.html %}

@@ -1,5 +1,7 @@
 # 付録A：GitHub用語集
 
+{% include navigation.html %}
+
 ## 基本用語
 
 ### Repository（リポジトリ）
@@ -269,3 +271,5 @@ GitHubで広く使用される軽量マークアップ言語。
 - **UI**: User Interface
 - **URL**: Uniform Resource Locator
 - **YAML**: YAML Ain't Markup Language
+
+{% include navigation.html %}

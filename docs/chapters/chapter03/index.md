@@ -1,5 +1,7 @@
 # 第3章：必須コマンドとAI活用
 
+{% include navigation.html %}
+
 ## 3.1 環境構築とGitの初期設定
 
 ### Gitのインストール
@@ -541,3 +543,5 @@ git config --global core.excludesfile ~/.gitignore_global
 - [ ] ブランチの作成と切り替えができる
 - [ ] コンフリクトの解決方法を理解している
 - [ ] .gitignoreファイルを作成できる
+
+{% include navigation.html %}
