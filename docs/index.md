@@ -1,12 +1,161 @@
 # AI開発のためのGitHubワークフロー実践ガイド
 
+> AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック
+
 ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した開発手法を体系的に解説。AI時代のソフトウェア開発に必要なワークフロー、セキュリティ、ガバナンス、大規模開発の実践的ノウハウを網羅。
 
-## 目次
+## 📚 目次
 
-- [はじめに](introduction/)
-- [第1章](chapters/chapter01/)
+### [はじめに](introduction/)
+
+### 第1部：AI協働時代の基礎編
+
+#### [第1章：GitとGitHubの基本概念](chapters/chapter01/)
+- 1.1 バージョン管理の必要性
+- 1.2 GitとGitHubの違い
+- 1.3 リポジトリの概念
+- 1.4 コミットとは何か
+- 1.5 ブランチの基本
+- 1.6 ローカルとリモートの関係
+
+#### [第2章：AI時代のGitHub協働基礎](chapters/chapter02/)
+- 2.1 なぜAI協働が必要なのか
+- 2.2 AIが理解しやすいIssueの書き方
+- 2.3 AI協働を前提としたPull Request
+- 2.4 AI指示の体系的手法（CLEAR方式）
+- 2.5 チームレベルでのAI協働標準化
+- 2.6 実践的なワークフロー
+- 2.7 継続的な改善
+
+#### [第3章：必須コマンドとAI活用](chapters/chapter03/)
+- 3.1 環境構築とGitの初期設定
+- 3.2 基本コマンド（clone, add, commit, push, pull）とAI支援
+- 3.3 ブランチ操作（checkout, branch, merge）の効率化
+- 3.4 状態確認（status, log, diff）とAI分析
+- 3.5 AIを活用したコンフリクト解決
+- 3.6 .gitignoreの自動生成と最適化
+
+#### [第4章：GitHubでの協働作業入門](chapters/chapter04/)
+- 4.1 実践例：AI支援による機械学習プロジェクト
+- 4.2 ラベルとマイルストーンの活用
+- 4.3 プロジェクトボードでのタスク管理
+- 4.4 AI最適化Issueテンプレートの実装
+
+#### [第5章：GitHubアカウントとリポジトリ管理](chapters/chapter05/)
+- 5.1 個人アカウントの設定
+- 5.2 個人アカウントと組織アカウントの違い
+- 5.3 Public/Privateリポジトリの選択基準
+- 5.4 リポジトリの基本設定
+- 5.5 READMEとライセンスの設定
+
+### 第2部：AIツール活用編
+
+#### [第6章：GitHub Copilotの高度な活用](chapters/chapter06/)
+- 6.1 第2章のCLEAR方式を使ったCopilot活用
+- 6.2 コード生成の効果的な使い方（実践編）
+- 6.3 AIペアプログラミングの発展的テクニック
+- 6.4 高度なプロンプトエンジニアリング
+- 6.5 Copilotの制限事項と対処法
+
+#### [第7章：AI支援によるコードレビュー実践](chapters/chapter07/)
+- 7.1 第2章のPRテンプレートを使った実装
+- 7.2 自動レビューコメントの効果的な活用
+- 7.3 人間のレビューとAIレビューの協働パターン
+- 7.4 セキュリティ脆弱性の自動検出と対応
+- 7.5 AI協働履歴を活用したレビュー効率化
+
+#### [第8章：GitHub Advanced SecurityとAI統合](chapters/chapter08/)
+- 8.1 Code scanningの設定
+- 8.2 Secret scanningの活用
+- 8.3 Dependency reviewの実践
+- 8.4 AI支援による脆弱性修正提案
+- 8.5 セキュリティアラートの管理
+
+### 第3部：セキュリティと権限管理編
+
+#### [第9章：アクセス権限の体系](chapters/chapter09/)
+- 9.1 リポジトリレベルの権限（Read/Write/Admin）
+- 9.2 ブランチ保護ルールの設定
+- 9.3 CODEOWNERSによる承認フロー
+- 9.4 Required reviewersの設定
+- 9.5 権限の継承と上書き
+
+#### [第10章：組織管理とチーム運用](chapters/chapter10/)
+- 10.1 Organizationの作成と初期設定
+- 10.2 Team構造の設計と権限継承
+- 10.3 Outside Collaboratorの管理
+- 10.4 SAML SSOとの連携
+- 10.5 監査ログの活用
+
+#### [第11章：セキュリティ実践](chapters/chapter11/)
+- 11.1 Secrets管理の基本
+- 11.2 Environment設定と環境変数
+- 11.3 Dependabotによる脆弱性対策
+- 11.4 Security Policyの設定
+- 11.5 セキュリティインシデント対応
+
+### 第4部：実践編（チーム開発）
+
+#### [第12章：実践的なワークフロー設計](chapters/chapter12/)
+- 12.1 ケーススタディ：AI協働型モデル開発プロジェクト
+- 12.2 実験ブランチとメインラインの管理
+- 12.3 AI協働を考慮したリリース戦略
+
+#### [第13章：CI/CDパイプライン構築](chapters/chapter13/)
+- 13.1 GitHub Actionsの基本構造とAI活用
+- 13.2 AIモデル学習の自動化パイプライン
+- 13.3 第2章の品質ゲート実装
+- 13.4 AI協働による効率的なワークフロー作成
+- 13.5 継続的改善サイクルの実装
+
+#### [第14章：大規模データとモデルの管理](chapters/chapter14/)
+- 14.1 Git LFSの基本設定
+- 14.2 DVC（Data Version Control）との連携
+- 14.3 モデルレジストリの構築
+- 14.4 アクセス制御を考慮したデータ管理
+- 14.5 実験結果の追跡と管理
+
+#### [第15章：GitHub Pagesでのプロジェクト公開](chapters/chapter15/)
+- 15.1 GitHub Pagesの基本設定
+- 15.2 ML/AIプロジェクトのデモページ作成
+- 15.3 ドキュメントサイトの構築
+- 15.4 実験結果の可視化と公開
+- 15.5 自動デプロイとメンテナンス
+
+### 第5部：発展編（エンタープライズ対応）
+
+#### [第16章：外部協力者との連携](chapters/chapter16/)
+- 16.1 Fork & Pull Requestモデル
+- 16.2 コントリビューターライセンス契約（CLA）
+- 16.3 外部貢献者の権限管理
+- 16.4 コントリビューションガイドラインの作成
+- 16.5 オープンソースプロジェクトの運営
+
+#### [第17章：コンプライアンスとガバナンス](chapters/chapter17/)
+- 17.1 ライセンス管理の基本
+- 17.2 Export Control対応
+- 17.3 AIツール利用時の知的財産権配慮
+- 17.4 監査要件への対応
+- 17.5 ポリシー違反の検出と対応
+
+### 付録
+
+#### [付録A：GitHub用語集](appendices/appendix-a/)
+#### [付録B：トラブルシューティングガイド](appendices/appendix-b/)
+#### [付録C：料金プランと機能比較表](appendices/appendix-c/)
+#### [付録D：AIツールのコスト計算例](appendices/appendix-d/)
+#### [付録E：便利なGitエイリアス集](appendices/appendix-e/)
+#### [付録F：推奨VS Code拡張機能](appendices/appendix-f/)
+#### [付録G：参考資料](appendices/appendix-g/)
 
 ---
 
-Built with Book Publishing Template
+## 📖 書籍について
+
+**著者**: 太田和彦（株式会社アイティードゥ）  
+**ライセンス**: MIT License  
+**リポジトリ**: [GitHub](https://github.com/itdojp/github-workflow-book-private)
+
+---
+
+*Built with [Book Publishing Template v2.0](https://github.com/itdojp/book-publishing-template2)*

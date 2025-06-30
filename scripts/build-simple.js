@@ -185,6 +185,19 @@ class SimpleBuild {
   }
 
   async generateIndex(publicDir) {
+    const indexPath = path.join(publicDir, 'index.md');
+    
+    // Check if index.md already exists and has substantial content
+    try {
+      const existingContent = await fs.readFile(indexPath, 'utf-8');
+      if (existingContent.length > 200) {
+        this.log('既存のインデックスページを保持しました');
+        return;
+      }
+    } catch {
+      // File doesn't exist, continue with generation
+    }
+
     const indexContent = `# ${this.config.book?.title || 'Book Title'}
 
 ${this.config.book?.description || 'Book description'}
@@ -199,7 +212,7 @@ ${this.config.book?.description || 'Book description'}
 Built with Book Publishing Template
 `;
 
-    await fs.writeFile(path.join(publicDir, 'index.md'), indexContent);
+    await fs.writeFile(indexPath, indexContent);
     this.log('インデックスページを生成しました');
   }
 
@@ -247,7 +260,8 @@ exclude:
       
       await this.processContentSections(srcDir, publicDir);
       await this.copyAssets(srcDir, publicDir);
-      await this.generateIndex(publicDir);
+      // Skip auto-generation of index.md to preserve custom index
+      // await this.generateIndex(publicDir);
       await this.copyJekyllConfig(publicDir);
       
       console.log('\n' + colors.green('✅ ビルド完了!'));
