@@ -57,9 +57,23 @@ class SimpleBuild {
 
   async createPublicDirectory() {
     const publicDir = path.join(process.cwd(), 'docs');
+    const indexPath = path.join(publicDir, 'index.md');
+    let indexBackup = null;
     
     try {
       await fs.access(publicDir);
+      
+      // Backup index.md if it exists and has substantial content
+      try {
+        const indexContent = await fs.readFile(indexPath, 'utf-8');
+        if (indexContent.length > 200) {
+          indexBackup = indexContent;
+          this.log('index.mdをバックアップしました');
+        }
+      } catch {
+        // index.md doesn't exist, continue
+      }
+      
       // Clean existing directory
       await fs.rm(publicDir, { recursive: true, force: true });
     } catch {
@@ -67,6 +81,13 @@ class SimpleBuild {
     }
     
     await fs.mkdir(publicDir, { recursive: true });
+    
+    // Restore index.md if we had a backup
+    if (indexBackup) {
+      await fs.writeFile(indexPath, indexBackup, 'utf-8');
+      this.log('index.mdを復元しました');
+    }
+    
     this.log('公開ディレクトリを準備しました');
     return publicDir;
   }
