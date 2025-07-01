@@ -246,27 +246,44 @@ Built with Book Publishing Template
       await fs.copyFile(configPath, destPath);
       this.log('Jekyll設定をコピーしました');
     } catch {
-      // Generate default Jekyll config
+      // Generate v3.0 Jekyll config with custom layout
       const defaultConfig = `title: "${this.config.book?.title || 'My Book'}"
 description: "${this.config.book?.description || 'Book description'}"
+author: "${this.config.book?.author?.name || 'Author'}"
 baseurl: ""
 url: ""
 
+# v3.0 Design System Configuration
 markdown: kramdown
 highlighter: rouge
-theme: minima
+
+# Use custom book layout as default
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "book"
 
 plugins:
   - jekyll-feed
 
+# Repository information for edit links
+repository:
+  github: ""
+
 exclude:
   - node_modules/
   - scripts/
+  - templates/
+  - src/
   - package*.json
   - README.md
+  - "*.tmp"
+  - Gemfile*
 `;
       await fs.writeFile(destPath, defaultConfig);
-      this.log('デフォルトJekyll設定を生成しました');
+      this.log('v3.0 Jekyll設定を生成しました');
     }
   }
 
@@ -353,18 +370,75 @@ ${navigationData.appendices.map(ap => `  - title: "${ap.title}"
     this.log('ナビゲーションデータを生成しました');
   }
 
-  async copyNavigationTemplates(publicDir) {
-    // Copy navigation include file
+  async copyV3DesignSystem(publicDir) {
+    const templatesDir = path.join(__dirname, '..', 'templates');
+    
+    // Copy CSS files
+    const assetsDir = path.join(publicDir, 'assets');
+    const cssDir = path.join(assetsDir, 'css');
+    const jsDir = path.join(assetsDir, 'js');
+    
+    await fs.mkdir(cssDir, { recursive: true });
+    await fs.mkdir(jsDir, { recursive: true });
+    
+    // Copy CSS files
+    const cssFiles = ['main.css', 'syntax-highlighting.css'];
+    for (const cssFile of cssFiles) {
+      try {
+        const cssPath = path.join(templatesDir, 'styles', cssFile);
+        await fs.copyFile(cssPath, path.join(cssDir, cssFile));
+      } catch {
+        this.log(`${cssFile}が見つかりません`, 'warning');
+      }
+    }
+    this.log('CSSファイルをコピーしました');
+    
+    // Copy JavaScript files
+    const jsFiles = ['theme.js', 'sidebar.js', 'code-copy.js'];
+    for (const jsFile of jsFiles) {
+      try {
+        const jsPath = path.join(templatesDir, 'js', jsFile);
+        await fs.copyFile(jsPath, path.join(jsDir, jsFile));
+      } catch {
+        this.log(`${jsFile}が見つかりません`, 'warning');
+      }
+    }
+    this.log('JavaScriptファイルをコピーしました');
+    
+    // Copy layout files
+    const layoutsDir = path.join(publicDir, '_layouts');
+    await fs.mkdir(layoutsDir, { recursive: true });
+    
+    try {
+      const bookLayoutPath = path.join(templatesDir, 'layouts', 'book.html');
+      await fs.copyFile(bookLayoutPath, path.join(layoutsDir, 'book.html'));
+      this.log('書籍レイアウトをコピーしました');
+    } catch {
+      this.log('書籍レイアウトが見つかりません', 'warning');
+    }
+    
+    // Copy include files
     const includesDir = path.join(publicDir, '_includes');
     await fs.mkdir(includesDir, { recursive: true });
     
-    const navigationTemplatePath = path.join(__dirname, '..', 'templates', 'navigation', 'navigation.html');
+    const includeFiles = ['sidebar-nav.html', 'breadcrumb.html', 'page-navigation.html'];
+    for (const includeFile of includeFiles) {
+      try {
+        const includePath = path.join(templatesDir, 'includes', includeFile);
+        await fs.copyFile(includePath, path.join(includesDir, includeFile));
+      } catch {
+        this.log(`${includeFile}が見つかりません`, 'warning');
+      }
+    }
+    this.log('Includeファイルをコピーしました');
+    
+    // Copy legacy navigation for backward compatibility
     try {
-      await fs.access(navigationTemplatePath);
+      const navigationTemplatePath = path.join(templatesDir, 'navigation', 'navigation.html');
       await fs.copyFile(navigationTemplatePath, path.join(includesDir, 'navigation.html'));
-      this.log('ナビゲーションテンプレートをコピーしました');
+      this.log('レガシーナビゲーションをコピーしました');
     } catch {
-      this.log('ナビゲーションテンプレートが見つかりません', 'warning');
+      // Legacy navigation is optional
     }
   }
 
@@ -444,9 +518,9 @@ ${navigationData.appendices.map(ap => `  - title: "${ap.title}"
       await this.generateIndex(publicDir);
       await this.copyJekyllConfig(publicDir);
       
-      // Generate navigation
+      // Deploy v3.0 Design System
+      await this.copyV3DesignSystem(publicDir);
       await this.generateNavigationData(srcDir, publicDir);
-      await this.copyNavigationTemplates(publicDir);
       await this.addNavigationToMarkdownFiles(publicDir);
       
       console.log('\n' + colors.green('✅ ビルド完了!'));

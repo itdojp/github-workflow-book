@@ -12,13 +12,13 @@
     },
     "license": "MIT License",
     "repository": {
-      "url": "https://github.com/itdojp/github-workflow-book-private",
+      "url": "https://github.com/itdojp/github-workflow-book",
       "zenn": "https://zenn.dev/itdojp/books/github-workflow-ai"
     }
   },
   "deployment": {
     "sourceFolder": "docs",
-    "siteUrl": "https://itdojp.github.io/github-workflow-book-private/"
+    "siteUrl": "https://itdojp.github.io/github-workflow-book/"
   },
   "contentSections": [
     {
@@ -173,5 +173,15 @@
     "enableTextlint": true,
     "enableZennFormat": true,
     "techTermConsistency": true
+  },
+  "build": {
+    "outputDirectory": "docs",
+    "enableV3DesignSystem": true,
+    "enableNavigation": true,
+    "enableSyntaxHighlighting": true,
+    "enableSearchIndex": false,
+    "enablePWA": false,
+    "minifyCSS": false,
+    "minifyJS": false
   }
 }

@@ -1,88 +1,49 @@
 {
-  "name": "github-workflow-book",
-  "version": "1.0.0",
-  "description": "AI開発のためのGitHubワークフロー実践ガイド - AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック",
-  "author": "ITDO Inc. (株式会社アイティードゥ) 太田和彦 <knowledge@itdo.jp>",
+  "name": "book-publishing-template-improved",
+  "version": "2.0.0",
+  "description": "Improved Book Publishing Template with Easy Setup",
+  "author": "Book Publishing Template Contributors",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "setup": "node easy-setup.js",
     "build": "node scripts/build-simple.js",
-    "preview": "npm run build && npx http-server docs -p 8080",
-    "clean": "rm -rf docs",
-    "clean:all": "rm -rf docs node_modules",
-    "legacy:build": "node scripts/build.js",
-    "legacy:build:incremental": "node scripts/build-incremental.js",
-    "legacy:preview": "npm run legacy:build && npx http-server public -p 8080",
-    "lint": "markdownlint '**/*.md' --ignore node_modules --ignore public --ignore output",
-    "spell": "cspell 'src/**/*.md' 'chapter-*.md' 'appendix-*.md'",
-    "link-check": "find . -name '*.md' -not -path './node_modules/*' -not -path './public/*' -not -path './output/*' -exec markdown-link-check {} \\;",
-    "textlint": "textlint 'chapter-*.md' 'appendix-*.md'",
-    "validate": "node scripts/content-validator-enhanced.js",
-    "validate:fix": "node scripts/content-validator-enhanced.js --fix",
-    "validate:report": "node scripts/content-validator-enhanced.js --report",
-    "validate:legacy": "node scripts/validate-content.js",
-    "test": "npm run lint && npm run spell && npm run link-check && npm run validate",
-    "test:report": "node scripts/validate-content.js --report",
-    "test:image-optimization": "node tests/test-image-optimization.js",
-    "setup-token": "node scripts/setup-token.js",
-    "validate-token": "node scripts/validate-token.js",
-    "meta:status": "node scripts/meta-manager.js status",
-    "meta:analyze": "node scripts/meta-manager.js analyze",
-    "meta:cleanup": "node scripts/meta-manager.js cleanup",
-    "meta:reset": "node scripts/meta-manager.js reset",
-    "meta:export": "node scripts/meta-manager.js export",
-    "meta:report": "node scripts/meta-manager.js report",
-    "version:create": "node scripts/version-manager.js create",
-    "version:list": "node scripts/version-manager.js list",
-    "version:current": "node scripts/version-manager.js current",
-    "version:info": "node scripts/version-manager.js info",
-    "compare-versions": "node scripts/version-compare.js",
-    "release-notes": "node scripts/release-notes.js",
-    "release-notes:all": "node scripts/release-notes.js all",
-    "release-notes:latest": "node scripts/release-notes.js latest",
-    "python:build": "cd scripts && python build_book.py",
-    "python:publish": "cd scripts && python publication_manager.py",
-    "python:validate": "cd scripts && python validate_links.py",
-    "python:metrics": "cd scripts && python ai_metrics_calculator.py",
-    "check:all": "npm run lint && npm run spell && npm run link-check && npm run validate",
-    "check:markdown": "npm run lint",
-    "check:markdown:fix": "npm run lint -- --fix",
-    "check:spelling": "npm run spell",
-    "check:links": "npm run link-check",
-    "publish:zenn": "node scripts/publish-to-zenn.js",
-    "python:adapter": "node scripts/python-build-adapter.js"
+    "build:full": "node scripts/build.js",
+    "preview": "npm run build && npx http-server public -p 8080 --silent",
+    "deploy": "bash scripts/deploy.sh",
+    "clean": "rm -rf public output temp",
+    "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
+    "test:light": "npm run lint:light && npm run build",
+    "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'"
   },
   "dependencies": {
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.3.0",
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
     "http-server": "^14.1.1",
-    "markdownlint-cli": "^0.33.0",
-    "markdown-link-check": "^3.11.2",
-    "textlint": "^12.6.1",
-    "textlint-rule-preset-ja-technical-writing": "^7.0.0",
-    "textlint-filter-rule-comments": "^1.2.2",
-    "textlint-filter-rule-allowlist": "^4.0.0",
-    "cspell": "^6.31.1"
-  },
-  "legacyDependencies": {
-    "chokidar": "^3.5.3",
-    "glob": "^8.0.3",
-    "ws": "^8.16.0",
-    "sharp": "^0.34.2",
-    "puppeteer": "^21.0.0",
-    "marked": "^9.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-node": "^29.7.0",
-    "axe-core": "^4.8.3",
-    "@testing-library/jest-dom": "^6.1.5"
+    "markdownlint-cli": "^0.33.0"
   },
   "optionalDependencies": {
-    "epub-gen": "^0.1.0"
+    "puppeteer": "^21.0.0",
+    "sharp": "^0.34.2"
   },
+  "keywords": [
+    "book",
+    "publishing",
+    "markdown",
+    "github-pages",
+    "template",
+    "easy-setup"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itdojp/github-workflow-book-private.git"
-  }
+    "url": "git+https://github.com/itdojp/book-publishing-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/itdojp/book-publishing-template/issues"
+  },
+  "homepage": "https://github.com/itdojp/book-publishing-template#readme"
 }

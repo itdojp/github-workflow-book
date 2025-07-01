@@ -5,12 +5,12 @@ author:
   name: ITDO Inc. (株式会社アイティードゥ) 太田和彦
   github: itdojp
   email: knowledge@itdo.jp
-baseurl: "/github-workflow-book-private"
+baseurl: "/github-workflow-book"
 url: "https://itdojp.github.io"
 
 # Repository settings for links
 repository:
-  github: itdojp/github-workflow-book-private
+  github: itdojp/github-workflow-book
   zenn: books/github-workflow-ai
 
 # テーマ
@@ -34,8 +34,8 @@ google_analytics:
 
 # GitHub metadata
 github:
-  repository_name: github-workflow-book-private
-  repository_url: https://github.com/itdojp/github-workflow-book-private
+  repository_name: github-workflow-book
+  repository_url: https://github.com/itdojp/github-workflow-book
 
 # その他の設定
 show_downloads: false
