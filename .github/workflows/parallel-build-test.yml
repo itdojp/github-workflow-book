@@ -89,7 +89,7 @@ jobs:
           mv chunk-* chunks/
       
       - name: Upload chunk definitions
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-chunks
           path: chunks/
@@ -115,7 +115,7 @@ jobs:
           cache: 'npm'
       
       - name: Download chunk definitions
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-chunks
           path: chunks/
@@ -176,7 +176,7 @@ jobs:
           EOF
       
       - name: Upload chunk output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-output-chunk-${{ matrix.chunk }}
           path: |
@@ -193,7 +193,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Download all chunks
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           pattern: build-output-chunk-*
           path: chunks-output/
@@ -249,7 +249,7 @@ jobs:
           echo "| **Parallel Speedup** | **$(( TOTAL_DURATION / AVG_DURATION ))x** |" >> $GITHUB_STEP_SUMMARY
       
       - name: Upload final build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: final-build-output
           path: public/
