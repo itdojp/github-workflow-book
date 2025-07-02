@@ -15,11 +15,11 @@ repository:
 
 # テーマ
 # remote_theme: pages-themes/minimal@v0.2.0  # v3.0ではカスタムレイアウトを使用
-plugins:
+# plugins:
   # - jekyll-remote-theme  # v3.0ではカスタムレイアウトを使用
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-seo-tag
+  # - jekyll-feed
+  # - jekyll-sitemap
+  # - jekyll-seo-tag
 
 # 言語設定
 lang: ja

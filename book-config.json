@@ -49,7 +49,7 @@
       "name": "afterword",
       "title": "あとがき",
       "directory": "afterword",
-      "enabled": false,
+      "enabled": true,
       "order": 4
     }
   ],

@@ -46,7 +46,9 @@ class SimpleBuild {
         book: { title: 'My Book', author: { name: 'Author' } },
         contentSections: [
           { name: 'introduction', directory: 'introduction', enabled: true, order: 1 },
-          { name: 'chapters', directory: 'chapters', enabled: true, order: 2 }
+          { name: 'chapters', directory: 'chapters', enabled: true, order: 2 },
+          { name: 'appendices', directory: 'appendices', enabled: true, order: 3 },
+          { name: 'afterword', directory: 'afterword', enabled: true, order: 4 }
         ],
         excludePatterns: ['draft.md', '*.tmp'],
         contentExcludePatterns: ['<!-- PRIVATE:', '<!-- TODO:']
@@ -118,7 +120,8 @@ class SimpleBuild {
         const destFile = path.join(destPath, entry.name);
         
         if (entry.isDirectory()) {
-          await this.processSection(srcFile, destFile, section);
+          // Recursively process subdirectories
+          await this.processDirectory(srcFile, destFile);
         } else if (entry.isFile() && this.shouldIncludeFile(entry.name)) {
           if (entry.name.endsWith('.md')) {
             await this.processMarkdownFile(srcFile, destFile);
@@ -135,6 +138,27 @@ class SimpleBuild {
         this.log(`${section.directory} ディレクトリが見つかりません`, 'warning');
       } else {
         throw error;
+      }
+    }
+  }
+
+  async processDirectory(srcPath, destPath) {
+    await fs.mkdir(destPath, { recursive: true });
+    const entries = await fs.readdir(srcPath, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const srcFile = path.join(srcPath, entry.name);
+      const destFile = path.join(destPath, entry.name);
+      
+      if (entry.isDirectory()) {
+        await this.processDirectory(srcFile, destFile);
+      } else if (entry.isFile() && this.shouldIncludeFile(entry.name)) {
+        if (entry.name.endsWith('.md')) {
+          await this.processMarkdownFile(srcFile, destFile);
+        } else {
+          await this.copyFile(srcFile, destFile);
+        }
+        this.processedFiles++;
       }
     }
   }
@@ -265,8 +289,8 @@ defaults:
     values:
       layout: "book"
 
-plugins:
-  - jekyll-feed
+# plugins:
+#   - jekyll-feed
 
 # Repository information for edit links
 repository:
@@ -284,6 +308,16 @@ exclude:
 `;
       await fs.writeFile(destPath, defaultConfig);
       this.log('v3.0 Jekyll設定を生成しました');
+    }
+    
+    // Copy Gemfile for GitHub Pages compatibility
+    const gemfilePath = path.join(__dirname, '..', 'templates', 'Gemfile');
+    const destGemfilePath = path.join(publicDir, 'Gemfile');
+    try {
+      await fs.copyFile(gemfilePath, destGemfilePath);
+      this.log('Gemfileをコピーしました');
+    } catch {
+      this.log('Gemfileが見つかりません', 'warning');
     }
   }
 
