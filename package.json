@@ -4,6 +4,10 @@
   "description": "Improved Book Publishing Template with Easy Setup",
   "author": "Book Publishing Template Contributors",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itdojp/github-workflow-book.git"
+  },
   "engines": {
     "node": ">=18.0.0"
   },

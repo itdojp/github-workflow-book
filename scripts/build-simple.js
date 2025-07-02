@@ -271,11 +271,32 @@ Built with Book Publishing Template
       this.log('Jekyll設定をコピーしました');
     } catch {
       // Generate v3.0 Jekyll config with custom layout
+      // Extract repository info from package.json or git if available
+      let repoName = '';
+      let userName = '';
+      try {
+        const packageJson = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json'), 'utf-8'));
+        if (packageJson.repository?.url) {
+          const match = packageJson.repository.url.match(/github\.com[/:](.*?)\/(.+?)(?:\.git)?$/);
+          if (match) {
+            userName = match[1];
+            repoName = match[2];
+          }
+        }
+      } catch {
+        // Fallback to directory name
+        repoName = path.basename(process.cwd());
+      }
+
+      const baseurl = repoName ? `/${repoName}` : '';
+      const url = userName ? `https://${userName}.github.io` : '';
+      const githubRepo = (userName && repoName) ? `${userName}/${repoName}` : '';
+
       const defaultConfig = `title: "${this.config.book?.title || 'My Book'}"
 description: "${this.config.book?.description || 'Book description'}"
 author: "${this.config.book?.author?.name || 'Author'}"
-baseurl: ""
-url: ""
+baseurl: "${baseurl}"
+url: "${url}"
 
 # v3.0 Design System Configuration
 markdown: kramdown
@@ -294,7 +315,7 @@ defaults:
 
 # Repository information for edit links
 repository:
-  github: ""
+  github: "${githubRepo}"
 
 exclude:
   - node_modules/
