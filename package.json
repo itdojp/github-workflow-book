@@ -42,12 +42,8 @@
     "template",
     "easy-setup"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/itdojp/book-publishing-template.git"
-  },
   "bugs": {
-    "url": "https://github.com/itdojp/book-publishing-template/issues"
+    "url": "https://github.com/itdojp/github-workflow-book/issues"
   },
-  "homepage": "https://github.com/itdojp/book-publishing-template#readme"
+  "homepage": "https://github.com/itdojp/github-workflow-book#readme"
 }

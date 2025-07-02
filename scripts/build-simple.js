@@ -284,9 +284,30 @@ Built with Book Publishing Template
           }
         }
       } catch {
-        // Fallback to directory name
+        // No package.json found
+      }
+      
+      // Try git remote as another source
+      if (!repoName) {
+        try {
+          const { execSync } = require('child_process');
+          const gitRemote = execSync('git remote get-url origin', { encoding: 'utf8' }).trim();
+          const match = gitRemote.match(/github\.com[/:](.*?)\/(.+?)(?:\.git)?$/);
+          if (match) {
+            userName = match[1];
+            repoName = match[2];
+          }
+        } catch {
+          // Git not available or no remote
+        }
+      }
+      
+      // Fallback to directory name if not found in package.json or git
+      if (!repoName) {
         repoName = path.basename(process.cwd());
       }
+      
+      this.log(`Repository detection: user=${userName}, repo=${repoName}`);
 
       const baseurl = repoName ? `/${repoName}` : '';
       const url = userName ? `https://${userName}.github.io` : '';
