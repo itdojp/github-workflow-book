@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第15章：GitHub Pagesでのプロジェクト公開"
+---
+
 # 第15章：GitHub Pagesでのプロジェクト公開
 
 ## 15.1 GitHub Pagesの基本設定

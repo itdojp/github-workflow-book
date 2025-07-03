@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第8章：GitHub Advanced SecurityとAI統合"
+---
+
 # 第8章：GitHub Advanced SecurityとAI統合
 
 ## 8.1 AI生成コードのセキュリティ対策

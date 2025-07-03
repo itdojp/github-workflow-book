@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第13章：CI/CDパイプライン構築"
+---
+
 # 第13章：CI/CDパイプライン構築
 
 ## 13.1 GitHub Actionsの基本構造とAI活用

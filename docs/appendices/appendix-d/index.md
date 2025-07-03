@@ -1,3 +1,8 @@
+---
+layout: book
+title: "付録D：AIツールのコスト計算例"
+---
+
 # 付録D：AIツールのコスト計算例
 
 ## GitHub Copilot コスト分析

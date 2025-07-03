@@ -188,6 +188,20 @@ class SimpleBuild {
       content = content.replace(regex, '');
     }
     
+    // Add Jekyll Front Matter if not present
+    if (!content.trimStart().startsWith('---')) {
+      const titleMatch = content.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : 'Page';
+      
+      const frontMatter = `---
+layout: book
+title: "${title}"
+---
+
+`;
+      content = frontMatter + content;
+    }
+    
     await fs.writeFile(destPath, content, 'utf-8');
   }
 
@@ -365,9 +379,30 @@ exclude:
 
   async generateNavigationData(srcDir, publicDir) {
     const navigationData = {
+      introduction: [],
       chapters: [],
-      appendices: []
+      appendices: [],
+      afterword: []
     };
+
+    // Process introduction (only if enabled)
+    const introductionSection = this.config.contentSections.find(s => s.name === 'introduction');
+    if (introductionSection && introductionSection.enabled) {
+      const introductionPath = path.join(srcDir, 'introduction');
+      try {
+        const indexPath = path.join(introductionPath, 'index.md');
+        const content = await fs.readFile(indexPath, 'utf-8');
+        const titleMatch = content.match(/^#\s+(.+)$/m);
+        const title = titleMatch ? titleMatch[1] : 'はじめに';
+        
+        navigationData.introduction.push({
+          title: title,
+          path: '/introduction/'
+        });
+      } catch {
+        this.log('はじめにのindex.mdが見つかりません', 'warning');
+      }
+    }
 
     // Process chapters
     const chaptersPath = path.join(srcDir, 'chapters');
@@ -400,31 +435,53 @@ exclude:
       this.log('章ディレクトリが見つかりません', 'warning');
     }
 
-    // Process appendices
-    const appendicesPath = path.join(srcDir, 'appendices');
-    try {
-      const appendices = await fs.readdir(appendicesPath, { withFileTypes: true });
-      const sortedAppendices = appendices
-        .filter(d => d.isDirectory())
-        .sort((a, b) => a.name.localeCompare(b.name));
+    // Process appendices (only if enabled)
+    const appendicesSection = this.config.contentSections.find(s => s.name === 'appendices');
+    if (appendicesSection && appendicesSection.enabled) {
+      const appendicesPath = path.join(srcDir, 'appendices');
+      try {
+        const appendices = await fs.readdir(appendicesPath, { withFileTypes: true });
+        const sortedAppendices = appendices
+          .filter(d => d.isDirectory())
+          .sort((a, b) => a.name.localeCompare(b.name));
 
-      for (const appendix of sortedAppendices) {
-        const indexPath = path.join(appendicesPath, appendix.name, 'index.md');
-        try {
-          const content = await fs.readFile(indexPath, 'utf-8');
-          const titleMatch = content.match(/^#\s+(.+)$/m);
-          const title = titleMatch ? titleMatch[1] : `付録${appendix.name.replace('appendix-', '').toUpperCase()}`;
-          
-          navigationData.appendices.push({
-            title: title,
-            path: `/appendices/${appendix.name}/`
-          });
-        } catch {
-          // Skip if index.md doesn't exist
+        for (const appendix of sortedAppendices) {
+          const indexPath = path.join(appendicesPath, appendix.name, 'index.md');
+          try {
+            const content = await fs.readFile(indexPath, 'utf-8');
+            const titleMatch = content.match(/^#\s+(.+)$/m);
+            const title = titleMatch ? titleMatch[1] : `付録${appendix.name.replace('appendix-', '').toUpperCase()}`;
+            
+            navigationData.appendices.push({
+              title: title,
+              path: `/appendices/${appendix.name}/`
+            });
+          } catch {
+            // Skip if index.md doesn't exist
+          }
         }
+      } catch {
+        this.log('付録ディレクトリが見つかりません', 'warning');
       }
-    } catch {
-      this.log('付録ディレクトリが見つかりません', 'warning');
+    }
+
+    // Process afterword (only if enabled)
+    const afterwordSection = this.config.contentSections.find(s => s.name === 'afterword');
+    if (afterwordSection && afterwordSection.enabled) {
+      const afterwordPath = path.join(srcDir, 'afterword');
+      try {
+        const indexPath = path.join(afterwordPath, 'index.md');
+        const content = await fs.readFile(indexPath, 'utf-8');
+        const titleMatch = content.match(/^#\s+(.+)$/m);
+        const title = titleMatch ? titleMatch[1] : 'あとがき';
+        
+        navigationData.afterword.push({
+          title: title,
+          path: '/afterword/'
+        });
+      } catch {
+        this.log('あとがきのindex.mdが見つかりません', 'warning');
+      }
     }
 
     // Write navigation data
@@ -433,6 +490,10 @@ exclude:
     await fs.writeFile(
       path.join(dataDir, 'navigation.yml'),
       `# Auto-generated navigation data
+introduction:
+${navigationData.introduction.map(intro => `  - title: "${intro.title}"
+    path: "${intro.path}"`).join('\n')}
+
 chapters:
 ${navigationData.chapters.map(ch => `  - title: "${ch.title}"
     path: "${ch.path}"`).join('\n')}
@@ -440,6 +501,10 @@ ${navigationData.chapters.map(ch => `  - title: "${ch.title}"
 appendices:
 ${navigationData.appendices.map(ap => `  - title: "${ap.title}"
     path: "${ap.path}"`).join('\n')}
+
+afterword:
+${navigationData.afterword.map(after => `  - title: "${after.title}"
+    path: "${after.path}"`).join('\n')}
 `
     );
     

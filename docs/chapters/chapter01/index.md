@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第1章：GitとGitHubの基本概念"
+---
+
 # 第1章：GitとGitHubの基本概念
 
 ## 1.1 バージョン管理の必要性

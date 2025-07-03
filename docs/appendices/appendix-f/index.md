@@ -1,3 +1,8 @@
+---
+layout: book
+title: "付録F：推奨VS Code拡張機能"
+---
+
 # 付録F：推奨VS Code拡張機能
 
 ## Git/GitHub関連

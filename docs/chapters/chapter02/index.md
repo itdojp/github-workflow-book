@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第2章：AI時代のGitHub協働基礎"
+---
+
 # 第2章：AI時代のGitHub協働基礎
 
 ## 2.1 なぜAI協働が必要なのか

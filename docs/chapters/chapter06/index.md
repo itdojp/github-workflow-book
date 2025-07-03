@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第6章：GitHub Copilotの高度な活用"
+---
+
 # 第6章：GitHub Copilotの高度な活用
 
 ## 6.1 第2章のCLEAR方式を使ったCopilot活用

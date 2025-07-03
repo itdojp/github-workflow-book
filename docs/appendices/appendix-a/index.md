@@ -1,3 +1,8 @@
+---
+layout: book
+title: "付録A：GitHub用語集"
+---
+
 # 付録A：GitHub用語集
 
 ## 基本用語

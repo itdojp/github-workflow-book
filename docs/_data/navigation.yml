@@ -1,4 +1,8 @@
 # Auto-generated navigation data
+introduction:
+  - title: "はじめに"
+    path: "/introduction/"
+
 chapters:
   - title: "第1章：GitとGitHubの基本概念"
     path: "/chapters/chapter01/"
@@ -50,3 +54,7 @@ appendices:
     path: "/appendices/appendix-f/"
   - title: "第16章：コンプライアンスとガバナンス"
     path: "/appendices/appendix-g/"
+
+afterword:
+  - title: "あとがき"
+    path: "/afterword/"

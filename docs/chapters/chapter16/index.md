@@ -1,3 +1,8 @@
+---
+layout: book
+title: "第16章：外部協力者との連携"
+---
+
 # 第16章：外部協力者との連携
 
 ## 16.1 Fork & Pull Requestモデル
