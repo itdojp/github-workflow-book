@@ -146,30 +146,30 @@ policies:
 ## 5.3 AI協働を考慮したPublic/Privateリポジトリの選択基準
 
 ### AI協働を含む判断フローチャート
-```
-1. 機密情報を含むか？
-   Yes → Private
-   No → 2へ
 
-2. AI生成コードの知的財産権が懸念されるか？
-   Yes → Private + AI使用ポリシー明記
-   No → 3へ
-
-3. 特許や独自アルゴリズムを含むか？
-   Yes → Private
-   No → 4へ
-
-4. オープンソースとして公開する意図があるか？
-   Yes → Public + AI協働の明示
-   No → 5へ
-
-5. AI協働の学習事例として共有したいか？
-   Yes → Public + AI協働ドキュメント
-   No → 6へ
-
-6. 教育目的やポートフォリオか？
-   Yes → Public
-   No → Private
+```mermaid
+flowchart TD
+    A[リポジトリ作成] --> B{機密情報を含むか？}
+    B -->|Yes| C[Private]
+    B -->|No| D{AI生成コードの<br/>知的財産権が懸念されるか？}
+    D -->|Yes| E[Private + AI使用ポリシー明記]
+    D -->|No| F{特許や独自アルゴリズムを含むか？}
+    F -->|Yes| G[Private]
+    F -->|No| H{オープンソースとして<br/>公開する意図があるか？}
+    H -->|Yes| I[Public + AI協働の明示]
+    H -->|No| J{AI協働の学習事例として<br/>共有したいか？}
+    J -->|Yes| K[Public + AI協働ドキュメント]
+    J -->|No| L{教育目的や<br/>ポートフォリオか？}
+    L -->|Yes| M[Public]
+    L -->|No| N[Private]
+    
+    style C fill:#ffcccc
+    style E fill:#ffcccc
+    style G fill:#ffcccc
+    style N fill:#ffcccc
+    style I fill:#ccffcc
+    style K fill:#ccffcc
+    style M fill:#ccffcc
 ```
 
 ### Publicリポジトリの利点
