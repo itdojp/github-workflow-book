@@ -19,7 +19,7 @@ organization_settings:
   name: "ai-research-lab"
   display_name: "AI Research Laboratory" 
   email: "admin@ai-research-lab.org"
-  description: "AI-Collaborative research and development team"
+  description: "AI-Collaborative research and development team using CLEAR framework"
   url: "https://ai-research-lab.org"
   location: "Tokyo, Japan"
   billing_email: "billing@ai-research-lab.org"
@@ -29,11 +29,13 @@ organization_settings:
     enabled: true
     plan: "business"  # business or enterprise
     
-  # 第2章のフレームワーク適用
+  # 本書で提唱するAI協働フレームワークを適用
   ai_collaboration_policy:
-    framework: "CLEAR"
+    framework: "CLEAR"  # 第2章で定義したフレームワーク
+    framework_description: "Context-Learning-Explanation-Assessment-Reflection"
     templates_required: true
     metrics_tracking: enabled
+    chapter2_integration: true  # 第2章のテンプレートとプロセスを使用
 ```
 
 #### AI協働に最適化されたセキュリティ設定

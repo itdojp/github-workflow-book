@@ -32,7 +32,8 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '30 1 * * 0'  # 毎週日曜日1:30
+    - cron: '30 1 * * 0'  # 毎週日曜日1:30（UTC時間）
+  workflow_dispatch:  # 手動実行にも対応
 
 # AI生成コード特有のセキュリティチェックを追加
 

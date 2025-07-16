@@ -26,7 +26,7 @@ title: "第6章：GitHub Copilotの高度な活用"
 # - データ形式: CSV, 10万行, 50カラム
 # - 目標: 欠損値処理, 正規化, 特徴量選択
 # - 制約: pandas使用, メモリ効率重視
-# - 処理時間: 30秒以内
+# - 性能要件: 効率的なアルゴリズムを使用（最終的に30秒以内での完了を目標）
 
 def preprocess_data(df):
     # Logic: 以下の順序で処理
@@ -378,8 +378,9 @@ require_review:
         "yaml": false,
         "plaintext": false
     },
-    "github.copilot.inlineSuggest.enable": true,
-    "github.copilot.editor.enableAutoCompletions": true,
+    "github.copilot.advanced": {
+        "length": 500
+    },
     "editor.inlineSuggest.enabled": true,
     "editor.suggest.preview": true
 }

@@ -36,40 +36,40 @@ PyTorchを使用し、チーム開発を前提としています。
 チーム開発での利便性を重視してチェックしてください。
 ```
 
-**AI提案のプロジェクト構造**：
+**AI提案のプロジェクト構造**（各ディレクトリの役割詳細）：
 ```
 image-classifier/
-├── src/
-│   ├── data/
+├── src/                      # メインソースコード（パッケージとして配布可能）
+│   ├── data/                 # データ処理関連
 │   │   ├── __init__.py
-│   │   ├── dataset.py        # データセット定義
-│   │   └── transforms.py     # データ前処理
-│   ├── models/
+│   │   ├── dataset.py        # PyTorch Dataset/DataLoader定義
+│   │   └── transforms.py     # データ拡張・正規化処理
+│   ├── models/               # モデルアーキテクチャ定義
 │   │   ├── __init__.py
-│   │   ├── base_model.py     # 基底クラス
-│   │   └── resnet.py         # 具体的なモデル
-│   ├── training/
+│   │   ├── base_model.py     # 共通インターフェース・基底クラス
+│   │   └── resnet.py         # ResNet等の具体的なモデル実装
+│   ├── training/             # 学習・評価ロジック
 │   │   ├── __init__.py
-│   │   ├── trainer.py        # 学習ロジック
-│   │   └── metrics.py        # 評価指標
-│   └── utils/
-│       └── config.py         # 設定管理
-├── tests/                    # テストコード
-├── notebooks/                # 実験用Jupyter
-├── configs/
-│   ├── model/               # モデル設定
-│   ├── training/            # 学習設定
-│   └── data/                # データ設定
-├── scripts/                 # 実行スクリプト
-├── docs/                    # ドキュメント
-├── .github/
-│   ├── workflows/           # CI/CD設定
-│   └── ISSUE_TEMPLATE/      # AI最適化テンプレート
-├── requirements.txt
-├── setup.py                 # パッケージ化対応
-├── README.md               # AI協働ガイド含む
-├── CONTRIBUTING.md         # AI協働ルール
-└── .gitignore
+│   │   ├── trainer.py        # 学習ループ・チェックポイント管理
+│   │   └── metrics.py        # 精度・ロス等の評価指標
+│   └── utils/                # ユーティリティ関数
+│       └── config.py         # ハイパーパラメータ・設定管理
+├── tests/                    # ユニットテスト・統合テスト
+├── notebooks/                # 実験・可視化用Jupyter Notebook
+├── configs/                  # 設定ファイル（YAML/JSON）
+│   ├── model/               # モデル別設定（resnet50.yaml等）
+│   ├── training/            # 学習設定（optimizer, scheduler等）
+│   └── data/                # データセット設定（パス、拡張設定等）
+├── scripts/                 # 実行用スクリプト（train.py, evaluate.py等）
+├── docs/                    # API文書・使用方法（Sphinx等）
+├── .github/                 # GitHub設定
+│   ├── workflows/           # CI/CD設定（テスト・デプロイ自動化）
+│   └── ISSUE_TEMPLATE/      # AI協働最適化されたテンプレート
+├── requirements.txt          # 依存パッケージ（pip install用）
+├── setup.py                 # パッケージ化設定（pip installable）
+├── README.md               # プロジェクト概要・AI協働ガイド
+├── CONTRIBUTING.md         # 貢献ガイド・AI協働ルール
+└── .gitignore              # バージョン管理除外設定
 ```
 
 #### リポジトリの作成

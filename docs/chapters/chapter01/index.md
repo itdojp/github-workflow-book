@@ -76,7 +76,7 @@ my-ai-project/
 ├── .git/              # Gitの管理情報
 ├── src/               # ソースコード
 ├── models/            # 学習済みモデル
-├── data/              # データセット（.gitignoreで除外）
+├── data/              # データセット（.gitignoreで除外、ファイルサイズが大きいため）
 ├── notebooks/         # Jupyter Notebook
 ├── configs/           # 設定ファイル
 └── README.md          # プロジェクト説明
@@ -105,7 +105,11 @@ feat: Add data augmentation for image classification
 fix: Correct learning rate decay calculation
 docs: Update model architecture diagram
 experiment: Test different optimizer configurations
+  - Results logged in experiments/2024-01-15-optimizer-test.json
+  - Best accuracy: 94.2% with AdamW (lr=0.001)
 ```
+
+実験系のコミットでは、結果ファイルへの参照や主要な指標を含めることで、後から実験を追跡しやすくなります。
 
 ## 1.5 ブランチの基本
 
@@ -120,6 +124,7 @@ experiment: Test different optimizer configurations
 
 ### 基本的なブランチ
 - `main`（または`master`）: メインブランチ
+  - 注: 近年は包括性の観点から`main`が推奨されています
 - `develop`: 開発用ブランチ
 - `feature/*`: 機能開発用
 - `experiment/*`: AI実験用
@@ -143,14 +148,17 @@ main
 4. **Push**: ローカルの変更をリモートへ送信
 
 ### 同期の仕組み
-```
-[ローカル]                    [リモート（GitHub）]
-作業ディレクトリ
-    ↓ (add)
-ステージングエリア
-    ↓ (commit)
-ローカルリポジトリ ←─────→ リモートリポジトリ
-                (push/pull)
+
+```mermaid
+graph LR
+    A[作業ディレクトリ] -->|add| B[ステージングエリア]
+    B -->|commit| C[ローカルリポジトリ]
+    C <-->|push/pull| D[リモートリポジトリ<br/>GitHub]
+    
+    style A fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style B fill:#e1f5e1,stroke:#333,stroke-width:2px
+    style C fill:#e1e5f5,stroke:#333,stroke-width:2px
+    style D fill:#ffe1e1,stroke:#333,stroke-width:2px
 ```
 
 ### リモートブランチの追跡
@@ -160,8 +168,15 @@ main
 
 ### AI開発での注意点
 1. **大容量ファイル**: モデルファイルは別管理（Git LFS）
+   - Git LFS (Large File Storage) は大容量ファイルを効率的に管理するGitの拡張機能
+   - 詳細は付録Bで解説
 2. **機密データ**: 学習データはリモートに送信しない
 3. **実験結果**: 必要なものだけを選択してプッシュ
+
+#### データ管理のベストプラクティス
+- **データセット**: `.gitignore`で除外し、別途データ管理システム（DVC、S3等）を使用
+- **モデルファイル**: Git LFSまたはモデルレジストリ（MLflow、Weights & Biases等）で管理
+- **実験ログ**: 軽量なメタデータのみGitで管理、詳細ログは外部システムで管理
 
 ## まとめ
 

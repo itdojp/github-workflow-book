@@ -17,12 +17,6 @@ title: "第13章：CI/CDパイプライン構築"
 # .github/workflows/ai-collaboration-pipeline.yml
 name: AI Collaboration ML Pipeline
 
-# 環境変数
-env:
-  PYTHON_VERSION: '3.9'
-  CUDA_VERSION: '11.8'
-  CACHE_NUMBER: 1  # キャッシュをリセットする場合に増やす
-
 # トリガー条件
 on:
   push:
@@ -52,6 +46,14 @@ jobs:
           # AI生成コード部分の品質チェック
           python scripts/check_ai_code_quality.py
 
+# 環境変数
+env:
+  PYTHON_VERSION: '3.9'
+  CUDA_VERSION: '11.8'
+  CACHE_NUMBER: 1  # キャッシュをリセットする場合に増やす
+
+# ジョブ定義
+jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
