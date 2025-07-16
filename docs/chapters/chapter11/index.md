@@ -501,8 +501,9 @@ from datetime import datetime
 from typing import List, Dict
 
 class VulnerabilityReporter:
-    def __init__(self, github_client):
+    def __init__(self, github_client, github_token=None):
         self.github = github_client
+        self.github_token = github_token
         
     def get_vulnerability_alerts(self, repo_name):
         """脆弱性アラートを取得"""
@@ -539,7 +540,7 @@ class VulnerabilityReporter:
         import requests
         
         headers = {
-            'Authorization': f'token {self.github._Github__requester._Requester__authorizationHeader.split()[1]}',
+            'Authorization': f'token {self.github_token}',
             'Content-Type': 'application/json'
         }
         
