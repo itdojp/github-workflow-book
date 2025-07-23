@@ -47,64 +47,9 @@ AI開発では、以下の要素を管理する必要があります：
   - セキュリティスキャン
 
 ### 関係性
-
-```mermaid
-graph TD
-    subgraph "Git と GitHub の関係性と AI開発フロー"
-        subgraph "ローカル環境 (Git)"
-            WorkDir["作業ディレクトリ<br/>・ソースコード<br/>・設定ファイル<br/>・実験スクリプト"]
-            StagingArea["ステージングエリア<br/>・コミット準備<br/>・変更選択"]
-            LocalRepo["ローカルリポジトリ<br/>・コミット履歴<br/>・ブランチ管理"]
-            
-            WorkDir -->|git add| StagingArea
-            StagingArea -->|git commit| LocalRepo
-        end
-        
-        subgraph "GitHub (リモート)"
-            RemoteRepo["リモートリポジトリ<br/>・チーム共有<br/>・バックアップ<br/>・CI/CD連携"]
-            PullRequest["Pull Request<br/>・コードレビュー<br/>・議論・承認"]
-            Issues["Issues<br/>・バグ報告<br/>・機能要求<br/>・タスク管理"]
-            Actions["GitHub Actions<br/>・自動テスト<br/>・デプロイ<br/>・AI実験実行"]
-        end
-        
-        subgraph "AI開発特有の要素"
-            AIAssets["AI アセット<br/>・学習済みモデル<br/>・データセット<br/>・実験結果"]
-            AIColab["AI協働<br/>・GitHub Copilot<br/>・AI pair programming<br/>・自動コード生成"]
-            MLOps["MLOps<br/>・モデルバージョニング<br/>・実験追跡<br/>・モデルデプロイ"]
-        end
-        
-        subgraph "チーム協働フロー"
-            TeamMember1["開発者A<br/>・機能開発<br/>・モデル実装"]
-            TeamMember2["開発者B<br/>・データ処理<br/>・評価実装"]
-            TeamMember3["AI研究者<br/>・実験設計<br/>・ハイパラ調整"]
-        end
-        
-        LocalRepo -->|git push| RemoteRepo
-        RemoteRepo -->|git pull/fetch| LocalRepo
-        
-        RemoteRepo --> PullRequest
-        RemoteRepo --> Issues
-        RemoteRepo --> Actions
-        
-        AIAssets --> LocalRepo
-        AIColab --> WorkDir
-        Actions --> MLOps
-        
-        TeamMember1 --> LocalRepo
-        TeamMember2 --> LocalRepo
-        TeamMember3 --> LocalRepo
-        
-        PullRequest --> RemoteRepo
-        Issues --> PullRequest
-    end
-    
-    style WorkDir fill:#e3f2fd
-    style RemoteRepo fill:#fff3e0
-    style AIAssets fill:#e8f5e8
-    style TeamMember1 fill:#f3e5f5
-    style PullRequest fill:#ffe0b2
 ```
-
+ローカル（Git） ←→ リモート（GitHub）
+```
 - Gitで管理したコードをGitHubに保存
 - チームメンバーとGitHub経由で共有
 
@@ -185,109 +130,13 @@ experiment: Test different optimizer configurations
 - `experiment/*`: AI実験用
 
 ### AI開発でのブランチ戦略例
-
-```mermaid
-gitgraph
-    commit id: "初期コミット"
-    
-    branch develop
-    checkout develop
-    commit id: "開発環境設定"
-    commit id: "基本フレームワーク"
-    
-    branch feature/data-pipeline
-    checkout feature/data-pipeline
-    commit id: "データローダー実装"
-    commit id: "前処理パイプライン"
-    commit id: "バリデーション追加"
-    
-    checkout develop
-    merge feature/data-pipeline
-    commit id: "データパイプライン統合"
-    
-    branch feature/model-architecture
-    checkout feature/model-architecture
-    commit id: "ベースモデル実装"
-    commit id: "カスタムレイヤー"
-    commit id: "損失関数定義"
-    
-    checkout develop
-    branch experiment/transformer-model
-    checkout experiment/transformer-model
-    commit id: "Transformer実装"
-    commit id: "Attention機構"
-    commit id: "実験結果記録"
-    
-    checkout develop
-    merge feature/model-architecture
-    commit id: "モデル統合"
-    
-    checkout main
-    branch release/v1.0
-    checkout release/v1.0
-    commit id: "リリース準備"
-    commit id: "ドキュメント更新"
-    
-    checkout main
-    merge release/v1.0
-    commit id: "v1.0リリース"
-    
-    checkout develop
-    merge experiment/transformer-model
-    commit id: "実験結果統合"
 ```
-
-```mermaid
-graph TD
-    subgraph "AI開発ブランチ戦略の詳細"
-        subgraph "メインブランチ"
-            Main["main<br/>・本番用<br/>・安定版<br/>・リリースタグ"]
-            Develop["develop<br/>・開発統合<br/>・テスト済み<br/>・次期リリース準備"]
-        end
-        
-        subgraph "機能開発ブランチ"
-            FeatureData["feature/data-pipeline<br/>・データ処理機能<br/>・ETLパイプライン<br/>・データバリデーション"]
-            FeatureModel["feature/model-architecture<br/>・モデル実装<br/>・ネットワーク設計<br/>・レイヤー定義"]
-            FeatureAPI["feature/api-endpoint<br/>・推論API<br/>・REST/GraphQL<br/>・認証機能"]
-        end
-        
-        subgraph "実験ブランチ"
-            ExpTransformer["experiment/transformer-model<br/>・新アーキテクチャ<br/>・ハイパーパラメータ<br/>・性能評価"]
-            ExpOptimizer["experiment/new-optimizer<br/>・最適化手法<br/>・学習率調整<br/>・収束性検証"]
-            ExpAugmentation["experiment/data-augmentation<br/>・データ拡張<br/>・水増し手法<br/>・精度向上"]
-        end
-        
-        subgraph "リリースブランチ"
-            Release["release/v1.0<br/>・リリース準備<br/>・バグ修正のみ<br/>・ドキュメント"]
-        end
-        
-        subgraph "ホットフィックス"
-            Hotfix["hotfix/security-patch<br/>・緊急修正<br/>・セキュリティ<br/>・クリティカルバグ"]
-        end
-        
-        Main --> Release
-        Release --> Main
-        Develop --> Release
-        
-        FeatureData --> Develop
-        FeatureModel --> Develop
-        FeatureAPI --> Develop
-        
-        ExpTransformer -.-> Develop
-        ExpOptimizer -.-> Develop
-        ExpAugmentation -.-> Develop
-        
-        Main --> Hotfix
-        Hotfix --> Main
-        Hotfix --> Develop
-    end
-    
-    style Main fill:#e8f5e8
-    style Develop fill:#fff3e0
-    style FeatureData fill:#e3f2fd
-    style ExpTransformer fill:#f3e5f5
-    style Release fill:#ffe0b2
-    style Hotfix fill:#ffebee
+main
+├── develop
+│   ├── feature/data-pipeline
+│   ├── feature/model-architecture
+│   └── experiment/transformer-model
+└── release/v1.0
 ```
 
 ## 1.6 ローカルとリモートの関係

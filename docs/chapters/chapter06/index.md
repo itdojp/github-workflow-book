@@ -378,6 +378,9 @@ require_review:
         "yaml": false,
         "plaintext": false
     },
+    "github.copilot.advanced": {
+        "length": 500
+    },
     "editor.inlineSuggest.enabled": true,
     "editor.suggest.preview": true
 }
