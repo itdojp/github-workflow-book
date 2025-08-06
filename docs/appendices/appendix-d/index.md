@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 22
 title: "付録D：AIツールのコスト計算例"
 ---
 

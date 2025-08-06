@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 13
 title: "第12章：実践的なワークフロー設計"
 ---
 

@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 21
 title: "付録C：料金プランと機能比較表"
 ---
 

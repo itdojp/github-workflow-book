@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 10
 title: "第9章：アクセス権限の体系"
 ---
 

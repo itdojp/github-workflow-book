@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 3
 title: "第2章：AI時代のGitHub協働基礎"
 ---
 

@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 7
 title: "第6章：GitHub Copilotの高度な活用"
 ---
 
