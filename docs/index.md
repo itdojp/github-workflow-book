@@ -1,3 +1,12 @@
+---
+layout: book
+order: 1
+title: "AI開発のためのGitHubワークフロー実践ガイド"
+author: "株式会社アイティードゥ"
+version: "1.0.0"
+permalink: /
+---
+
 # AI開発のためのGitHubワークフロー実践ガイド
 
 > AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック

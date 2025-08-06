@@ -1,34 +1,39 @@
 title: "AI開発のためのGitHubワークフロー実践ガイド"
 description: "ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した開発手法を体系的に解説。AI時代のソフトウェア開発に必要なワークフロー、セキュリティ、ガバナンス、大規模開発の実践的ノウハウを網羅。"
-author: "太田和彦"
-baseurl: "/github-workflow-book"
-url: "https://itdojp.github.io"
+author: "株式会社アイティードゥ"
+version: "1.0.0"
+lang: "ja"
 
-# v3.0 Design System Configuration
+# Jekyll設定
 markdown: kramdown
 highlighter: rouge
 
-# Use custom book layout as default
-defaults:
-  - scope:
-      path: ""
-      type: "pages"
-    values:
-      layout: "book"
+# プラグイン
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-remote-theme
 
-# plugins:
-#   - jekyll-feed
-
-# Repository information for edit links
-repository:
-  github: "itdojp/github-workflow-book"
-
+# 除外ファイル
 exclude:
   - node_modules/
+  - package.json
+  - package-lock.json
   - scripts/
-  - templates/
-  - src/
-  - package*.json
-  - README.md
-  - "*.tmp"
-  - Gemfile*
+  - tests/
+  - "README.md"
+  - vendor/
+  - .bundle/
+  - Gemfile
+  - Gemfile.lock
+
+# 日本語対応
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  
+# GitHub Pages設定
+url: "https://itdojp.github.io"
+baseurl: "/github-workflow-book"
+repository: "itdojp/github-workflow-book"

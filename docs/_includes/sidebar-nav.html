@@ -1,342 +1,215 @@
-<!-- Sidebar Navigation -->
-<div class="sidebar-header">
-    <div class="sidebar-title">{{ site.title | escape }}</div>
-    {% if site.description %}
-    <div class="sidebar-description">{{ site.description | escape }}</div>
-    {% endif %}
-</div>
-
+<!-- Sidebar Navigation - AI GitHub Workflow Guide -->
 <div class="sidebar-content">
-    <!-- Introduction -->
-    {% if site.data.navigation.introduction %}
-    <div class="nav-section">
-        {% if site.data.navigation.introduction.size == 1 %}
-        <!-- Single introduction - display as direct link -->
-        {% for item in site.data.navigation.introduction %}
-        <a href="{{ site.baseurl }}{{ item.path }}" 
-           class="nav-link nav-single-item{% if page.url contains item.path %} active{% endif %}"
-           aria-current="{% if page.url contains item.path %}page{% endif %}">
-            {{ item.title }}
-        </a>
-        {% endfor %}
-        {% else %}
-        <!-- Multiple introduction items - display with section header -->
-        <h3 class="nav-section-title">はじめに</h3>
-        <ul class="nav-list">
-            {% for item in site.data.navigation.introduction %}
-            <li class="nav-item">
-                <a href="{{ site.baseurl }}{{ item.path }}" 
-                   class="nav-link{% if page.url contains item.path %} active{% endif %}"
-                   aria-current="{% if page.url contains item.path %}page{% endif %}">
-                    {{ item.title }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+    <!-- Book Info -->
+    <div class="book-info">
+        <h2 class="book-title">📚 AI開発のためのGitHubワークフロー実践ガイド</h2>
+        
+        <p class="book-subtitle">AI協働時代に対応した実践的GitHubワークフローガイドブック</p>
+        
     </div>
-    {% endif %}
 
-    <!-- Chapters -->
-    {% if site.data.navigation.chapters %}
-    <div class="nav-section">
-        <h3 class="nav-section-title">章</h3>
-        <ul class="nav-list">
-            {% for chapter in site.data.navigation.chapters %}
-            <li class="nav-item">
-                <a href="{{ site.baseurl }}{{ chapter.path }}" 
-                   class="nav-link{% if page.url contains chapter.path %} active{% endif %}"
-                   aria-current="{% if page.url contains chapter.path %}page{% endif %}">
-                    <span class="nav-number">{{ forloop.index }}</span>
-                    <span class="nav-title">{{ chapter.title }}</span>
-                </a>
-                
-                <!-- Sub-sections if available -->
-                {% if chapter.sections %}
-                <ul class="nav-subsections">
-                    {% for section in chapter.sections %}
-                    <li class="nav-subsection">
-                        <a href="{{ site.baseurl }}{{ section.path }}" 
-                           class="nav-sublink{% if page.url == section.path %} active{% endif %}"
-                           aria-current="{% if page.url == section.path %}page{% endif %}">
-                            {{ section.title }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h3 class="toc-title">目次</h3>
+        
+        <!-- Introduction -->
+        <div class="toc-section">
+            <ul class="toc-list">
+                <li class="toc-item">
+                    <a href="{{ '/' | relative_url }}" class="toc-link {% if page.url == '/' %}active{% endif %}">
+                        🏠 はじめに
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/introduction/' | relative_url }}" class="toc-link {% if page.url contains 'introduction' %}active{% endif %}">
+                        📖 イントロダクション
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-    <!-- Appendices -->
-    {% if site.data.navigation.appendices %}
-    <div class="nav-section">
-        <h3 class="nav-section-title">付録</h3>
-        <ul class="nav-list">
-            {% for appendix in site.data.navigation.appendices %}
-            <li class="nav-item">
-                <a href="{{ site.baseurl }}{{ appendix.path }}" 
-                   class="nav-link{% if page.url contains appendix.path %} active{% endif %}"
-                   aria-current="{% if page.url contains appendix.path %}page{% endif %}">
-                    <span class="nav-number">{{ appendix.title | slice: 2, 1 }}</span>
-                    <span class="nav-title">{{ appendix.title }}</span>
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+        <!-- Part I: 基礎編 -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">📖 第1部：基礎編</h3>
+            <ul class="toc-list">
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter01/' | relative_url }}" class="toc-link {% if page.url contains 'chapter01' %}active{% endif %}">
+                        <span class="chapter-number">1.</span>GitとGitHubの基本概念
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter02/' | relative_url }}" class="toc-link {% if page.url contains 'chapter02' %}active{% endif %}">
+                        <span class="chapter-number">2.</span>AI時代のGitHub協働基礎
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter03/' | relative_url }}" class="toc-link {% if page.url contains 'chapter03' %}active{% endif %}">
+                        <span class="chapter-number">3.</span>必須コマンドとAI活用
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter04/' | relative_url }}" class="toc-link {% if page.url contains 'chapter04' %}active{% endif %}">
+                        <span class="chapter-number">4.</span>GitHubでの協働作業入門
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter05/' | relative_url }}" class="toc-link {% if page.url contains 'chapter05' %}active{% endif %}">
+                        <span class="chapter-number">5.</span>アカウントとリポジトリ管理
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-    <!-- Afterword -->
-    {% if site.data.navigation.afterword %}
-    <div class="nav-section">
-        {% if site.data.navigation.afterword.size == 1 %}
-        <!-- Single afterword - display as direct link -->
-        {% for afterword in site.data.navigation.afterword %}
-        <a href="{{ site.baseurl }}{{ afterword.path }}" 
-           class="nav-link nav-single-item{% if page.url contains afterword.path %} active{% endif %}"
-           aria-current="{% if page.url contains afterword.path %}page{% endif %}">
-            {{ afterword.title }}
-        </a>
-        {% endfor %}
-        {% else %}
-        <!-- Multiple afterword items - display with section header -->
-        <h3 class="nav-section-title">あとがき</h3>
-        <ul class="nav-list">
-            {% for afterword in site.data.navigation.afterword %}
-            <li class="nav-item">
-                <a href="{{ site.baseurl }}{{ afterword.path }}" 
-                   class="nav-link{% if page.url contains afterword.path %} active{% endif %}"
-                   aria-current="{% if page.url contains afterword.path %}page{% endif %}">
-                    {{ afterword.title }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+        <!-- Part II: AI活用編 -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">🤖 第2部：AI活用編</h3>
+            <ul class="toc-list">
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter06/' | relative_url }}" class="toc-link {% if page.url contains 'chapter06' %}active{% endif %}">
+                        <span class="chapter-number">6.</span>GitHub Copilotの高度な活用
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter07/' | relative_url }}" class="toc-link {% if page.url contains 'chapter07' %}active{% endif %}">
+                        <span class="chapter-number">7.</span>AI支援によるコードレビュー実践
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter08/' | relative_url }}" class="toc-link {% if page.url contains 'chapter08' %}active{% endif %}">
+                        <span class="chapter-number">8.</span>GitHub Advanced SecurityとAI統合
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Part III: セキュリティと権限 -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">🔐 第3部：セキュリティと権限</h3>
+            <ul class="toc-list">
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter09/' | relative_url }}" class="toc-link {% if page.url contains 'chapter09' %}active{% endif %}">
+                        <span class="chapter-number">9.</span>アクセス権限の体系
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter10/' | relative_url }}" class="toc-link {% if page.url contains 'chapter10' %}active{% endif %}">
+                        <span class="chapter-number">10.</span>組織管理とチーム運用
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter11/' | relative_url }}" class="toc-link {% if page.url contains 'chapter11' %}active{% endif %}">
+                        <span class="chapter-number">11.</span>セキュリティ実践
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Part IV: 実践的チーム開発 -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">👥 第4部：実践的チーム開発</h3>
+            <ul class="toc-list">
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter12/' | relative_url }}" class="toc-link {% if page.url contains 'chapter12' %}active{% endif %}">
+                        <span class="chapter-number">12.</span>実践的なワークフロー設計
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter13/' | relative_url }}" class="toc-link {% if page.url contains 'chapter13' %}active{% endif %}">
+                        <span class="chapter-number">13.</span>CI/CDパイプライン構築
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter14/' | relative_url }}" class="toc-link {% if page.url contains 'chapter14' %}active{% endif %}">
+                        <span class="chapter-number">14.</span>大規模データとモデルの管理
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter15/' | relative_url }}" class="toc-link {% if page.url contains 'chapter15' %}active{% endif %}">
+                        <span class="chapter-number">15.</span>GitHub Pagesでのプロジェクト公開
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Part V: エンタープライズレベル開発 -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">🏢 第5部：エンタープライズレベル開発</h3>
+            <ul class="toc-list">
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter16/' | relative_url }}" class="toc-link {% if page.url contains 'chapter16' %}active{% endif %}">
+                        <span class="chapter-number">16.</span>外部協力者との連携
+                    </a>
+                </li>
+                <li class="toc-item toc-chapter">
+                    <a href="{{ '/chapters/chapter17/' | relative_url }}" class="toc-link {% if page.url contains 'chapter17' %}active{% endif %}">
+                        <span class="chapter-number">17.</span>コンプライアンスとガバナンス
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Appendices -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">📋 付録</h3>
+            <ul class="toc-list">
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-a/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-a' %}active{% endif %}">
+                        付録A: GitHub用語集
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-b/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-b' %}active{% endif %}">
+                        付録B: トラブルシューティングガイド
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-c/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-c' %}active{% endif %}">
+                        付録C: 料金プランと機能比較表
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-d/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-d' %}active{% endif %}">
+                        付録D: AIツールのコスト計算例
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-e/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-e' %}active{% endif %}">
+                        付録E: 便利なGitエイリアス集
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-f/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-f' %}active{% endif %}">
+                        付録F: 推奨VS Code拡張機能
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="{{ '/appendices/appendix-g/' | relative_url }}" class="toc-link {% if page.url contains 'appendix-g' %}active{% endif %}">
+                        付録G: 参考資料
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Additional Resources -->
+        <div class="toc-section">
+            <h3 class="toc-section-title">📚 リソース</h3>
+            <ul class="toc-list">
+                <li class="toc-item">
+                    <a href="https://github.com/itdojp/github-workflow-book" class="toc-link" target="_blank" rel="noopener">
+                        💾 GitHubリポジトリ
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="https://itdojp.github.io/it-engineer-knowledge-architecture/" class="toc-link" target="_blank" rel="noopener">
+                        📚 書籍一覧
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="https://itdo.jp" class="toc-link" target="_blank" rel="noopener">
+                        🏢 株式会社アイティードゥ
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-    {% endif %}
 </div>
-
-<!-- Progress Indicator -->
-{% assign total_pages = site.data.navigation.chapters.size %}
-{% if site.data.navigation.appendices %}
-{% assign total_pages = total_pages | plus: site.data.navigation.appendices.size %}
-{% endif %}
-
-{% assign current_index = 0 %}
-{% for chapter in site.data.navigation.chapters %}
-    {% if page.url contains chapter.path %}
-        {% assign current_index = forloop.index %}
-        {% break %}
-    {% endif %}
-{% endfor %}
-
-{% if current_index == 0 %}
-    {% for appendix in site.data.navigation.appendices %}
-        {% if page.url contains appendix.path %}
-            {% assign current_index = site.data.navigation.chapters.size | plus: forloop.index %}
-            {% break %}
-        {% endif %}
-    {% endfor %}
-{% endif %}
-
-{% if current_index > 0 %}
-<div class="progress-container">
-    <div class="progress-label">進捗: {{ current_index }} / {{ total_pages }}</div>
-    <div class="progress-bar">
-        <div class="progress-fill" style="width: {{ current_index | times: 100 | divided_by: total_pages }}%"></div>
-    </div>
-</div>
-{% endif %}
-
-<style>
-/* Sidebar Styles */
-.sidebar-header {
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.sidebar-title {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-2);
-}
-
-.sidebar-description {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-normal);
-}
-
-.sidebar-content {
-    padding: var(--space-4) 0;
-}
-
-.nav-section {
-    margin-bottom: var(--space-6);
-}
-
-.nav-section-title {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0 var(--space-4) var(--space-3);
-}
-
-.nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-item {
-    margin-bottom: var(--space-1);
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    padding: var(--space-2) var(--space-4);
-    color: var(--color-text-primary);
-    text-decoration: none;
-    transition: all var(--transition-fast);
-    border-left: 3px solid transparent;
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-normal);
-}
-
-.nav-link:hover {
-    background-color: var(--color-bg-tertiary);
-    color: var(--color-primary);
-}
-
-.nav-link.active {
-    background-color: var(--color-primary);
-    color: white;
-    border-left-color: var(--color-primary-hover);
-    font-weight: 500;
-}
-
-.nav-single-item {
-    margin-bottom: var(--space-4);
-    font-weight: 500;
-}
-
-.nav-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background-color: var(--color-bg-tertiary);
-    color: var(--color-text-secondary);
-    border-radius: 50%;
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    margin-right: var(--space-3);
-    flex-shrink: 0;
-}
-
-.nav-link.active .nav-number {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-.nav-title {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.nav-subsections {
-    list-style: none;
-    margin: var(--space-2) 0 0;
-    padding: 0;
-    background-color: var(--color-bg-secondary);
-}
-
-.nav-subsection {
-    margin-bottom: 0;
-}
-
-.nav-sublink {
-    display: block;
-    padding: var(--space-2) var(--space-4) var(--space-2) var(--space-12);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: var(--font-size-xs);
-    transition: all var(--transition-fast);
-    border-left: 3px solid transparent;
-}
-
-.nav-sublink:hover {
-    background-color: var(--color-bg-tertiary);
-    color: var(--color-primary);
-}
-
-.nav-sublink.active {
-    background-color: var(--color-primary);
-    color: white;
-    border-left-color: var(--color-primary-hover);
-}
-
-/* Progress Indicator */
-.progress-container {
-    margin: var(--space-6) var(--space-4) var(--space-4);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--color-border);
-}
-
-.progress-label {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-2);
-    text-align: center;
-}
-
-.progress-bar {
-    height: 4px;
-    background-color: var(--color-bg-tertiary);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background-color: var(--color-primary);
-    transition: width var(--transition-base);
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .sidebar-header {
-        padding: var(--space-3);
-    }
-    
-    .nav-link {
-        padding: var(--space-3) var(--space-3);
-    }
-    
-    .nav-sublink {
-        padding: var(--space-2) var(--space-3) var(--space-2) var(--space-8);
-    }
-    
-    .nav-number {
-        width: 20px;
-        height: 20px;
-        margin-right: var(--space-2);
-    }
-    
-    .progress-container {
-        margin: var(--space-4) var(--space-3) var(--space-3);
-    }
-}
-</style>
