@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 14
 title: "第13章：CI/CDパイプライン構築"
 ---
 

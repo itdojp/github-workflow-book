@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 20
 title: "付録B：トラブルシューティングガイド"
 ---
 

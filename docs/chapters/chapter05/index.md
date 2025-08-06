@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 6
 title: "第5章：GitHubアカウントとリポジトリ管理"
 ---
 

@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 4
 title: "第3章：必須コマンドとAI活用"
 ---
 

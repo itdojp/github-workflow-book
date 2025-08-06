@@ -1,5 +1,6 @@
 ---
 layout: book
+order: 23
 title: "付録E：便利なGitエイリアス集"
 ---
 
