@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 2
 title: "第1章：GitとGitHubの基本概念"
 ---
 

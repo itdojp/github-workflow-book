@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 5
 title: "第4章：GitHubでの協働作業入門"
 ---
 

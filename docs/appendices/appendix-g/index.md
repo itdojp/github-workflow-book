@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 25
 title: "第16章：コンプライアンスとガバナンス"
 ---
 

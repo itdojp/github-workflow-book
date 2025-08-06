@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 11
 title: "第10章：組織管理とチーム運用"
 ---
 

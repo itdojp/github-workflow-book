@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 17
 title: "第16章：外部協力者との連携"
 ---
 

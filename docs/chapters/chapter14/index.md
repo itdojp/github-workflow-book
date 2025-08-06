@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 15
 title: "第14章：大規模データとモデルの管理"
 ---
 

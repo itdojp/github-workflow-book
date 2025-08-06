@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 8
 title: "第7章：AI支援によるコードレビュー実践"
 ---
 

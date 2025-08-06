@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 9
 title: "第8章：GitHub Advanced SecurityとAI統合"
 ---
 

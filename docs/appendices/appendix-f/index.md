@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 24
 title: "付録F：推奨VS Code拡張機能"
 ---
 

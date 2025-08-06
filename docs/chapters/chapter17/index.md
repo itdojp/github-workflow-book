@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 18
 title: "第17章：コンプライアンスとガバナンス"
 ---
 

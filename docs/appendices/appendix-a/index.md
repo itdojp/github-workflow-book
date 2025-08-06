@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 19
 title: "付録A：GitHub用語集"
 ---
 

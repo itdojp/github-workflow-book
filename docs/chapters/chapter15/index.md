@@ -1,6 +1,5 @@
 ---
 layout: book
-order: 16
 title: "第15章：GitHub Pagesでのプロジェクト公開"
 ---
 
