@@ -20,8 +20,7 @@ defaults:
 #   - jekyll-feed
 
 # Repository information for edit links
-repository:
-  github: "itdojp/github-workflow-book"
+repository: "https://github.com/itdojp/github-workflow-book"
 
 exclude:
   - node_modules/
