@@ -16,8 +16,9 @@ defaults:
     values:
       layout: "book"
 
-# plugins:
-#   - jekyll-feed
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
 
 # Repository information for edit links
 repository: "https://github.com/itdojp/github-workflow-book"
