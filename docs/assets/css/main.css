@@ -120,6 +120,35 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Accessibility: visible focus and skip link */
+:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    width: auto;
+    height: auto;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    z-index: 10000;
+}
+
 /* Layout */
 .book-layout {
     display: flex;
