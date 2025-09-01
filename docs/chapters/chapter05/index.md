@@ -323,7 +323,7 @@ Full documentation is available at [https://docs.example.com](https://docs.examp
 See the [examples/](examples/) directory for more examples.
 
 ## Contributing
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct.
+Please read our contributing guide on GitHub: [CONTRIBUTING.md](https://github.com/itdojp/github-workflow-book/blob/main/CONTRIBUTING.md).
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

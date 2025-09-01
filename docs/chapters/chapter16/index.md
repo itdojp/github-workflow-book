@@ -850,7 +850,7 @@ Contributors can be nominated to become Committers based on:
 - Demonstrated understanding of the project
 
 ## Code of Conduct
-All participants must follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+All participants must follow our [Code of Conduct](https://github.com/itdojp/github-workflow-book/blob/main/CODE_OF_CONDUCT.md).
 
 ## Changes to Governance
 This governance model can be changed through the proposal process with TSC approval.
