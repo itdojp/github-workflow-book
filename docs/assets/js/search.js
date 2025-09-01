@@ -17,15 +17,30 @@
     }
     
     // Build search index from page content
-    function buildSearchIndex() {
-        // In a real implementation, this would be generated at build time
-        // For now, we'll create a simple index from current page
+    async function buildSearchIndex() {
+        // If prebuilt search data exists, prefer it
+        try {
+            const res = await fetch('{{ "/assets/search-data.json" | relative_url }}', { cache: 'no-store' });
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    searchIndex = data.map((item, i) => ({
+                        id: item.id || `search-result-${i}`,
+                        title: item.title || '',
+                        content: item.content || '',
+                        url: item.url || null
+                    }));
+                    return;
+                }
+            }
+        } catch (e) {
+            // ignore and fallback to on-page index
+        }
+
+        // Fallback: build a simple index from current page content
         const content = document.querySelector('.page-content');
         if (!content) return;
-        
-        // Get all headings and paragraphs
         const elements = content.querySelectorAll('h1, h2, h3, h4, h5, h6, p');
-        
         elements.forEach((el, index) => {
             const text = el.textContent.trim();
             if (text) {
@@ -143,6 +158,9 @@
             setTimeout(() => {
                 result.element.classList.remove('search-highlight');
             }, 2000);
+        } else if (result && result.url) {
+            // Navigate to URL if provided by prebuilt index
+            window.location.href = result.url;
         }
     }
     
