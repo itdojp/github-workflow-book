@@ -110,7 +110,7 @@ security_settings:
 - [Paper 2](link) - NeurIPS 2023
 
 ## 🤝 Contributing
-See our [Contributing Guide](CONTRIBUTING.md)
+See our [Contributing Guide](https://github.com/itdojp/github-workflow-book/blob/main/CONTRIBUTING.md)
 
 ## 📬 Contact
 - Email: contact@ai-research-lab.org
