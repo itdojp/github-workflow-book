@@ -1,60 +1,53 @@
-# Auto-generated navigation data
 introduction:
-  - title: "はじめに"
-    path: "/introduction/"
-
+- title: 序章
+  path: /introduction/
 chapters:
-  - title: "第1章：GitとGitHubの基本概念"
-    path: "/chapters/chapter01/"
-  - title: "第2章：AI時代のGitHub協働基礎"
-    path: "/chapters/chapter02/"
-  - title: "第3章：必須コマンドとAI活用"
-    path: "/chapters/chapter03/"
-  - title: "第4章：GitHubでの協働作業入門"
-    path: "/chapters/chapter04/"
-  - title: "第5章：GitHubアカウントとリポジトリ管理"
-    path: "/chapters/chapter05/"
-  - title: "第6章：GitHub Copilotの高度な活用"
-    path: "/chapters/chapter06/"
-  - title: "第7章：AI支援によるコードレビュー実践"
-    path: "/chapters/chapter07/"
-  - title: "第8章：GitHub Advanced SecurityとAI統合"
-    path: "/chapters/chapter08/"
-  - title: "第9章：アクセス権限の体系"
-    path: "/chapters/chapter09/"
-  - title: "第10章：組織管理とチーム運用"
-    path: "/chapters/chapter10/"
-  - title: "第11章：セキュリティ実践"
-    path: "/chapters/chapter11/"
-  - title: "第12章：実践的なワークフロー設計"
-    path: "/chapters/chapter12/"
-  - title: "第13章：CI/CDパイプライン構築"
-    path: "/chapters/chapter13/"
-  - title: "第14章：大規模データとモデルの管理"
-    path: "/chapters/chapter14/"
-  - title: "第15章：GitHub Pagesでのプロジェクト公開"
-    path: "/chapters/chapter15/"
-  - title: "第16章：外部協力者との連携"
-    path: "/chapters/chapter16/"
-  - title: "第17章：コンプライアンスとガバナンス"
-    path: "/chapters/chapter17/"
-
+- title: 第1章：GitとGitHubの基本概念
+  path: /chapters/chapter01/
+- title: 第2章：AI時代のGitHub協働基礎
+  path: /chapters/chapter02/
+- title: 第3章：必須コマンドとAI活用
+  path: /chapters/chapter03/
+- title: 第4章：GitHubでの協働作業入門
+  path: /chapters/chapter04/
+- title: 第5章：GitHubアカウントとリポジトリ管理
+  path: /chapters/chapter05/
+- title: 第6章：GitHub Copilotの高度な活用
+  path: /chapters/chapter06/
+- title: 第7章：AI支援によるコードレビュー実践
+  path: /chapters/chapter07/
+- title: 第8章：GitHub Advanced SecurityとAI統合
+  path: /chapters/chapter08/
+- title: 第9章：アクセス権限の体系
+  path: /chapters/chapter09/
+- title: 第10章：組織管理とチーム運用
+  path: /chapters/chapter10/
+- title: 第11章：セキュリティ実践
+  path: /chapters/chapter11/
+- title: 第12章：実践的なワークフロー設計
+  path: /chapters/chapter12/
+- title: 第13章：CI/CDパイプライン構築
+  path: /chapters/chapter13/
+- title: 第14章：大規模データとモデルの管理
+  path: /chapters/chapter14/
+- title: 第15章：GitHub Pagesでのプロジェクト公開
+  path: /chapters/chapter15/
+- title: 第16章：外部協力者との連携
+  path: /chapters/chapter16/
+- title: 第17章：コンプライアンスとガバナンス
+  path: /chapters/chapter17/
 appendices:
-  - title: "付録A：GitHub用語集"
-    path: "/appendices/appendix-a/"
-  - title: "付録B：トラブルシューティングガイド"
-    path: "/appendices/appendix-b/"
-  - title: "付録C：料金プランと機能比較表"
-    path: "/appendices/appendix-c/"
-  - title: "付録D：AIツールのコスト計算例"
-    path: "/appendices/appendix-d/"
-  - title: "付録E：便利なGitエイリアス集"
-    path: "/appendices/appendix-e/"
-  - title: "付録F：推奨VS Code拡張機能"
-    path: "/appendices/appendix-f/"
-  - title: "第16章：コンプライアンスとガバナンス"
-    path: "/appendices/appendix-g/"
-
-afterword:
-  - title: "あとがき"
-    path: "/afterword/"
+- title: 付録A：GitHub用語集
+  path: /appendices/appendix-a/
+- title: 付録B：トラブルシューティングガイド
+  path: /appendices/appendix-b/
+- title: 付録C：料金プランと機能比較表
+  path: /appendices/appendix-c/
+- title: 付録D：AIツールのコスト計算例
+  path: /appendices/appendix-d/
+- title: 付録E：便利なGitエイリアス集
+  path: /appendices/appendix-e/
+- title: 付録F：推奨VS Code拡張機能
+  path: /appendices/appendix-f/
+- title: 第16章：コンプライアンスとガバナンス
+  path: /appendices/appendix-g/
