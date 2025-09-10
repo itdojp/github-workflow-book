@@ -168,3 +168,4 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 ---
 
 *Built with [Book Publishing Template v2.0](https://github.com/itdojp/book-publishing-template2)*
+{% include page-navigation.html %}
