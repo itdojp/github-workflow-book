@@ -298,7 +298,7 @@ function calculateIoU(box1, box2) {
 }
 ```
 
-## 5.5 Copilotの制限事項と注意点
+## 6.5 Copilotの制限事項と注意点
 
 ### セキュリティ上の考慮事項
 

@@ -1,11 +1,11 @@
 ---
 layout: book
-title: "第16章：コンプライアンスとガバナンス"
+title: "付録G：参考資料"
 ---
 
-# 第16章：コンプライアンスとガバナンス
+# 付録G：参考資料
 
-## 16.1 ライセンス管理の基本
+## G.1 ライセンス管理の基本
 
 ### オープンソースライセンスの選択
 
@@ -346,7 +346,7 @@ class LicenseHeaderManager:
         return files_updated
 ```
 
-## 16.2 Export Control対応
+## G.2 Export Control対応
 
 ### 暗号化技術の輸出規制
 
@@ -588,7 +588,7 @@ class GeoRestrictionManager:
         return log_entry
 ```
 
-## 16.3 AIツール利用時の知的財産権配慮
+## G.3 AIツール利用時の知的財産権配慮
 
 ### Copilot使用ポリシー
 
@@ -761,7 +761,7 @@ class AICodeTracker:
             json.dump(self.metadata, f, indent=2)
 ```
 
-## 16.4 監査要件への対応
+## G.4 監査要件への対応
 
 ### 監査ログシステム
 
@@ -1015,7 +1015,7 @@ class GDPRCompliance:
         return user_data
 ```
 
-## 16.5 ポリシー違反の検出と対応
+## G.5 ポリシー違反の検出と対応
 
 ### 自動ポリシー検出
 

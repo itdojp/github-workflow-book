@@ -1,5 +1,5 @@
 introduction:
-- title: 序章
+- title: はじめに
   path: /introduction/
 chapters:
 - title: 第1章：GitとGitHubの基本概念
@@ -49,5 +49,5 @@ appendices:
   path: /appendices/appendix-e/
 - title: 付録F：推奨VS Code拡張機能
   path: /appendices/appendix-f/
-- title: 第16章：コンプライアンスとガバナンス
+- title: 付録G：参考資料
   path: /appendices/appendix-g/

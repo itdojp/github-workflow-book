@@ -151,7 +151,7 @@ class ModelLFSManager:
         return sha256_hash.hexdigest()
 ```
 
-## 13.2 DVC（Data Version Control）との連携
+## 14.2 DVC（Data Version Control）との連携
 
 ### DVCの基本設定
 
@@ -341,7 +341,7 @@ Parameters:
         print(result.stdout)
 ```
 
-## 13.3 モデルレジストリの構築
+## 14.3 モデルレジストリの構築
 
 ### MLflowとの連携
 
@@ -618,7 +618,7 @@ class S3ModelRegistry:
         return sha256_hash.hexdigest()
 ```
 
-## 13.4 アクセス制御を考慮したデータ管理
+## 14.4 アクセス制御を考慮したデータ管理
 
 ### データアクセス階層
 

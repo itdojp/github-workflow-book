@@ -278,7 +278,7 @@ assignees: ''
         (templates_dir / 'experiment_proposal.md').write_text(experiment_template)
 ```
 
-## 11.1.2 Issue駆動開発の実践
+## 12.1.2 Issue駆動開発の実践
 
 ### Issue管理のベストプラクティス
 
@@ -496,7 +496,7 @@ class SprintManager:
         return report
 ```
 
-## 11.1.3 Feature Branchワークフロー
+## 12.1.3 Feature Branchワークフロー
 
 ### ブランチ命名規則
 
@@ -688,7 +688,7 @@ class ExperimentTracker:
         return report
 ```
 
-## 11.1.4 レビュープロセスの最適化
+## 12.1.4 レビュープロセスの最適化
 
 ### 効率的なコードレビュー
 
@@ -881,7 +881,7 @@ class ReviewMetrics:
         return report
 ```
 
-## 11.2 実験ブランチとメインラインの管理
+## 12.2 実験ブランチとメインラインの管理
 
 ### 実験結果の統合戦略
 

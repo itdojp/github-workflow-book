@@ -208,7 +208,7 @@ jobs:
         ./deploy.sh
 ```
 
-## 10.2 Environment設定と環境変数
+## 11.2 Environment設定と環境変数
 
 ### Environment（環境）の設計
 
@@ -377,7 +377,7 @@ class ConfigTemplate:
         return True
 ```
 
-## 10.3 Dependabotによる脆弱性対策
+## 11.3 Dependabotによる脆弱性対策
 
 ### Dependabot設定の最適化
 
@@ -650,7 +650,7 @@ class VulnerabilityReporter:
         return priorities
 ```
 
-## 10.4 Security Policyの設定
+## 11.4 Security Policyの設定
 
 ### セキュリティポリシーファイル
 
@@ -789,7 +789,7 @@ jobs:
         bash scripts/secret_scan.sh
 ```
 
-## 10.5 セキュリティインシデント対応
+## 11.5 セキュリティインシデント対応
 
 ### インシデント対応プレイブック
 

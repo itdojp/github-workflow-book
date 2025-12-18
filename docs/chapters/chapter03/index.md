@@ -422,7 +422,7 @@ git config --global merge.tool vscode
 git config --global mergetool.vscode.cmd 'code --wait $MERGED'
 ```
 
-## 2.6 .gitignoreの設定
+## 3.6 .gitignoreの設定
 
 ### .gitignoreの役割
 Gitで管理しないファイルを指定します。

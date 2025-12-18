@@ -202,7 +202,7 @@ my-ml-project/
     └── proprietary/
 ```
 
-## 4.4 リポジトリの基本設定
+## 5.4 リポジトリの基本設定
 
 ### General設定
 
@@ -276,7 +276,7 @@ Protect matching branches:
 - **SonarCloud**: コード品質
 - **Dependabot**: 依存関係更新
 
-## 4.5 READMEとライセンスの設定
+## 5.5 READMEとライセンスの設定
 
 ### 効果的なREADMEの構造
 
