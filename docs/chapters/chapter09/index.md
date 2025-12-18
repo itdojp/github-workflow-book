@@ -325,7 +325,7 @@ class DeploymentGatekeeper:
         }
 ```
 
-## 8.3 CODEOWNERSによる承認フロー
+## 9.3 CODEOWNERSによる承認フロー
 
 ### CODEOWNERS ファイルの構造
 
@@ -440,7 +440,7 @@ class CodeOwnersManager:
         subprocess.run(['git', 'commit', '-m', 'chore: Update CODEOWNERS'])
 ```
 
-## 8.4 Required reviewersの設定
+## 9.4 Required reviewersの設定
 
 ### レビュアーの自動割り当て
 
@@ -586,7 +586,7 @@ class ReviewBot:
         }
 ```
 
-## 8.5 権限の継承と上書き
+## 9.5 権限の継承と上書き
 
 ### 組織からリポジトリへの権限継承
 

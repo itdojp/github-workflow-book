@@ -97,7 +97,7 @@ review_preferences:
     require_docstrings: true
 ```
 
-## 6.2 自動レビューコメントの活用
+## 7.2 自動レビューコメントの活用
 
 ### レビューコメントの種類
 
@@ -200,7 +200,7 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 """
 ```
 
-## 6.3 人間のレビューとAIレビューの使い分け
+## 7.3 人間のレビューとAIレビューの使い分け
 
 ### レビューの役割分担
 
@@ -276,7 +276,7 @@ priority_rules:
       - ai_review: "basic"
 ```
 
-## 6.4 セキュリティ脆弱性の自動検出
+## 7.4 セキュリティ脆弱性の自動検出
 
 ### 検出可能な脆弱性
 
@@ -379,7 +379,7 @@ logger.info(f"User login attempt: {username}")
 4. Use JSON instead of pickle
 ```
 
-## 6.5 レビュー効率化のワークフロー
+## 7.5 レビュー効率化のワークフロー
 
 ### 自動化ルールの設定
 

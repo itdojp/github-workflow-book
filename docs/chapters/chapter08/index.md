@@ -177,7 +177,7 @@ filepath = os.path.join(UPLOAD_DIR, filename)
 - OWASP: Path Traversal
 ```
 
-## 7.2 Secret scanningの活用
+## 8.2 Secret scanningの活用
 
 ### Secret scanningの仕組み
 - コミット履歴を含む全体をスキャン
@@ -269,7 +269,7 @@ repos:
       - id: gitleaks
 ```
 
-## 7.3 Dependency reviewの実践
+## 8.3 Dependency reviewの実践
 
 ### 依存関係の脆弱性管理
 
@@ -379,7 +379,7 @@ def check_dependencies():
     return issues
 ```
 
-## 7.4 AI支援による脆弱性修正提案
+## 8.4 AI支援による脆弱性修正提案
 
 ### 自動修正の生成
 
@@ -491,7 +491,7 @@ class TestSecurityFixes:
             assert isinstance(result, list)
 ```
 
-## 7.5 セキュリティアラートの管理
+## 8.5 セキュリティアラートの管理
 
 ### アラートのトリアージ
 

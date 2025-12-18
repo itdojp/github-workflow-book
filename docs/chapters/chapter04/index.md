@@ -478,7 +478,7 @@ exemptLabels:
   - security
 ```
 
-## 3.2 ラベルとマイルストーンの活用
+## 4.2 ラベルとマイルストーンの活用
 
 ### ラベルの設計
 ```yaml
@@ -527,7 +527,7 @@ Goals:
 Progress: 7/10 issues closed (70%)
 ```
 
-## 3.3 プロジェクトボードでのタスク管理
+## 4.3 プロジェクトボードでのタスク管理
 
 ### カンバンボードの設定
 列の構成：
@@ -542,7 +542,7 @@ Progress: 7/10 issues closed (70%)
 - PRが作成されたら「In Progress」に移動
 - PRがマージされたら「Done」に移動
 
-## 3.4 Issueテンプレートの作成
+## 4.4 Issueテンプレートの作成
 
 ### 複数のテンプレート
 `.github/ISSUE_TEMPLATE/`:

@@ -305,7 +305,7 @@ manager.grant_team_permissions(
 )
 ```
 
-## 9.3 Outside Collaboratorの管理
+## 10.3 Outside Collaboratorの管理
 
 ### 外部協力者のポリシー
 
@@ -466,7 +466,7 @@ class CollaboratorManager:
         return report
 ```
 
-## 9.4 SAML SSOとの連携
+## 10.4 SAML SSOとの連携
 
 ### SAML SSO設定（Enterprise）
 
@@ -575,7 +575,7 @@ class SCIMSync:
                 )
 ```
 
-## 9.5 監査ログの活用
+## 10.5 監査ログの活用
 
 ### 監査ログの収集と分析
 
