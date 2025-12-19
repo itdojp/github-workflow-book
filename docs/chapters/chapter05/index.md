@@ -90,7 +90,7 @@ Settings → Notifications で設定：
 - **Custom**: リポジトリごとに設定
 
 推奨設定：
-```
+```text
 ✓ Participating
 ✓ @mentions
 ✓ Review requests
@@ -190,7 +190,7 @@ flowchart TD
 - **セキュリティ**: 脆弱性の非公開
 
 ### ハイブリッドアプローチ
-```
+```text
 my-ml-project/
 ├── my-ml-project-public/    # 公開可能な部分
 │   ├── src/
@@ -280,7 +280,7 @@ Protect matching branches:
 
 ### 効果的なREADMEの構造
 
-```markdown
+````markdown
 # Project Name
 
 [![Build Status](https://travis-ci.org/username/repo.svg?branch=main)](https://travis-ci.org/username/repo)
@@ -342,7 +342,7 @@ If you use this software in your research, please cite:
 ## Acknowledgments
 - Acknowledgment 1
 - Acknowledgment 2
-```
+````
 
 ### ライセンスの選択
 
@@ -374,7 +374,7 @@ If you use this software in your research, please cite:
 Settings → Template repository にチェック
 
 #### 標準構造
-```
+```text
 ml-project-template/
 ├── .github/
 │   ├── workflows/
