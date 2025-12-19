@@ -71,7 +71,7 @@ project:
 ### リポジトリ構造
 
 #### モノレポ vs マルチレポ
-```
+```text
 # モノレポ構造（推奨）
 image-classification/
 ├── .github/

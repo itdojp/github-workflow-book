@@ -136,7 +136,7 @@ select call, "Loading model from potentially untrusted source"
 ### スキャン結果の解釈
 
 #### セキュリティアラートダッシュボード
-```
+```text
 Security → Code scanning alerts
 
 High severity (3)
@@ -151,7 +151,7 @@ Medium severity (5)
 ```
 
 #### アラートの詳細情報
-```markdown
+````markdown
 ## Path traversal in file upload
 
 **Severity**: High
@@ -175,7 +175,7 @@ filepath = os.path.join(UPLOAD_DIR, filename)
 ### References
 - CWE-22: Path Traversal
 - OWASP: Path Traversal
-```
+````
 
 ## 8.2 Secret scanningの活用
 
