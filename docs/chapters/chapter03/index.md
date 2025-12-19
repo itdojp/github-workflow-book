@@ -115,7 +115,7 @@ git add -p
 #### AIを使った効率的なファイル選択
 第2章のCLEAR方式を使って、AIに適切なファイルの選択を依頼できます：
 
-```markdown
+````markdown
 ## AI指示例（第2章のCLEAR方式を使用）
 
 ### Context
@@ -135,7 +135,7 @@ git add -p
 
 ### Example
 期待する出力形式：
-```
+```text
 Modified files:
 - data/preprocessor.py (本機能)
 - tests/test_preprocessor.py (テスト)
@@ -148,7 +148,7 @@ Modified files:
 
 ### Review
 セキュリティリスクやコミット範囲の妥当性をチェックしてください。
-```
+````
 
 **AI回答例**：
 ```bash
@@ -181,7 +181,7 @@ git commit -am "Fix: correct validation split ratio"
 ```
 
 #### コミットメッセージの規約
-```
+```text
 <type>: <subject>
 
 <body>
@@ -321,7 +321,7 @@ git status -sb
 ```
 
 出力の読み方：
-```
+```text
 On branch main
 Your branch is up to date with 'origin/main'.
 
