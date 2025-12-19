@@ -10,7 +10,7 @@ title: "第16章：外部協力者との連携"
 ### Fork & PRワークフローの基本
 
 #### 外部協力者向けのワークフロー
-```markdown
+````markdown
 # Contributing Guide for External Collaborators
 
 ## Getting Started
@@ -47,12 +47,12 @@ title: "第16章：外部協力者との連携"
    - Push your branch to your fork
    - Create a PR from your fork to the main repository
    - Fill out the PR template completely
-```
+````
 
 ### フォーク管理の自動化
 
 #### フォーク同期スクリプト
-```python
+````python
 # scripts/fork_manager.py
 import subprocess
 import requests
@@ -132,7 +132,7 @@ Let us know if you need any help!
         except:
             # Issueが無効な場合はスキップ
             pass
-```
+````
 
 ### Pull Requestテンプレート
 
@@ -194,7 +194,7 @@ Let us know if you need any help!
 ### CLAの実装
 
 #### CLA自動化ボット
-```python
+```yaml
 # .github/workflows/cla.yml
 name: "CLA Assistant"
 
@@ -241,7 +241,7 @@ jobs:
 ### CLAドキュメント
 
 #### CLA.md
-```markdown
+````markdown
 # Contributor License Agreement
 
 ## Purpose
@@ -275,7 +275,7 @@ Comment on the PR with:
 ```
 I have read the CLA Document and I hereby sign the CLA
 ```
-```
+````
 
 ### CLA管理システム
 
@@ -454,7 +454,7 @@ class ContributorManager:
 ### 外部コントリビューター向けのガイドライン
 
 #### CONTRIBUTING.md
-```markdown
+````markdown
 # Contributing to ML Project
 
 We love your input! We want to make contributing to this project as easy and transparent as possible.
@@ -535,7 +535,7 @@ We recognize our contributors! Check out our [Contributors page](https://github.
 
 ## License
 By contributing, you agree that your contributions will be licensed under the same license as the project.
-```
+````
 
 ## 16.4 コントリビューションガイドラインの作成
 
