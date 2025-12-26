@@ -965,7 +965,7 @@ class SecurityMonitor:
 
 ## まとめ
 
-本章では、GitHubでのセキュリティ実践について学習しました：
+本章では、GitHubでのセキュリティ実践について学習しました。主なポイントは次のとおりです。
 - Secrets管理で機密情報を安全に保管
 - Environment設定で環境別のセキュリティ制御
 - Dependabotで脆弱性を自動検出・修正

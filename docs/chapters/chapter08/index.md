@@ -663,7 +663,7 @@ metrics:
 
 ## まとめ
 
-本章では、GitHub Advanced Securityとの連携について学習しました：
+本章では、GitHub Advanced Securityとの連携について学習しました。主なポイントは次のとおりです。
 - CodeQLで静的コード解析を実施
 - Secret scanningで機密情報の漏洩を防止
 - Dependency reviewで脆弱な依存関係を管理

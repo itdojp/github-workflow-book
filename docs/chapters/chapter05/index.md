@@ -424,7 +424,7 @@ Do NOT report security vulnerabilities through public GitHub issues.
 
 ## まとめ
 
-本章では、GitHubアカウントとリポジトリ管理を学習しました：
+本章では、GitHubアカウントとリポジトリ管理を学習しました。主なポイントは次のとおりです。
 - 個人アカウントのセキュリティ設定が基本
 - 組織アカウントでチーム開発を効率化
 - Public/Privateは目的に応じて選択
