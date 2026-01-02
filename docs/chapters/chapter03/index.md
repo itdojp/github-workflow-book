@@ -547,7 +547,7 @@ git config --global core.excludesfile ~/.gitignore_global
 
 ## まとめ
 
-本章では、Gitの基本的なコマンドと操作を学習しました：
+本章では、Gitの基本的なコマンドと操作を学習しました。主なポイントは次のとおりです。
 - 初期設定でユーザー情報とGitHub接続を設定
 - clone, add, commit, push, pullの基本サイクル
 - ブランチ操作でパラレル開発が可能

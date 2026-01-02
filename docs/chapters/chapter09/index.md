@@ -766,7 +766,7 @@ class PermissionAuditor:
 
 ## まとめ
 
-本章では、GitHubのアクセス権限体系について学習しました：
+本章では、GitHubのアクセス権限体系について学習しました。主なポイントは次のとおりです。
 - Read/Write/Adminの3段階の基本権限
 - ブランチ保護で重要なコードを保護
 - CODEOWNERSで責任範囲を明確化
