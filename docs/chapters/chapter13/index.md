@@ -1065,7 +1065,7 @@ class DeploymentMonitor:
 
 ## まとめ
 
-本章では、GitHub ActionsによるCI/CDパイプラインの構築を学習しました：
+本章では、GitHub ActionsによるCI/CDパイプラインの構築を学習しました。主なポイントは次のとおりです。
 - GitHub Actionsの基本構造とカスタムアクション
 - AIモデル学習の自動化とハイパーパラメータ探索
 - 包括的なテストスイートと品質管理
