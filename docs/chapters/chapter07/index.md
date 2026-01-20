@@ -65,8 +65,8 @@ AIレビューを「運用」に落とすには、レビューの前提を成果
 Copilotのcode reviewは、プランや組織設定によって利用可否が変わります。設定手順は変更され得るため、公式ドキュメントを参照してください。
 
 - Copilot code review: https://docs.github.com/en/copilot/concepts/agents/code-review
-- Using Copilot code review: https://docs.github.com/copilot/using-github-copilot/code-review/using-copilot-code-review
-- Custom instructions: https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot
+- Using Copilot code review: https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review
+- Custom instructions: https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot
 
 ## 7.2 自動レビューコメントの活用
 

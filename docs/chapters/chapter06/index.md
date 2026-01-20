@@ -31,7 +31,7 @@ Copilotは「補完ツール」だけではなく、目的別に複数の機能�
 
 注意点：選べるモデルはプランや組織設定で変わります。最新情報は公式ドキュメントを参照してください。
 
-- Supported models: https://docs.github.com/copilot/reference/ai-models/supported-models
+- Supported models: https://docs.github.com/en/copilot/reference/ai-models/supported-models
 - Model hosting: https://docs.github.com/en/copilot/reference/ai-models/model-hosting
 
 ### 6.1.3 組織ポリシーでの統制（機能/モデル/追加コスト）
@@ -43,7 +43,7 @@ Copilotは「補完ツール」だけではなく、目的別に複数の機能�
 
 公式の管理・ポリシーは変更され得るため、設定手順は公式ドキュメントを参照してください。
 
-- Policies: https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization
+- Policies: https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization
 
 ### 6.1.4 モデル更新/廃止に備える（最小チェックリスト）
 モデルは更新/廃止があり得ます。特定モデル前提の手順やテンプレがあると、ある日再現できなくなるため、最低限の点検を入れておくのが安全です。
