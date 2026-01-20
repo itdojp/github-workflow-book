@@ -234,7 +234,30 @@ assignees: ''
 - OS:
 ```
 
-### 3.1.3 ブランチ作成からPull Requestまでの流れ
+### 4.1.3 ブランチ作成からPull Requestまでの流れ（coding agent 併用）
+
+ここでは、従来の「Issue→ブランチ→PR」だけでなく、Copilot coding agent を使って **Issue→Agent→PR→レビュー→反復** で進める流れも扱います。
+
+#### Copilot coding agent を使う場合（Issue→Agent→PR）
+前提：利用可否はプラン/組織ポリシーで変わります。設定は公式ドキュメントを参照してください。
+
+- About coding agent: https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent
+- Use Copilot to create/update issues: https://docs.github.com/en/copilot/how-tos/use-copilot-for-common-tasks/use-copilot-to-create-or-update-issues
+
+手順（概要）
+1. Issueに「目的/スコープ/受入条件/制約/テスト」を明記する（テンプレ例は `examples/ai-agent-starter/`）
+2. IssueをCopilot coding agentに割り当てる（利用できる場合）
+3. AgentがPRを作成する
+4. 人間がPRをレビューし、受入条件とリスクを判断する（第7章の観点で運用する）
+5. 追加修正が必要なら、PRコメントでフィードバックし、反復する
+
+#### エージェントに向く/向かない作業（判断表）
+| 観点 | 向く | 向かない |
+|---|---|---|
+| 仕様の明確さ | 受入条件が明確、テスト手順がある | 目的が曖昧、評価基準がない |
+| 変更の性質 | 既存パターンに沿う修正、機械的変更 | 仕様策定、合意形成、例外だらけの設計 |
+| リスク | 影響範囲が限定、ロールバック容易 | 認証/暗号/決済/権限など高リスク領域 |
+| 依存関係 | リポジトリ内で完結 | 外部システム・契約・運用調整が必要 |
 
 #### 1. Issueからブランチを作成
 ```bash
@@ -311,7 +334,7 @@ Fixes #5
 ## Performance Impact
 - メモリ使用量：変化なし
 - 訓練時間：エポックあたり約5%増加
-- 期待される精度向上：2〜3%
+- 目標（例）：精度2〜3%向上
 
 ## Screenshots
 訓練前後の画像サンプル：
@@ -324,7 +347,7 @@ Fixes #5
 - [x] 関連するIssueをリンク
 ```
 
-### 3.1.4 レビューコメントへの対応
+### 4.1.4 レビューコメントへの対応
 
 #### レビューコメントの例
 
@@ -402,7 +425,7 @@ git commit -m "refactor: Make image size configurable in transforms
 git push
 ```
 
-### 3.1.5 マージ、却下、クローズの判断基準
+### 4.1.5 マージ、却下、クローズの判断基準
 
 #### マージの条件
 1. **すべてのテストがパス**

@@ -1,0 +1,57 @@
+name: Agent task（spec-driven）
+description: Copilot coding agent に割り当てやすいタスクテンプレート
+title: "[TASK] "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        目的/受入条件/制約/テストを明確にすると、AgentがPRまで到達しやすくなります。
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: 目的 / 背景
+      description: 何を、なぜ、誰のために行うか
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: スコープ（やること / やらないこと）
+      description: 今回のIssueで扱う範囲を箇条書き
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 受入条件（DoD）
+      description: マージ判定に使う条件（チェックリスト推奨）
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: 制約
+      description: 互換性、禁止事項、依存、セキュリティなど
+    validations:
+      required: false
+
+  - type: textarea
+    id: tests
+    attributes:
+      label: テスト/検証
+      description: どうやって正しさを確認するか（コマンドや手順）
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足（参考リンク/関連Issue/背景資料）
+    validations:
+      required: false
+
