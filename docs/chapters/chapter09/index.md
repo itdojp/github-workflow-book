@@ -11,6 +11,12 @@ title: "第9章：アクセス権限の体系"
 
 第2章で学んだAI協働パターンを踏まえ、権限設計にはAI生成コードの管理とレビューを考慮する必要があります。
 
+### この章の例の読み方
+本章では、例を次の2種類に分けて示します。
+
+- **実運用例（このまま使える）**：CLIや設定ファイルなど、実在する仕組みに沿った例（ただしプレースホルダは自分の環境に合わせて置き換えます）。
+- **概念例（擬似）**：考え方を説明するための例。GitHubの実設定や実行環境と一致しない場合があるため、コピペ前提では扱いません。
+
 **重要：カスタム権限について**
 
 以下の例で示す`view_ai_collaboration_history`、`push_ai_generated_code`などの権限は、本書で提唱するAI協働ワークフローにおける**概念的な権限**です。これらは：
@@ -23,6 +29,7 @@ title: "第9章：アクセス権限の体系"
 実装時は、これらの概念を組織のポリシーやワークフロールールとして運用してください。
 
 #### Read（読み取り）権限 + AI協働要素
+**概念例（擬似）**：GitHubの標準権限にAI協働の観点を加えた「権限モデル」の例です。
 ```yaml
 read_permissions:
   code:
@@ -59,6 +66,7 @@ read_permissions:
 ```
 
 #### Write（書き込み）権限 + AI協働要素
+**概念例（擬似）**：同様に「書き込み可能だが、AI利用の開示や運用ルールは必須」という前提を表現しています。
 ```yaml
 write_permissions:
   includes_all_read_permissions: true
@@ -97,6 +105,7 @@ write_permissions:
 ```
 
 #### Admin（管理者）権限
+**概念例（擬似）**：管理者権限は、統制ルールの変更・例外運用（override等）を含むため、最小人数に限定する前提で扱います。
 ```yaml
 admin_permissions:
   includes_all_write_permissions: true
@@ -130,6 +139,7 @@ admin_permissions:
 ### 権限の付与方法
 
 #### 個人への直接付与
+**実運用例（このまま使える）**：GitHub CLIで権限を付与する例です（`:owner`/`:repo`/`:username` は置き換えます）。
 ```bash
 # GitHub CLIを使用
 gh api repos/:owner/:repo/collaborators/:username \
@@ -138,6 +148,7 @@ gh api repos/:owner/:repo/collaborators/:username \
 ```
 
 #### プログラムによる管理
+**概念例（参考実装）**：自動化の方向性を示す例です。利用するライブラリ/認証方式/権限は環境に合わせて要調整です。
 ```python
 # github_permissions.py
 from github import Github
@@ -213,6 +224,7 @@ AI生成PRに限らず、最終的にマージされるコードの品質は「�
 ### 基本的な保護設定
 
 #### AI協働対応のmainブランチ保護
+**概念例（擬似）**：ここで示すYAMLは「ルール設計のイメージ」です。実際の設定は rulesets または branch protection（Web UI / API）で行います。
 ```yaml
 # branch-protection-main-ai.yml
 protection_rules:

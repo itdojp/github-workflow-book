@@ -1,0 +1,28 @@
+name: AI Collaboration Quality Gate
+
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run checks
+        run: |
+          echo "Replace this step with your test/lint/security checks."
+
+      - name: Validate AI disclosure (pull_request only)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          if ! echo "${{ github.event.pull_request.body }}" | grep -q "AI利用の開示"; then
+            echo "PR本文に「AI利用の開示」がありません"
+            exit 1
+          fi
