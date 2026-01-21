@@ -17,6 +17,12 @@ Copilot coding agent を使ってPRを作る場合でも、CI/CDの基本は変�
 - 受入条件（Issue）とテスト手順がPRから追える状態にする
 - 重要な変更は、AIレビューだけでなくCI（テスト/静的解析）でブロックできるようにする
 
+### この章の例の読み方
+本章では、例を次の2種類に分けて示します。
+
+- **実運用例（このまま使える）**：`examples/` 配下にあるワークフロー例。必要に応じて自分のリポジトリ事情に合わせて調整して使います。
+- **概念例（擬似/抜粋）**：考え方や構造を説明するための例。ワークフロー全体ではない「抜粋」も含むため、コピペ前提では扱いません。
+
 ### ワークフローの基本要素
 
 ### merge queue を使う場合の注意（`merge_group`）
@@ -38,75 +44,43 @@ on:
 - サンプル: `examples/merge-queue-ci-example/`
 
 #### AI協働品質ゲート統合のワークフロー構造
+**実運用例（このまま使える）**：全文は `examples/ai-collaboration-pipeline-example/` を参照してください。以下は最小構成の例です（チェック内容はプロジェクトに合わせて置き換えます）。
 ```yaml
-# .github/workflows/ai-collaboration-pipeline.yml
-name: AI Collaboration ML Pipeline
+# .github/workflows/ai-collaboration-quality-gate.yml
+name: AI Collaboration Quality Gate
 
-# トリガー条件
 on:
-  push:
-    branches: [ main, develop ]
-    paths:
-      - 'src/**'
-      - 'configs/**'
-      - 'requirements.txt'
   pull_request:
-    types: [opened, synchronize]
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
-  # 第2章で学んだAI協働品質チェック
-  ai-collaboration-quality:
+  quality-gate:
     runs-on: ubuntu-latest
     steps:
-      - name: Check AI Collaboration Metadata
+      - uses: actions/checkout@v4
+
+      - name: Run checks
         run: |
-          # PR説明にAI協働履歴があることを確認
-          if ! echo "${{ github.event.pull_request.body }}" | grep -q "🤖 AI協働履歴"; then
-            echo "❌ AI協働履歴が記載されていません"
+          echo "Replace this step with your test/lint/security checks."
+
+      - name: Validate AI disclosure (pull_request only)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          if ! echo "${{ github.event.pull_request.body }}" | grep -q "AI利用の開示"; then
+            echo "PR本文に「AI利用の開示」がありません"
             exit 1
           fi
-          
-      - name: Validate AI Generated Code Quality  
-        run: |
-          # AI生成コード部分の品質チェック
-          python scripts/check_ai_code_quality.py
-
-# 環境変数
-env:
-  PYTHON_VERSION: '3.9'
-  CUDA_VERSION: '11.8'
-  CACHE_NUMBER: 1  # キャッシュをリセットする場合に増やす
-
-# ジョブ定義
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      python-version: ${{ steps.setup.outputs.python-version }}
-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        id: setup
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      
-      - name: Cache dependencies
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.cache/torch
-          key: ${{ runner.os }}-pip-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}
 ```
 
 ### マトリックスビルド
 
 #### 複数環境でのテスト
+**概念例（抜粋）**：`jobs.test` の構造例です（ワークフロー全体ではありません）。
 ```yaml
 test:
   needs: setup
@@ -154,6 +128,7 @@ test:
 ### カスタムアクション
 
 #### 再利用可能なアクション
+**概念例（参考実装）**：カスタムアクションの構造例です。依存関係やOS差分は環境に合わせて要調整です。
 ```yaml
 # .github/actions/setup-ml-env/action.yml
 name: 'Setup ML Environment'
