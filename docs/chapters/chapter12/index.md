@@ -68,6 +68,15 @@ project:
         - "Performance benchmarks"
 ```
 
+### AIエージェント運用の標準化（Issue→Agent→PR→レビュー）
+大規模チームでは、AI活用を「個人の工夫」ではなく「運用」として標準化する必要があります。特に、Copilot coding agent を使う場合は、IssueとPRの情報設計がそのまま成果物品質に影響します。
+
+- Issueは仕様（目的/スコープ/受入条件/制約/テスト）を構造化する
+- PRはAI利用の開示と、人間が検証した観点を固定する
+- `copilot-instructions.md` とチェックリストで、レビュー観点のブレを抑える
+
+最小のひな形は `examples/ai-agent-starter/` を参照してください。実践フローは第4章（Issue→PR）と第7章（レビュー運用）で扱います。
+
 ### リポジトリ構造
 
 #### モノレポ vs マルチレポ

@@ -7,97 +7,74 @@ title: "第7章：AI支援によるコードレビュー実践"
 
 ## 7.1 第2章のPRテンプレートを使った実装
 
-### AI協働履歴を活用したレビュー
-第2章で学んだAI協働テンプレートを実際のPRレビューで活用します。
+### この章で扱う「AIレビュー」の前提
+この章では、GitHub Copilotの **code review（PRレビュー支援）** を中心に扱います。AIレビューは有効ですが、誤検知/見落としがあり得るため、最終判断と責任は人間側に残します。
 
-### 基本機能の確認
-- PRに対する自動コードレビュー
-- セキュリティ脆弱性の検出
-- コードスタイルの提案
-- パフォーマンス改善の指摘
+### 再現性を上げるために、先に揃えるもの
+AIレビューを「運用」に落とすには、レビューの前提を成果物として固定するのが効果的です。
 
-### 第2章テンプレートの実装例
-以下は、第2章で学んだPRテンプレートを実際のプロジェクトで使用した例です：
+- **PRテンプレート**：目的・影響範囲・テスト・ロールバック・AI利用開示・受入条件
+- **カスタム指示**：リポジトリの規約・禁止事項・レビュー観点を`copilot-instructions.md`に集約
+- **チェックリスト**：セキュリティ/運用/互換性など、AIが見落としやすい観点を人間の確認項目として明文化
 
-````markdown
-# [FEATURE] ユーザー認証のレート制限実装
+以下のサンプルは `examples/ai-agent-starter/` に同梱しています（そのままコピーして使える形）。
 
-## 🤖 AI協働履歴
-### AI提案された設計選択
-- **選択肢1**: Redis使用 vs メモリ内カウンター
-  - **AI推奨**: Redis（理由: スケーラビリティ）
-  - **人間判断**: Redis採用（理由: 将来の分散化を考慮）
+### PRテンプレート例（抜粋）
+```markdown
+## 目的
+- 何を直す/追加するか：
+- 期待するユーザー影響：
 
-### AI生成コード部分
-```python
-# AI生成: レート制限ロジック（auth/rate_limiter.py:15-45）
-class LoginRateLimiter:
-    """AIが提案したデコレーター形式で既存コードへの影響最小化"""
-    # 人間による修正: タイムアウト設定を5秒→3秒に短縮
+## 変更内容（概要）
+- 
+
+## 影響範囲
+- 影響する：
+- 影響しない：
+
+## 検証
+- 自動テスト：
+- 手動確認：
+
+## ロールバック
+- 失敗時の戻し方：
+
+## AI利用の開示（必須）
+- AI利用：有 / 無
+- 利用範囲：下書き/実装/レビュー補助 など
+- 人間が最終確認した観点：
+
+## 受入条件（Issue）
+- Closes #xxxx
 ```
 
-## 📊 品質指標
-### AI協働効果測定
-- **開発速度**: ベースライン比2.1倍高速
-- **バグ発見率**: AI提案での事前発見 2件
-- **コードレビュー効率**: レビュー時間1.3時間短縮
-````
+### `.github/copilot-instructions.md` 例（抜粋）
+```markdown
+## Repository rules (must follow)
+- 変更は小さく、意図が分かる単位でPRを作る
+- 既存の規約（命名、ディレクトリ構成、lint）を優先する
+- 秘密情報・個人情報を出力しない
 
-### 有効化手順
-
-#### 組織レベルでの設定
-1. Organization settings → Copilot → Policies
-2. "Copilot for Pull Requests"を有効化
-3. 適用するリポジトリを選択
-
-```yaml
-# .github/copilot-pr.yml
-copilot:
-  pull_request_review:
-    enabled: true
-    auto_review: true
-    review_level: "detailed"  # basic, standard, detailed
-    languages:
-      - python
-      - javascript
-      - typescript
-    exclude_paths:
-      - "docs/**"
-      - "*.md"
-      - "tests/fixtures/**"
+## Review focus
+- 仕様/受入条件との整合
+- セキュリティ（`security-checklist.md` を参照）
+- 破壊的変更の有無とロールバック手順
 ```
 
-#### リポジトリレベルでの設定
-```yaml
-# .github/CODEOWNERS と連携
-# Copilotレビューを特定のファイルに限定
-*.py @ai-reviewer
-src/critical/** @human-reviewer @ai-reviewer
-```
+### 有効化・設定（公式手順への参照）
+Copilotのcode reviewは、プランや組織設定によって利用可否が変わります。設定手順は変更され得るため、公式ドキュメントを参照してください。
 
-### レビュー設定のカスタマイズ
-
-#### レビューの詳細度
-```yaml
-review_preferences:
-  security:
-    level: "strict"
-    block_on_high_severity: true
-  
-  performance:
-    level: "moderate"
-    suggest_optimizations: true
-    
-  style:
-    level: "relaxed"
-    enforce_conventions: false
-    
-  documentation:
-    level: "detailed"
-    require_docstrings: true
-```
+- Copilot code review: https://docs.github.com/en/copilot/concepts/agents/code-review
+- Using Copilot code review: https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review
+- Custom instructions: https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot
 
 ## 7.2 自動レビューコメントの活用
+
+### 重要：誤検知/見落としを前提に扱う
+AIレビューは「気づきの補助」です。次の2点を前提に、運用として扱います。
+
+- **誤検知（false positive）**：問題に見えるが問題ではない指摘が混ざる → 受入条件/仕様/一次情報に戻って判断する
+- **見落とし（false negative）**：問題があるのに指摘されないことがある → テスト/静的解析/人間レビューの責務で担保する
 
 ### レビューコメントの種類
 
@@ -183,8 +160,7 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 ```markdown
 # 開発者の返信例
 
-@copilot ご指摘ありがとうございます。セキュリティの観点は重要ですね。
-環境変数を使用するように修正しました。commit: abc123
+ご指摘ありがとうございます。セキュリティの観点は重要なので、環境変数を使用するように修正しました（commit: abc123）。
 
 また、設定ファイルのサンプルも追加しました。
 ```
@@ -240,16 +216,17 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 
 ```mermaid
 graph LR
-    A[PR作成] --> B[AI自動レビュー]
-    B --> C{重大な問題?}
-    C -->|Yes| D[自動ブロック]
-    C -->|No| E[人間レビュー待ち]
-    E --> F[人間がAIコメント確認]
-    F --> G[追加レビュー]
-    G --> H[承認/要修正]
+    A[PR作成] --> B[（任意）Copilot code review]
+    B --> C[人間レビュー（仕様/リスク判断）]
+    C --> D[CI（テスト/静的解析）]
+    D --> E{要修正?}
+    E -->|Yes| F[修正→再レビュー]
+    E -->|No| G[承認→マージ]
 ```
 
 ### レビュー優先順位の設定
+
+以下は「考え方」を示す**概念例**です。実際に強制する場合は、rulesets/branch protection とCODEOWNERS（必要な承認者/必要なチェック）で表現します。
 
 ```yaml
 # .github/review-priority.yml
@@ -276,281 +253,94 @@ priority_rules:
       - ai_review: "basic"
 ```
 
-## 7.4 セキュリティ脆弱性の自動検出
+## 7.4 セキュリティは「AIレビュー + 静的解析 + ルール」で担保する
 
-### 検出可能な脆弱性
+Copilotのレビューは、セキュリティ観点の気づきに役立つことがありますが、**セキュリティ検査の代替ではありません**。止めたいリスクは、CI（静的解析/テスト）と運用ルールで担保します。
 
-#### 1. インジェクション攻撃
-````python
-# 脆弱なコード
+### 静的解析（CodeQL等）との役割分担（概要）
+- **Copilot code review**：差分の読みやすさ、一般的なアンチパターン、レビュー観点の補助
+- **CI（テスト/静的解析）**：規約違反・既知パターンの検出、ブロッキング（必須チェック）
+- **人間レビュー**：仕様/受入条件、トレードオフ、リスク許容、ロールバック判断
+
+静的解析の詳細は、第8章（GitHub Advanced Security）を参照してください。
+
+### セキュリティのレビュー観点（例）
+以下は「見落としやすい典型例」です。AIが指摘しない場合もあるため、チェックリスト化して人間の責務として残します。
+
+#### 1. インジェクション（例）
+```python
+# 脆弱になり得る例（文字列連結）
 def search_users(query):
     sql = f"SELECT * FROM users WHERE name = '{query}'"
     return db.execute(sql)
 
-# Copilotの警告
-"""
-🚨 CRITICAL: SQL Injection vulnerability detected!
-User input is directly concatenated into SQL query.
-
-Secure implementation:
-```python
-def search_users(query):
+# 対応例（パラメータ化）
+def search_users_safe(query):
     sql = "SELECT * FROM users WHERE name = ?"
     return db.execute(sql, (query,))
 ```
-"""
-````
 
-#### 2. 認証・認可の問題
-````python
-# 脆弱なコード
-@app.route('/admin/users')
-def admin_users():
-    return render_template('admin_users.html', users=get_all_users())
-
-# Copilotの警告
-"""
-⚠️ WARNING: Missing authentication check
-This endpoint appears to be administrative but lacks authentication.
-
-Suggested fix:
+#### 2. 認証・認可（例）
 ```python
+# 脆弱になり得る例（認可チェックの抜け）
 @app.route('/admin/users')
-@require_auth
-@require_role('admin')
 def admin_users():
     return render_template('admin_users.html', users=get_all_users())
 ```
-"""
-````
 
-#### 3. 機密情報の露出
-````python
-# 脆弱なコード
+#### 3. 機密情報の露出（例）
+```python
+# 脆弱になり得る例（ログへの機密出力）
 logger.info(f"User login attempt: {username}, password: {password}")
-
-# Copilotの警告
-"""
-🔐 SECURITY: Sensitive information in logs
-Passwords should never be logged, even for debugging.
-
-Secure approach:
-```python
-logger.info(f"User login attempt: {username}")
-# パスワードは記録しない
 ```
-"""
-````
 
-### セキュリティレポートの活用
+### セキュリティ観点のサマリーを残す（例）
+AIレビュー/人間レビュー/CIの結果を混ぜず、**一次情報（CI結果や根拠リンク）**に寄せてPRに残します。
 
-#### PRセキュリティサマリー
 ```markdown
-## Security Review Summary
+## Security review summary（例）
 
-### 🔍 Scan Results
-- **Critical**: 0
-- **High**: 1
-- **Medium**: 3
-- **Low**: 5
-
-### 📊 Details
-
-#### High Severity
-1. **Insufficient Input Validation** (line 45)
-   - User input not sanitized before use
-   - Potential XSS vulnerability
-
-#### Medium Severity
-1. **Weak Cryptography** (line 120)
-   - MD5 used for password hashing
-   - Recommend bcrypt or argon2
-   
-2. **Missing CSRF Protection** (line 200)
-   - Form submission lacks CSRF token
-   
-3. **Insecure Deserialization** (line 350)
-   - pickle.loads() used on user input
-
-### ✅ Recommendations
-1. Implement input validation library
-2. Update to secure hashing algorithm
-3. Add CSRF middleware
-4. Use JSON instead of pickle
+- CI（CodeQL等）の結果：リンク/結果
+- 追加で確認した観点：auth、入力検証、ログ、依存関係 など
+- リスクと受容判断：この変更で受けるリスク/避けるリスク
+- ロールバック：戻し方、影響範囲
 ```
 
-## 7.5 レビュー効率化のワークフロー
+## 7.5 クォータ/コストを踏まえた運用設計
 
-### 自動化ルールの設定
+Copilotのcode reviewは、プランや組織設定によってクォータ等の制約があります。全PRに無条件で適用する前提ではなく、対象を選ぶ運用が現実的です。
 
-#### GitHub Actions統合
-```yaml
-name: AI-Assisted Code Review
+### どのPRでAIレビューを使うか（例）
+- **優先（高リスク）**：認証/認可、暗号、決済、権限、ネットワーク境界、データ移行、運用手順の変更
+- **選択（中リスク）**：主要な仕様変更、パフォーマンス影響が大きい変更、依存関係の更新
+- **省略（低リスク）**：誤字修正、コメント整形、単純なリファクタ（ただし例外あり）
 
-on:
-  pull_request:
-    types: [opened, synchronize]
+### クォータ枯渇/失敗時の代替フロー
+1. まずCI（必須チェック）を優先する（テスト/静的解析）
+2. 人間レビューで「受入条件」と「リスク」を先に確定する
+3. AIレビューは「使えるときに、観点補助として追加」する（前提が逆転しないようにする）
 
-jobs:
-  ai-review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Run Copilot Review
-        uses: github/copilot-review-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          review-level: detailed
-          
-      - name: Security Scan
-        uses: github/security-scan-action@v1
-        with:
-          fail-on-severity: high
-          
-      - name: Post Review Summary
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const summary = core.getInput('review-summary');
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: summary
-            });
-```
+### 最小の運用指標（例）
+定量は「断定値」ではなく、改善サイクルの材料として扱います。
 
-### レビューダッシュボード
-
-#### カスタムビューの作成
-```javascript
-// review-dashboard.js
-const ReviewDashboard = {
-  filters: {
-    aiReviewPending: true,
-    humanReviewPending: true,
-    securityIssues: 'high',
-    sortBy: 'priority'
-  },
-  
-  columns: [
-    'PR Title',
-    'AI Review Status',
-    'Human Reviewers',
-    'Security Score',
-    'Code Coverage',
-    'Last Updated'
-  ],
-  
-  actions: {
-    bulkApprove: (prs) => {
-      // AI承認済みのPRを一括承認
-    },
-    escalate: (pr) => {
-      // 重要な問題を上位レビュアーに
-    }
-  }
-};
-```
-
-### メトリクスとレポート
-
-#### レビュー効率の測定
-```python
-# review_metrics.py
-class ReviewMetrics:
-    def __init__(self):
-        self.metrics = {
-            'avg_time_to_first_review': None,
-            'ai_accuracy_rate': None,
-            'false_positive_rate': None,
-            'issues_caught_by_ai': 0,
-            'issues_caught_by_human': 0
-        }
-    
-    def calculate_ai_effectiveness(self, prs):
-        """AI レビューの効果を測定"""
-        total_issues = 0
-        ai_caught = 0
-        
-        for pr in prs:
-            for issue in pr.issues:
-                total_issues += 1
-                if issue.detected_by == 'ai':
-                    ai_caught += 1
-                    
-        return ai_caught / total_issues if total_issues > 0 else 0
-    
-    def generate_weekly_report(self):
-        """週次レビューレポートを生成"""
-        return f"""
-        ## Code Review Weekly Report
-        
-        ### AI Review Performance
-        - Issues detected: {self.metrics['issues_caught_by_ai']}
-        - Accuracy rate: {self.metrics['ai_accuracy_rate']:.1%}
-        - False positive rate: {self.metrics['false_positive_rate']:.1%}
-        
-        ### Efficiency Gains
-        - Average review time reduced by: 35%
-        - Critical issues caught early: 89%
-        """
-```
-
-### ベストプラクティス
-
-#### 1. 段階的レビュー
-```yaml
-review_stages:
-  stage1:
-    name: "Automated Checks"
-    tools: ["copilot", "linter", "security-scan"]
-    blocking: true
-    
-  stage2:
-    name: "AI Deep Review"
-    tools: ["copilot-detailed"]
-    blocking: false
-    
-  stage3:
-    name: "Human Review"
-    required_approvals: 1
-    focus_areas: ["business_logic", "architecture"]
-```
-
-#### 2. フィードバックループ
-```python
-# AIレビューの改善
-def collect_feedback(pr_id, ai_comment_id, feedback_type):
-    """
-    feedback_type: 'helpful', 'not_helpful', 'false_positive'
-    """
-    # フィードバックを記録してAIモデルの改善に活用
-    feedback_data = {
-        'pr_id': pr_id,
-        'comment_id': ai_comment_id,
-        'type': feedback_type,
-        'timestamp': datetime.now()
-    }
-    store_feedback(feedback_data)
-```
+- 初回レビューまでの時間（Time to first review）
+- 修正ラウンド数（レビュー→修正→再レビュー）
+- 重大指摘の流入元（人間/AI/CIのどれで検出されたか）
+- ロールバック発生の有無（リスク判断の妥当性）
 
 ## まとめ
 
-本章では、AI支援によるコードレビューについて学習しました。主なポイントは次のとおりです。
-- Copilot for PRsで自動レビューを設定
-- セキュリティ、パフォーマンス、スタイルの自動チェック
-- 人間とAIの役割分担で効率化
-- セキュリティ脆弱性の早期発見
-- メトリクスでレビュー品質を継続改善
+本章の要点は次のとおりです。
+- Copilot code review は「気づきの補助」であり、最終判断と責任は人間側に残る
+- 再現性は、PRテンプレ・カスタム指示・チェックリストで担保する
+- セキュリティはAIレビューだけに依存せず、CI（静的解析/テスト）とルールで担保する
+- クォータ等の制約を前提に、AIレビューを使うPRを選ぶ
 
-次章では、GitHub Advanced Securityとの連携について学習します。
+次章（第8章）では、GitHub Advanced Securityによる静的解析・セキュリティ運用を扱います。
 
 ## 確認事項
 
-- [ ] Copilot for PRsの設定が完了している
-- [ ] AIコメントの種類を理解している
-- [ ] 人間レビューとの使い分けができる
-- [ ] セキュリティ検出機能を活用している
-- [ ] レビューワークフローを最適化している
+- [ ] 章の冒頭で示した「テンプレ/指示/チェックリスト」の役割を説明できる
+- [ ] 誤検知/見落としを前提に、AIレビューの結果を扱える
+- [ ] セキュリティはCIと運用ルールで担保する設計にできる
+- [ ] クォータ等の制約を前提に、AIレビューの適用範囲を決められる
