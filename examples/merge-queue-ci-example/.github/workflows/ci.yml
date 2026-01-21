@@ -1,0 +1,19 @@
+name: CI (pull_request + merge_group)
+
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run checks
+        run: |
+          echo "Replace this step with your test/lint/security checks."
+          echo "event_name=${{ github.event_name }}"

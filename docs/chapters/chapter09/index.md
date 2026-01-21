@@ -183,6 +183,33 @@ class PermissionManager:
 
 ## 9.2 AI協働を考慮したブランチ保護ルール
 
+### branch protection と rulesets の位置付け
+
+GitHub には、ブランチへの制約を表現する仕組みとして、主に次の2系統があります（利用可否や設定項目はプラン/権限で差分があるため、詳細は公式ドキュメントで要確認です）。
+
+- **branch protection rules**: ブランチパターン（例: `main`）に対して保護ルールを設定する従来の仕組み
+- **rulesets**: ブランチやタグに対してルールをまとめて適用できる仕組み（組織ポリシーとしても運用しやすい）
+
+本章では読みやすさのために「branch protection」を例に説明しますが、可能であれば rulesets を第一候補として検討してください。特に AI 協働では、次の要素を **ルール（rulesets/branch protection）+ CODEOWNERS + 必須チェック（CI）** で一体として設計すると、運用が安定します。
+
+- PR を必須にする（直 push を避ける）
+- 必須チェック（テスト/静的解析/セキュリティ）を定義する
+- CODEOWNERS による必須承認（重要領域のレビュー固定）を有効にする
+- 必要に応じて merge queue を有効化する（詳細は第13章）
+
+参考:
+- rulesets: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets
+- merge queue: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
+
+#### AI生成PRの検証レベルを「ルール + 必須チェック」で固定する（例）
+
+AI生成PRに限らず、最終的にマージされるコードの品質は「人間の善意」ではなく、ルールとチェックで担保します。rulesets/branch protection で「必須チェック（required status checks）」を要求しておけば、AI生成PRを例外扱いせずに品質ゲートへ乗せられます。
+
+例:
+- **必須チェック**: テスト、静的解析（CodeQL等）、依存関係レビュー（dependency review）など
+- **必須承認**: CODEOWNERS による重要領域（認証/暗号/決済など）の承認必須化
+- **任意の追加**: PR本文の「AI利用の開示」欄（PRテンプレ）をチェックする独自ワークフローを必須チェックにする
+
 ### 基本的な保護設定
 
 #### AI協働対応のmainブランチ保護

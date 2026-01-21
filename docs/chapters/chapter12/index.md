@@ -159,6 +159,19 @@ gitGraph
     merge release/v1.0
 ```
 
+### rulesets と merge queue を前提にした統制
+
+大規模チームでは「ブランチ戦略」だけでなく、「マージの統制（誰が/どの条件で/どこへマージできるか）」を仕組みで固定しないと破綻しやすくなります。ここでは、ルール定義として rulesets を前提にすることを推奨します（環境により branch protection を継続するケースもあるため要確認です）。
+
+- rulesets（または branch protection）で、PR必須・必須チェック（required status checks）・必須承認（CODEOWNERS等）を定義する
+- merge queue を併用し、最終的なマージ結果に対して必須チェックが通っている状態で統合する
+- merge queue を使う場合、CI は `pull_request` だけでなく `merge_group` にも対応させる（第13章を参照）
+
+参考:
+- rulesets: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets
+- merge queue: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
+- `merge_group` イベント: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group
+
 ### 実装例
 
 #### プロジェクト初期設定スクリプト
