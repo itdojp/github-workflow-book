@@ -45,14 +45,39 @@ Copilotは「補完ツール」だけではなく、目的別に複数の機能�
 
 - Policies: https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization
 
-### 6.1.4 モデル更新/廃止に備える（最小チェックリスト）
-モデルは更新/廃止があり得ます。特定モデル前提の手順やテンプレがあると、ある日再現できなくなるため、最低限の点検を入れておくのが安全です。
+### 6.1.4 モデル更新/廃止に備える（運用ガイド）
+Copilotで利用できるモデルや機能は、更新・追加・廃止があり得ます。特定モデル前提の手順やテンプレートがあると、ある日再現できなくなるため、変更管理の「最小運用」を先に決めておくのが安全です。
 
-- [ ] 自分の環境で利用できるモデル一覧を確認する（Supported models）
+#### 想定する変化（例）
+- 利用できるモデルの追加/更新/廃止（選択肢が変わる）
+- 組織ポリシーの変更（機能/モデル/追加コストの許可範囲が変わる）
+- 生成結果の揺れ（品質/トーン/安全性が変わり得る）
+
+#### 変更時の基本フロー（検知→影響分析→検証→ロールアウト→ロールバック）
+1. **検知**: 定期点検（例：月次）と、変更が起きたときの通知経路を決める（誰が見るか）
+2. **影響分析**: 影響を受ける範囲を特定する（例：テンプレート、必須チェック、レビュー観点、CI）
+3. **事前検証**: 代表的なタスクで差分を確認する（例：同じIssue入力でPRが成立するか、レビュー観点が漏れないか）
+4. **ロールアウト**: 適用範囲を段階化する（例：一部チームで先行、例外申請の扱いを決める）
+5. **ロールバック**: 代替手段と切り戻し基準を決める（例：人手レビュー強化、静的解析の必須化、モデル固定の見直し）
+
+#### 最小（必須）チェックリスト
+- [ ] 自分の環境で利用できるモデル一覧を定期確認する（Supported models）
 - [ ] Auto運用の場合、何が選ばれ得るか（組織ポリシー/ホスティング前提）を把握する
-- [ ] 重要な手順・テンプレは「モデル名に依存しない書き方」へ寄せる（入力・制約・出力の定義で担保）
-- [ ] 重要なワークフローは、定期的に再実行して結果差分を確認する（例：月次）
-- [ ] 変更が入った場合の代替手段（人手レビュー、静的解析の強化など）を用意する
+- [ ] 重要な手順・テンプレートは「モデル名に依存しない書き方」へ寄せる（入力・制約・出力の定義で担保）
+- [ ] 主要ワークフローは定期的に再実行し、結果差分を記録する（例：月次）
+- [ ] 変更時の代替手段（人手レビュー、静的解析の必須化など）を事前に決める
+
+#### 推奨チェックリスト（運用として安定させる）
+- [ ] 監視の責任者と通知チャネルを決める（例：管理者→チームへの共有、チケット化）
+- [ ] 「評価用プロンプトセット」と「期待出力の許容範囲」を用意する（更新前後の比較に使う）
+- [ ] 重要領域は rulesets/branch protection と CODEOWNERS、必須チェック（CI）で品質ゲートを固定する（第9章・第13章）
+- [ ] レビュー観点はチェックリストに落とし、個人差を減らす（第7章、`examples/ai-agent-starter/`）
+- [ ] 例外（特定チームのみモデル固定等）の申請・期限・解除条件を決める
+
+#### 参照（公式）
+- Supported models: https://docs.github.com/en/copilot/reference/ai-models/supported-models
+- Model hosting: https://docs.github.com/en/copilot/reference/ai-models/model-hosting
+- Policies: https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization
 
 ### CLEAR方式とCopilotの組み合わせ
 第2章で学んだCLEAR方式をCopilotのコメント指示に適用することで、より精度の高いコード生成が可能になります。
