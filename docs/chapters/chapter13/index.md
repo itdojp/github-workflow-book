@@ -19,6 +19,24 @@ Copilot coding agent を使ってPRを作る場合でも、CI/CDの基本は変�
 
 ### ワークフローの基本要素
 
+### merge queue を使う場合の注意（`merge_group`）
+
+merge queue を有効にしている場合、必須チェック（required status checks）は「PRの先にある最終的なマージ結果」に対しても通る必要があります。GitHub Actions を必須チェックにしている場合、ワークフローが `pull_request` だけで起動する設計だと、merge queue 側のチェックが満たせずに詰まることがあります。
+
+そのため、必須チェックにしているワークフローは `merge_group` イベントにも対応させます。
+
+```yaml
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+```
+
+参考:
+- merge queue: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
+- `merge_group` イベント: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group
+- サンプル: `examples/merge-queue-ci-example/`
+
 #### AI協働品質ゲート統合のワークフロー構造
 ```yaml
 # .github/workflows/ai-collaboration-pipeline.yml
