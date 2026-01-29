@@ -1,13 +1,13 @@
 {
   "book": {
-    "title": "AI\u958b\u767a\u306e\u305f\u3081\u306eGitHub\u30ef\u30fc\u30af\u30d5\u30ed\u30fc\u5b9f\u8df5\u30ac\u30a4\u30c9",
-    "subtitle": "AI\u5354\u50cd\u6642\u4ee3\u306b\u5bfe\u5fdc\u3057\u305f\u3001\u4e16\u754c\u521d\u306e\u5b9f\u8df5\u7684GitHub\u30ef\u30fc\u30af\u30d5\u30ed\u30fc\u30ac\u30a4\u30c9\u30d6\u30c3\u30af",
-    "description": "ChatGPT/GitHub Copilot/Claude\u7b49\u306eAI\u958b\u767a\u8005\u30c4\u30fc\u30eb\u3068GitHub\u3092\u7d71\u5408\u3057\u305f\u958b\u767a\u624b\u6cd5\u3092\u4f53\u7cfb\u7684\u306b\u89e3\u8aac\u3002AI\u6642\u4ee3\u306e\u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u958b\u767a\u306b\u5fc5\u8981\u306a\u30ef\u30fc\u30af\u30d5\u30ed\u30fc\u3001\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u3001\u30ac\u30d0\u30ca\u30f3\u30b9\u3001\u5927\u898f\u6a21\u958b\u767a\u306e\u5b9f\u8df5\u7684\u30ce\u30a6\u30cf\u30a6\u3092\u7db2\u7f85\u3002",
+    "title": "AI開発のためのGitHubワークフロー実践ガイド",
+    "subtitle": "AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック",
+    "description": "ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した開発手法を体系的に解説。AI時代のソフトウェア開発に必要なワークフロー、セキュリティ、ガバナンス、大規模開発の実践的ノウハウを網羅。",
     "author": {
-      "name": "\u592a\u7530\u548c\u5f66",
+      "name": "太田和彦",
       "email": "knowledge@itdo.jp",
       "github": "itdojp",
-      "organization": "\u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5",
+      "organization": "株式会社アイティードゥ",
       "website": "https://www.itdo.jp"
     },
     "license": "CC-BY-NC-SA-4.0",
@@ -23,14 +23,14 @@
   "contentSections": [
     {
       "name": "introduction",
-      "title": "\u306f\u3058\u3081\u306b",
+      "title": "はじめに",
       "directory": "introduction",
       "enabled": true,
       "order": 1
     },
     {
       "name": "chapters",
-      "title": "\u672c\u7ae0",
+      "title": "本章",
       "directory": "chapters",
       "enabled": true,
       "order": 2,
@@ -38,16 +38,16 @@
     },
     {
       "name": "appendices",
-      "title": "\u4ed8\u9332",
+      "title": "付録",
       "directory": "appendices",
       "enabled": true,
       "order": 3,
       "numbering": true,
-      "numberingPrefix": "\u4ed8\u9332"
+      "numberingPrefix": "付録"
     },
     {
       "name": "afterword",
-      "title": "\u3042\u3068\u304c\u304d",
+      "title": "あとがき",
       "directory": "afterword",
       "enabled": true,
       "order": 4
@@ -56,7 +56,7 @@
   "tableOfContents": {
     "enabled": true,
     "outputFile": "github-workflow-book-toc.md",
-    "title": "\u76ee\u6b21",
+    "title": "目次",
     "maxDepth": 3,
     "includeNumbers": true,
     "autoLink": true,
@@ -91,8 +91,8 @@
     "<!-- INSTRUCTOR:",
     "<!-- INTERNAL:",
     "<!-- SENSITIVE:",
-    "<!-- \u500b\u4eba\u60c5\u5831",
-    "<!-- \u6a5f\u5bc6\u60c5\u5831"
+    "<!-- 個人情報",
+    "<!-- 機密情報"
   ],
   "sensitivePatterns": [
     "(api[_-]?key|secret[_-]?key|access[_-]?token|auth[_-]?token)\\s*[=:]\\s*['\"][a-zA-Z0-9_-]{8,}['\"]",
@@ -137,10 +137,7 @@
   "imageOptimization": {
     "enabled": true,
     "quality": 85,
-    "formats": [
-      "webp",
-      "original"
-    ],
+    "formats": ["webp", "original"],
     "maxWidth": 1920,
     "stripMetadata": true,
     "lazyLoad": true
@@ -169,8 +166,8 @@
     "includeTableOfContents": true,
     "chapterLevel": 1,
     "language": "ja",
-    "publisher": "\u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5",
-    "rights": "\u00a9 2025 ITDO Inc. All rights reserved."
+    "publisher": "株式会社アイティードゥ",
+    "rights": "© 2025 ITDO Inc. All rights reserved."
   },
   "japanese": {
     "enableTextlint": true,
