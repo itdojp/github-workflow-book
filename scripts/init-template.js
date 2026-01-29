@@ -203,7 +203,7 @@ ${config.authorName}
 
 ## ライセンス
 
-この書籍は [MIT License](LICENSE) の下で公開されています。
+この書籍は CC BY-NC-SA 4.0（非営利利用は自由、商用は別途契約）で提供されています。
 
 ---
 
@@ -340,7 +340,7 @@ ${path.basename(process.cwd())}/
 
 ## 📄 ライセンス
 
-MIT License - 詳細は [LICENSE](LICENSE) を参照してください。
+CC BY-NC-SA 4.0 - 詳細は LICENSE.md を参照してください。
 `;
   fs.writeFileSync('README.md', readmeContent);
   console.log('✓ README.md を作成しました');

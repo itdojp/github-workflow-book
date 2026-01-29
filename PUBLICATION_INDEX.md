@@ -254,4 +254,4 @@ python measure_productivity.py --before [導入前] --after [導入後]
 ---
 
 **© 2025 株式会社アイティードゥ 太田和彦. All rights reserved.**  
-**Licensed under MIT License - 商用利用可能**
+**CC BY-NC-SA 4.0（商用は別契約）**

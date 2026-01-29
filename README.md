@@ -263,7 +263,7 @@ AI協働に最適化された開発環境設定
 
 ## 📄 ライセンス
 
-MIT License - 商用利用可能
+CC BY-NC-SA 4.0（商用は別契約）
 
 © 2025 株式会社アイティードゥ 太田和彦. All rights reserved.
 
