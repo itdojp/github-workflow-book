@@ -710,7 +710,7 @@ async function processBookReadme(projectRoot, publicDir, rollback) {
       '{{CHAPTER_1_TITLE}}': '基礎',
       '{{CHAPTER_2_TITLE}}': '応用',
       '{{CHAPTER_3_TITLE}}': '実践',
-      '{{LICENSE}}': CONFIG.book?.license || 'MIT License',
+      '{{LICENSE}}': CONFIG.book?.license || 'CC BY-NC-SA 4.0',
       '{{BOOK_SLUG}}': CONFIG.book?.repository?.zenn?.split('/').pop() || 'book-slug',
       '{{TOC_FILE}}': CONFIG.tableOfContents?.outputFile || 'table-of-contents.md',
       '{{BUILD_DATE}}': new Date().toISOString().split('T')[0]

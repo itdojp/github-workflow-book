@@ -176,7 +176,7 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 ## 📖 書籍について
 
 **著者**: 太田和彦（株式会社アイティードゥ）  
-**ライセンス**: MIT License  
+**ライセンス**: CC BY-NC-SA 4.0（商用は別契約）  
 **リポジトリ**: [GitHub](https://github.com/itdojp/github-workflow-book-private)
 
 ---
