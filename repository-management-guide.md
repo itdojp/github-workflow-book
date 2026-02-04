@@ -174,7 +174,7 @@ github-workflow-book-private/
 ## 関連ドキュメント
 
 - [デプロイメントガイド](deployment-guide.md) - デプロイの詳細手順
-- [開発ガイド](development-guide.md) - 開発環境のセットアップ
+- [開発ガイド](DEVELOPMENT.md) - 開発環境のセットアップ
 - [コントリビューションガイド](CONTRIBUTING.md) - 貢献方法
 
 ## サポート
