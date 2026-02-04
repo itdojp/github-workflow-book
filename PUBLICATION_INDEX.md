@@ -92,81 +92,81 @@
 ### 🔥 重要度別ガイド
 
 #### ⭐⭐⭐⭐⭐ 必読（全読者共通）
-- **[第2章：AI時代のGitHub協働基礎](chapter-02-ai-collaboration-fundamentals.md)**
+- **[第2章：AI時代のGitHub協働基礎](docs/chapters/chapter02/)**
   - 🎯 **本書の核心**：CLEARフレームワーク
   - 📈 即座に生産性向上を実現
   - 🛠️ 以降の全章で使用する基礎概念
 
 #### ⭐⭐⭐⭐ 高優先度（実践重視）
-- [第3章：必須コマンドとAI活用](chapter-03-essential-commands-ai.md)
-- [第4章：GitHubでの協働作業入門](chapter-04-github-collaboration-ai.md)
-- [第6章：GitHub Copilotの高度な活用](chapter-06-github-copilot-advanced.md)
-- [第7章：AI支援によるコードレビュー実践](chapter-07-ai-code-review-practice.md)
+- [第3章：必須コマンドとAI活用](docs/chapters/chapter03/)
+- [第4章：GitHubでの協働作業入門](docs/chapters/chapter04/)
+- [第6章：GitHub Copilotの高度な活用](docs/chapters/chapter06/)
+- [第7章：AI支援によるコードレビュー実践](docs/chapters/chapter07/)
 
 #### ⭐⭐⭐ 中優先度（チーム・組織向け）
-- [第9章：アクセス権限の体系](chapter-09-access-permissions-ai.md)
-- [第10章：組織管理とチーム運用](chapter-10-organization-management-ai.md)
-- [第12章：実践的なワークフロー設計](chapter-11-practical-workflow.md)
-- [第13章：CI/CDパイプライン構築](chapter-12-cicd-pipeline.md)
+- [第9章：アクセス権限の体系](docs/chapters/chapter09/)
+- [第10章：組織管理とチーム運用](docs/chapters/chapter10/)
+- [第12章：実践的なワークフロー設計](docs/chapters/chapter12/)
+- [第13章：CI/CDパイプライン構築](docs/chapters/chapter13/)
 
 ### 📖 完全章構成（クリック可能）
 
 <details>
 <summary><strong>📑 第1部：AI協働時代の基礎編</strong></summary>
 
-- [第1章：GitとGitHubの基本概念](chapter-01-git-github-basics.md)
-- [⭐ 第2章：AI時代のGitHub協働基礎](chapter-02-ai-collaboration-fundamentals.md) **【核心章】**
-- [第3章：必須コマンドとAI活用](chapter-03-essential-commands-ai.md)
-- [第4章：GitHubでの協働作業入門](chapter-04-github-collaboration-ai.md)
-- [第5章：GitHubアカウントとリポジトリ管理](chapter-05-account-repository-ai.md)
+- [第1章：GitとGitHubの基本概念](docs/chapters/chapter01/)
+- [⭐ 第2章：AI時代のGitHub協働基礎](docs/chapters/chapter02/) **【核心章】**
+- [第3章：必須コマンドとAI活用](docs/chapters/chapter03/)
+- [第4章：GitHubでの協働作業入門](docs/chapters/chapter04/)
+- [第5章：GitHubアカウントとリポジトリ管理](docs/chapters/chapter05/)
 
 </details>
 
 <details>
 <summary><strong>🤖 第2部：AIツール活用編</strong></summary>
 
-- [第6章：GitHub Copilotの高度な活用](chapter-06-github-copilot-advanced.md)
-- [第7章：AI支援によるコードレビュー実践](chapter-07-ai-code-review-practice.md)
-- [第8章：GitHub Advanced SecurityとAI統合](chapter-08-github-advanced-security-ai.md)
+- [第6章：GitHub Copilotの高度な活用](docs/chapters/chapter06/)
+- [第7章：AI支援によるコードレビュー実践](docs/chapters/chapter07/)
+- [第8章：GitHub Advanced SecurityとAI統合](docs/chapters/chapter08/)
 
 </details>
 
 <details>
 <summary><strong>🔒 第3部：セキュリティと権限管理編</strong></summary>
 
-- [第9章：アクセス権限の体系](chapter-09-access-permissions-ai.md)
-- [第10章：組織管理とチーム運用](chapter-10-organization-management-ai.md)
-- [第11章：セキュリティ実践](chapter-11-security-practice-ai.md)
+- [第9章：アクセス権限の体系](docs/chapters/chapter09/)
+- [第10章：組織管理とチーム運用](docs/chapters/chapter10/)
+- [第11章：セキュリティ実践](docs/chapters/chapter11/)
 
 </details>
 
 <details>
 <summary><strong>⚙️ 第4部：実践編（チーム開発）</strong></summary>
 
-- [第12章：実践的なワークフロー設計](chapter-11-practical-workflow.md)
-- [第13章：CI/CDパイプライン構築](chapter-12-cicd-pipeline.md)
-- [第14章：大規模データとモデルの管理](chapter-14-large-scale-data-model-ai.md)
-- [第15章：GitHub Pagesでのプロジェクト公開](chapter-14-github-pages.md)
+- [第12章：実践的なワークフロー設計](docs/chapters/chapter12/)
+- [第13章：CI/CDパイプライン構築](docs/chapters/chapter13/)
+- [第14章：大規模データとモデルの管理](docs/chapters/chapter14/)
+- [第15章：GitHub Pagesでのプロジェクト公開](docs/chapters/chapter15/)
 
 </details>
 
 <details>
 <summary><strong>🏢 第5部：発展編（エンタープライズ対応）</strong></summary>
 
-- [第16章：外部協力者との連携](chapter-15-external-collaboration.md)
-- [第17章：コンプライアンスとガバナンス](chapter-16-compliance-governance.md)
+- [第16章：外部協力者との連携](docs/chapters/chapter16/)
+- [第17章：コンプライアンスとガバナンス](docs/chapters/chapter17/)
 
 </details>
 
 <details>
 <summary><strong>📚 付録・参考資料</strong></summary>
 
-- [付録A：GitHub用語集](appendix-a-github-glossary.md)
-- [付録B：トラブルシューティングガイド](appendix-b-troubleshooting.md)
-- [付録C：料金プランと機能比較表](appendix-c-pricing-comparison.md)
-- [付録D：AIツールのコスト計算例](appendix-d-ai-cost-calculation.md)
-- [付録E：便利なGitエイリアス集](appendix-e-git-aliases.md)
-- [付録F：推奨VS Code拡張機能](appendix-f-vscode-extensions.md)
+- [付録A：GitHub用語集](docs/appendices/appendix-a/)
+- [付録B：トラブルシューティングガイド](docs/appendices/appendix-b/)
+- [付録C：料金プランと機能比較表](docs/appendices/appendix-c/)
+- [付録D：AIツールのコスト計算例](docs/appendices/appendix-d/)
+- [付録E：便利なGitエイリアス集](docs/appendices/appendix-e/)
+- [付録F：推奨VS Code拡張機能](docs/appendices/appendix-f/)
 
 </details>
 
