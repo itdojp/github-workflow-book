@@ -164,7 +164,7 @@ github-workflow-book/
 2. **[README.md](README.md)** で書籍概要を確認
 3. **第2章** から実践開始
 
-### 👨‍💻 開発者として
+### 👨💻 開発者として
 1. **[CLAUDE.md](CLAUDE.md)** で開発経緯を理解
 2. **[scripts/publication_manager.py](scripts/publication_manager.py)** で出版準備
 3. **GitHub Actions** で自動化確認
