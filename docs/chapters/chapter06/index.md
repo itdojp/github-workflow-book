@@ -31,8 +31,8 @@ Copilotは「補完ツール」だけではなく、目的別に複数の機能�
 
 注意点：選べるモデルはプランや組織設定で変わります。最新情報は公式ドキュメントを参照してください。
 
-- Supported models: https://docs.github.com/en/copilot/reference/ai-models/supported-models
-- Model hosting: https://docs.github.com/en/copilot/reference/ai-models/model-hosting
+- Supported models: [Supported models](https://docs.github.com/en/copilot/reference/ai-models/supported-models)
+- Model hosting: [Model hosting](https://docs.github.com/en/copilot/reference/ai-models/model-hosting)
 
 ### 6.1.3 組織ポリシーでの統制（機能/モデル/追加コスト）
 組織でCopilotを使う場合、管理者がポリシーで統制します。現場では「使える/使えない」が突然変わることがあるため、利用者側も前提として理解しておくとトラブルを減らせます。
@@ -43,7 +43,7 @@ Copilotは「補完ツール」だけではなく、目的別に複数の機能�
 
 公式の管理・ポリシーは変更され得るため、設定手順は公式ドキュメントを参照してください。
 
-- Policies: https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization
+- Policies: [Policies](https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization)
 
 ### 6.1.4 モデル更新/廃止に備える（運用ガイド）
 Copilotで利用できるモデルや機能は、更新・追加・廃止があり得ます。特定モデル前提の手順やテンプレートがあると、ある日再現できなくなるため、変更管理の「最小運用」を先に決めておくのが安全です。
@@ -75,9 +75,9 @@ Copilotで利用できるモデルや機能は、更新・追加・廃止があ�
 - [ ] 例外（特定チームのみモデル固定等）の申請・期限・解除条件を決める
 
 #### 参照（公式）
-- Supported models: https://docs.github.com/en/copilot/reference/ai-models/supported-models
-- Model hosting: https://docs.github.com/en/copilot/reference/ai-models/model-hosting
-- Policies: https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization
+- Supported models: [Supported models](https://docs.github.com/en/copilot/reference/ai-models/supported-models)
+- Model hosting: [Model hosting](https://docs.github.com/en/copilot/reference/ai-models/model-hosting)
+- Policies: [Policies](https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization)
 
 ### CLEAR方式とCopilotの組み合わせ
 第2章で学んだCLEAR方式をCopilotのコメント指示に適用することで、より精度の高いコード生成が可能になります。
