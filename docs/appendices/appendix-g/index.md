@@ -483,7 +483,8 @@ This software may NOT be exported/re-exported to:
 - Entities on denied parties lists
 
 ## Cryptographic Notice
-This distribution includes cryptographic software. The country in which you currently reside may have restrictions on the import, possession, use, and/or re-export to another country, of encryption software.
+This distribution includes cryptographic software. The country in which you currently reside may have restrictions on the
+import, possession, use, and/or re-export to another country, of encryption software.
 
 ## Compliance Requirements
 Before using or distributing this software:

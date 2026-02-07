@@ -256,10 +256,14 @@ By making a contribution to this project, I agree to the following:
 - "Contribution" shall mean any original work of authorship, including any modifications or additions to an existing work.
 
 ### 2. Grant of Copyright License
-You hereby grant to the project maintainers and to recipients of software distributed by the project maintainers a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute Your Contributions and such derivative works.
+You hereby grant to the project maintainers and to recipients of software distributed by the project maintainers a perpetual,
+worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of,
+publicly display, publicly perform, sublicense, and distribute Your Contributions and such derivative works.
 
 ### 3. Grant of Patent License
-You hereby grant to the project maintainers and to recipients of software distributed by the project maintainers a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work.
+You hereby grant to the project maintainers and to recipients of software distributed by the project maintainers a perpetual,
+worldwide, non-exclusive, no-charge, royalty-free, irrevocable patent license to make, have made, use, offer to sell, sell,
+import, and otherwise transfer the Work.
 
 ### 4. Representations
 You represent that:
