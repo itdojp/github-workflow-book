@@ -219,7 +219,7 @@ git config alias.st status
     contributors = shortlog -sn
     
     # 今週のコントリビューション
-    stats = "!git log --author=\"$(git config user.name)\" --since=1.week --pretty=tformat: --numstat | awk '{a+=$1;r+=$2}END{printf \"Added:%s Removed:%s Total:%s\\n\",a,r,a-r}'"
+    stats = "!git log --author=\"$(git config user.name)\" --since=1.week --pretty=tformat: --numstat | awk '{a+=$1;r+=$2}END{printf \"Added: %s, Removed: %s, Total: %s\\n\",a,r,a-r}'"
     
     # ファイル別の変更頻度
     churn = "!git log --all -M -C --name-only --format='format:' \"$@\" | sort | grep -v '^$' | uniq -c | sort -n"
