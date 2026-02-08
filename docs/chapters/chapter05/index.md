@@ -298,8 +298,8 @@ One-line description of your project.
 
 ### Requirements
 - Python 3.10+
-- PyTorch 1.9+
-- CUDA 11.0+ (for GPU support)
+- PyTorch 2.x
+- CUDA 11.x/12.x (for GPU support, matching your PyTorch build)
 
 ### Setup
 ```bash

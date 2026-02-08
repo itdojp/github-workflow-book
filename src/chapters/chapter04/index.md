@@ -154,10 +154,10 @@ Title: [FEATURE] データ拡張機能の追加
 Title: [BUG] バッチサイズ1でモデル推論時にエラー発生
 
 ## 環境情報
-- OS: Ubuntu 20.04
-- Python: 3.9.0
-- PyTorch: 2.0.0
-- CUDA: 11.7
+- OS: Ubuntu LTS（例: 22.04）
+- Python: 3.x
+- PyTorch: 2.x
+- CUDA: 11.x
 - 発生頻度: バッチサイズ1の時100%再現
 
 ## 再現手順
