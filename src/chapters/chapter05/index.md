@@ -280,7 +280,7 @@ Protect matching branches:
 
 [![Build Status](https://travis-ci.org/username/repo.svg?branch=main)](https://travis-ci.org/username/repo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
 One-line description of your project.
 
@@ -292,9 +292,9 @@ One-line description of your project.
 ## Installation
 
 ### Requirements
-- Python 3.8+
-- PyTorch 1.9+
-- CUDA 11.0+ (for GPU support)
+- Python 3.10+
+- PyTorch 2.x
+- CUDA 11.x/12.x (for GPU support, matching your PyTorch build)
 
 ### Setup
 ```bash
