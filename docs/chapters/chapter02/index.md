@@ -36,9 +36,9 @@ GitHub Actions による品質ゲートやメトリクス収集（2.6〜2.7）�
 # [BUG] ログイン認証でランダムに401エラーが発生
 
 ## 環境情報
-- OS: Ubuntu 20.04
-- Python: 3.9.7
-- Django: 4.1.2
+- OS: Ubuntu LTS（例: 22.04）
+- Python: 3.x
+- Django: 4.x
 - 発生頻度: 約20%のログイン試行
 
 ## 再現手順
