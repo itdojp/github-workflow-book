@@ -93,7 +93,7 @@ title: "第2章：AI時代のGitHub協働基礎 ⭐"
 # [BUG] ログイン認証でランダムに401エラーが発生
 
 ## 環境情報
-- OS: Ubuntu 20.04
+ - OS: Ubuntu 22.04 LTS
 - Python: 3.9.7
 - Django: 4.1.2
 - 発生頻度: 約20%のログイン試行
