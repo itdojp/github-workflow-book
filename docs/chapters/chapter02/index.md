@@ -104,7 +104,7 @@ def get_cached_user(user_id: int) -> Optional[User]:
 ### Context（コンテキスト設定）
 ```markdown
 ## プロジェクト情報
-- **技術スタック**: Python 3.9, Django 4.1, PostgreSQL
+- **技術スタック**: Python 3.11, Django 4.2 (LTS), PostgreSQL
 - **チーム規模**: 5名（フロント2名、バック2名、DevOps1名）
 - **現在のスプリント**: ユーザー認証機能の強化（Week 2/3）
 ```
