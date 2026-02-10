@@ -102,7 +102,7 @@ test:
   runs-on: ${{ matrix.os }}
   
   steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -228,7 +228,7 @@ jobs:
     runs-on: [self-hosted, gpu]  # セルフホストランナー（GPU付き）
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup ML environment
         uses: ./.github/actions/setup-ml-env
@@ -332,7 +332,7 @@ jobs:
       matrix: ${{ steps.generate.outputs.matrix }}
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Generate experiment matrix
         id: generate
@@ -352,7 +352,7 @@ jobs:
     runs-on: [self-hosted, gpu]
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup environment
         uses: ./.github/actions/setup-ml-env
@@ -377,7 +377,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Collect all results
         run: |
@@ -423,7 +423,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -453,7 +453,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup ML environment
         uses: ./.github/actions/setup-ml-env
@@ -505,7 +505,7 @@ jobs:
           - 6379:6379
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup environment
         uses: ./.github/actions/setup-ml-env
@@ -521,7 +521,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup environment
         uses: ./.github/actions/setup-ml-env
@@ -709,7 +709,7 @@ jobs:
     runs-on: [self-hosted, gpu-cluster]
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup distributed environment
         run: |
@@ -747,7 +747,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       # Docker層のキャッシュ
       - name: Set up Docker Buildx
@@ -814,7 +814,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Download model artifact
         uses: actions/download-artifact@v3
@@ -849,7 +849,7 @@ jobs:
     environment: staging
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -878,7 +878,7 @@ jobs:
     environment: production
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Deploy canary version
         run: |
