@@ -741,12 +741,12 @@ jobs:
     
     # 1. CodeQL
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v4
       with:
         languages: 'python, javascript'
         
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v4
       
     # 2. Trivy (コンテナスキャン)
     - name: Run Trivy vulnerability scanner
@@ -757,7 +757,7 @@ jobs:
         output: 'trivy-results.sarif'
         
     - name: Upload Trivy results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: 'trivy-results.sarif'
         
