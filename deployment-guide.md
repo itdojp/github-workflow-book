@@ -147,7 +147,7 @@ jobs:
         rm -f .nojekyll
 
     - name: Deploy to public repository using peaceiris/actions-gh-pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         personal_token: ${{ secrets.PUBLIC_REPO_TOKEN }}
         external_repository: itdojp/github-workflow-book-public
