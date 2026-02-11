@@ -751,7 +751,7 @@ jobs:
       
       # Docker層のキャッシュ
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         
       - name: Cache Docker layers
         uses: actions/cache@v4
