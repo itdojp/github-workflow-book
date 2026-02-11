@@ -763,7 +763,7 @@ jobs:
         
     # 3. Snyk
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/python@v1
+      uses: snyk/actions/python@v1.0.0
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
