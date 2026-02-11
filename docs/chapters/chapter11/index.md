@@ -467,32 +467,32 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       
-    - name: Metadata
-      id: metadata
-      uses: dependabot/fetch-metadata@v1
-      with:
-        github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
         
-    - name: Auto-merge for patch and minor updates
-      if: |
-        steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-        steps.metadata.outputs.update-type == 'version-update:semver-minor'
-      run: gh pr merge --auto --merge "$PR_URL"
-      env:
-        PR_URL: ${{ github.event.pull_request.html_url }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Auto-merge for patch and minor updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: Approve PR
-      if: |
-        steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-        steps.metadata.outputs.update-type == 'version-update:semver-minor'
-      run: gh pr review --approve "$PR_URL"
-      env:
-        PR_URL: ${{ github.event.pull_request.html_url }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Approve PR
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### 脆弱性レポートの生成
