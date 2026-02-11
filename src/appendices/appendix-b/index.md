@@ -182,7 +182,7 @@ env:
     find . -name "*.pth"
 
 # 正しいアップロード設定
-- uses: actions/upload-artifact@v3
+- uses: actions/upload-artifact@v4
   with:
     name: model-artifacts
     path: |
@@ -258,7 +258,7 @@ git remote set-url origin git@github.com:user/repo.git
 **最適化方法：**
 ```yaml
 # 1. キャッシュの活用
-- uses: actions/cache@v3
+- uses: actions/cache@v4
   with:
     path: |
       ~/.cache/pip

@@ -79,7 +79,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v5
         
       - name: Build site
         run: |
@@ -87,7 +87,7 @@ jobs:
           npm run build
           
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
           
@@ -100,7 +100,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
 ```
 
 ### カスタムドメインの設定
@@ -891,7 +891,7 @@ jobs:
           ref: gh-pages
           
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: experiment-results
           path: ./temp
