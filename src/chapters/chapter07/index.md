@@ -390,7 +390,7 @@ jobs:
   ai-review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Run Copilot Review
         uses: github/copilot-review-action@v1

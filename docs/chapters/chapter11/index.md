@@ -163,7 +163,7 @@ jobs:
   ai-security-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: AI Placeholder Detection
       run: |
@@ -184,7 +184,7 @@ jobs:
     environment: production
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -468,7 +468,7 @@ jobs:
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Metadata
       id: metadata
@@ -742,7 +742,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     # 1. CodeQL
     - name: Initialize CodeQL
