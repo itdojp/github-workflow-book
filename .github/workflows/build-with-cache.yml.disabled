@@ -27,7 +27,7 @@ jobs:
       
       # 1. NPM キャッシュ
       - name: Cache NPM dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: npm-cache
         with:
           path: |
@@ -39,7 +39,7 @@ jobs:
       
       # 2. pnpm キャッシュ (将来の対応用)
       - name: Cache pnpm store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         if: contains(github.event.head_commit.message, '[pnpm]')
         with:
           path: |
@@ -51,7 +51,7 @@ jobs:
       
       # 3. ビルド成果物キャッシュ
       - name: Cache build artifacts
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: build-cache
         with:
           path: |
@@ -66,7 +66,7 @@ jobs:
       
       # 4. Markdown処理キャッシュ
       - name: Cache markdown processing
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .markdown-cache
