@@ -775,7 +775,7 @@ jobs:
       
       # ビルドとテスト
       - name: Build Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: false
