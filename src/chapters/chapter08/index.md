@@ -51,16 +51,16 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         queries: +security-extended,+security-and-quality
         
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      uses: github/codeql-action/autobuild@v4
       
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{ matrix.language }}"
         
@@ -423,7 +423,7 @@ jobs:
       
       - name: Run Security Analysis
         id: security
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v4
         
       - name: Generate Fixes with AI
         uses: github/copilot-security-fix@v1
