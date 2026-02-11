@@ -1197,7 +1197,7 @@ jobs:
           exit 1
           
       - name: Upload violation report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: policy-violations
           path: |

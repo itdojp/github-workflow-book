@@ -173,7 +173,7 @@ runs:
     - name: Cache dependencies
       if: inputs.cache-dependencies == 'true'
       id: cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/pip
@@ -282,7 +282,7 @@ jobs:
             --output-file evaluation_report.json
       
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: model-${{ github.event.inputs.model_name }}-${{ github.run_id }}
           path: |
@@ -471,7 +471,7 @@ jobs:
       
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: |
@@ -754,7 +754,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
         
       - name: Cache Docker layers
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -763,7 +763,7 @@ jobs:
       
       # モデルのキャッシュ
       - name: Cache ML models
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/huggingface
@@ -773,7 +773,7 @@ jobs:
       
       # データセットのキャッシュ
       - name: Cache datasets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./data
           key: ${{ runner.os }}-datasets-${{ hashFiles('**/data_config.yaml') }}
@@ -817,7 +817,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Download model artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: trained-model
           path: ./model
@@ -836,7 +836,7 @@ jobs:
             --output model_report.html
       
       - name: Upload validation results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: validation-results
           path: |
