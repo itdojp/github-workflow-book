@@ -948,7 +948,7 @@ jobs:
           fetch-depth: 0  # Full history for git-revision-date
           
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
           
