@@ -750,7 +750,7 @@ jobs:
       
     # 2. Trivy (コンテナスキャン)
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.33.1
       with:
         image-ref: 'myapp:${{ github.sha }}'
         format: 'sarif'
@@ -763,7 +763,7 @@ jobs:
         
     # 3. Snyk
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/python@master
+      uses: snyk/actions/python@v1
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
