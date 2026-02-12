@@ -42,7 +42,7 @@
    - Push your branch to your fork
    - Create a PR from your fork to the main repository
    - Fill out the PR template completely
-```
+```text
 
 ### フォーク管理の自動化
 
@@ -127,7 +127,7 @@ Let us know if you need any help!
         except:
             # Issueが無効な場合はスキップ
             pass
-```
+```text
 
 ### Pull Requestテンプレート
 
@@ -269,7 +269,7 @@ You are not expected to provide support for Your Contributions, except to the ex
 Comment on the PR with:
 ```
 I have read the CLA Document and I hereby sign the CLA
-```
+```text
 ```
 
 ### CLA管理システム
@@ -530,7 +530,7 @@ We recognize our contributors! Check out our [Contributors page](https://github.
 
 ## License
 By contributing, you agree that your contributions will be licensed under the same license as the project.
-```
+```text
 
 ## 16.4 コントリビューションガイドラインの作成
 

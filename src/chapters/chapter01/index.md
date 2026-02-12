@@ -42,7 +42,7 @@ AI開発では、以下の要素を管理する必要があります：
   - セキュリティスキャン
 
 ### 関係性
-```
+```text
 ローカル（Git） ←→ リモート（GitHub）
 ```
 - Gitで管理したコードをGitHubに保存
@@ -66,7 +66,7 @@ AI開発では、以下の要素を管理する必要があります：
 - バックアップとしても機能
 
 ### AI開発でのリポジトリ構成例
-```
+```text
 my-ai-project/
 ├── .git/              # Gitの管理情報
 ├── src/               # ソースコード
@@ -95,7 +95,7 @@ my-ai-project/
 - 動作する状態でコミット
 
 ### AI開発でのコミット例
-```
+```text
 feat: Add data augmentation for image classification
 fix: Correct learning rate decay calculation
 docs: Update model architecture diagram
@@ -125,7 +125,7 @@ experiment: Test different optimizer configurations
 - `experiment/*`: AI実験用
 
 ### AI開発でのブランチ戦略例
-```
+```text
 main
 ├── develop
 │   ├── feature/data-pipeline

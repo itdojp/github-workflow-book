@@ -36,7 +36,7 @@ class LoginRateLimiter:
 - **開発速度**: ベースライン比2.1倍高速
 - **バグ発見率**: AI提案での事前発見 2件
 - **コードレビュー効率**: レビュー時間1.3時間短縮
-```
+```text
 
 ### 有効化手順
 
@@ -116,7 +116,7 @@ def connect_to_database():
     return psycopg2.connect(conn_string)
 ```
 """
-```
+```text
 
 #### 2. パフォーマンス改善
 ```python
@@ -146,7 +146,7 @@ def process_images_batch(image_list):
     return results
 ```
 """
-```
+```text
 
 #### 3. コードスタイル
 ```python
@@ -170,7 +170,7 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 - docstringの追加
 - 意味のある変数名の使用を検討
 """
-```
+```text
 
 ### コメントへの対応方法
 
@@ -294,7 +294,7 @@ def search_users(query):
     return db.execute(sql, (query,))
 ```
 """
-```
+```text
 
 #### 2. 認証・認可の問題
 ```python
@@ -317,7 +317,7 @@ def admin_users():
     return render_template('admin_users.html', users=get_all_users())
 ```
 """
-```
+```text
 
 #### 3. 機密情報の露出
 ```python
@@ -335,7 +335,7 @@ logger.info(f"User login attempt: {username}")
 # パスワードは記録しない
 ```
 """
-```
+```text
 
 ### セキュリティレポートの活用
 

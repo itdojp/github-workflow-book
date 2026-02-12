@@ -2,7 +2,7 @@
 
 ## 📊 プロジェクト概要
 
-```
+```text
 github-workflow-book/
 ├── 📖 メインコンテンツ (17章 + 6付録)
 ├── 🌐 GitHub Pages 設定
@@ -14,7 +14,7 @@ github-workflow-book/
 
 ## 📂 完全ディレクトリ構造
 
-```
+```text
 github-workflow-book/
 │
 ├── 📚 **書籍メインコンテンツ**
