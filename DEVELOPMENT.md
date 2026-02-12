@@ -2,7 +2,7 @@
 
 ## プロジェクト構成
 
-```
+```text
 github-workflow-book-private/
 ├── .github/
 │   └── workflows/

@@ -85,7 +85,7 @@ Settings → Notifications で設定：
 - **Custom**: リポジトリごとに設定
 
 推奨設定：
-```
+```text
 ✓ Participating
 ✓ @mentions
 ✓ Review requests
@@ -185,7 +185,7 @@ flowchart TD
 - **セキュリティ**: 脆弱性の非公開
 
 ### ハイブリッドアプローチ
-```
+```text
 my-ml-project/
 ├── my-ml-project-public/    # 公開可能な部分
 │   ├── src/
@@ -337,7 +337,7 @@ If you use this software in your research, please cite:
 ## Acknowledgments
 - Acknowledgment 1
 - Acknowledgment 2
-```
+```text
 
 ### ライセンスの選択
 
@@ -390,7 +390,7 @@ ml-project-template/
 ├── LICENSE
 ├── CONTRIBUTING.md
 └── .gitignore
-```
+```text
 
 ### セキュリティポリシー
 

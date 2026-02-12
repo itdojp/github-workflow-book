@@ -79,7 +79,7 @@ npm run version:list     # List all versions
 
 Since this repository uses a flat structure (chapters in root), the `build-adapter.js` temporarily creates the expected `src/` structure during build:
 
-```
+```text
 Root files:                    Temporary src/ structure:
 chapter-01-*.md        →       src/chapters/chapter01/index.md
 chapter-02-*.md        →       src/chapters/chapter02/index.md

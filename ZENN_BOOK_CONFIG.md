@@ -18,7 +18,7 @@ cover: "./images/book-cover.png"
 ## Zenn用チャプター構成
 
 ### chapters/
-```
+```text
 chapters/
 ├── 01-introduction.md
 ├── 02-part1-intro.md
@@ -122,7 +122,7 @@ title: "第2章：AI時代のGitHub協働基礎 ⭐"
 - 第12〜13章：ワークフロー・CI/CDでの実践
 
 次の章では、これらの基礎を実際のGitコマンドに適用していきます。
-```
+```text
 
 ## Zenn公開用のconfig.yaml
 

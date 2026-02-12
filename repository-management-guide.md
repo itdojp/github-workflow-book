@@ -30,7 +30,7 @@
 
 公開リポジトリには以下の著作権表示を必ず含めてください：
 
-```
+```text
 Copyright (c) 2025 ITdo Japan, Inc. All rights reserved.
 ```
 
@@ -156,7 +156,7 @@ graph LR
 
 ### 重要なディレクトリとファイル
 
-```
+```text
 github-workflow-book-private/
 ├── .github/workflows/     # GitHub Actionsワークフロー
 │   └── deploy-to-public.yml # メインのデプロイワークフロー

@@ -220,7 +220,7 @@ title: "付録F：推奨VS Code拡張機能"
 
 ## Docker/コンテナ
 
-#### Docker
+### Docker
 ```json
 {
   "id": "ms-azuretools.vscode-docker",
@@ -244,7 +244,7 @@ title: "付録F：推奨VS Code拡張機能"
 
 ## ドキュメント作成
 
-#### Markdown All in One
+### Markdown All in One
 ```json
 {
   "id": "yzhang.markdown-all-in-one",
@@ -328,7 +328,7 @@ title: "付録F：推奨VS Code拡張機能"
 
 ## セキュリティ
 
-#### GitLab Workflow
+### GitLab Workflow
 ```json
 {
   "id": "GitLab.gitlab-workflow",
@@ -346,7 +346,7 @@ title: "付録F：推奨VS Code拡張機能"
 
 ## リモート開発
 
-#### Remote - SSH
+### Remote - SSH
 ```json
 {
   "id": "ms-vscode-remote.remote-ssh",

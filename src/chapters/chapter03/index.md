@@ -136,7 +136,7 @@ Modified files:
 - tests/test_preprocessor.py (テスト)
 - README.md (ドキュメント)
 - debug_output.log (一時ファイル)
-```
+```text
 
 ### Action
 適切なgit addコマンドを提案してください。
@@ -176,7 +176,7 @@ git commit -am "Fix: correct validation split ratio"
 ```
 
 #### コミットメッセージの規約
-```
+```text
 <type>: <subject>
 
 <body>
@@ -316,7 +316,7 @@ git status -sb
 ```
 
 出力の読み方：
-```
+```text
 On branch main
 Your branch is up to date with 'origin/main'.
 

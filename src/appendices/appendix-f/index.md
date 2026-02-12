@@ -215,7 +215,7 @@
 
 ## Docker/コンテナ
 
-#### Docker
+### Docker
 ```json
 {
   "id": "ms-azuretools.vscode-docker",
@@ -239,7 +239,7 @@
 
 ## ドキュメント作成
 
-#### Markdown All in One
+### Markdown All in One
 ```json
 {
   "id": "yzhang.markdown-all-in-one",
@@ -323,7 +323,7 @@
 
 ## セキュリティ
 
-#### GitLab Workflow
+### GitLab Workflow
 ```json
 {
   "id": "GitLab.gitlab-workflow",
@@ -341,7 +341,7 @@
 
 ## リモート開発
 
-#### Remote - SSH
+### Remote - SSH
 ```json
 {
   "id": "ms-vscode-remote.remote-ssh",
