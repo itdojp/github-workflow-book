@@ -183,7 +183,7 @@ git config alias.st status
     exp = "!f() { git checkout -b experiment/$1-$(date +%Y%m%d); }; f"
     
     # 実験結果をコミット
-    experiment = "!f() { git add -A && git commit -m \"Experiment: $1\nResults: $2\"; }; f"
+    experiment = "!f() { git add -p && git commit -m \"Experiment: $1\nResults: $2\"; }; f"
     
     # モデルをコミット（LFS使用）
     model-commit = "!f() { git lfs track \"*.pth\" \"*.h5\" \"*.onnx\" && git add .gitattributes && git add $1 && git commit -m \"Add model: $1\"; }; f"
