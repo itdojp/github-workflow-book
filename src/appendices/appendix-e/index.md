@@ -276,10 +276,12 @@ git config alias.st status
     start = "!f() { git checkout main && git pull && git checkout -b $1; }; f"
     
     # 作業完了（add, commit, push）
-    done = "!f() { git add -A && git commit -m \"$1\" && git push -u origin HEAD; }; f"
+    # ※ 新規ファイルは `git add <path>` 等で明示的に追加する（`git add -u` は tracked のみ）
+    done = "!f() { git add -u && git commit -m \"$1\" && git push -u origin HEAD; }; f"
     
     # 一時保存
-    wip = "!git add -A && git commit -m 'WIP: Work in progress'"
+    # ※ 新規ファイルは `git add <path>` 等で明示的に追加する（`git add -u` は tracked のみ）
+    wip = "!git add -u && git commit -m 'WIP: Work in progress'"
     
     # 同期（pull → rebase → push）
     sync = "!f() { git pull --rebase origin $(git branch --show-current) && git push; }; f"
