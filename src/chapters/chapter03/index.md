@@ -110,7 +110,7 @@ git add -p
 #### AIを使った効率的なファイル選択
 第2章のCLEAR方式を使って、AIに適切なファイルの選択を依頼できます：
 
-```markdown
+````markdown
 ## AI指示例（第2章のCLEAR方式を使用）
 
 ### Context
@@ -130,20 +130,20 @@ git add -p
 
 ### Example
 期待する出力形式：
-```
+```text
 Modified files:
 - data/preprocessor.py (本機能)
 - tests/test_preprocessor.py (テスト)
 - README.md (ドキュメント)
 - debug_output.log (一時ファイル)
-```text
+```
 
 ### Action
 適切なgit addコマンドを提案してください。
 
 ### Review
 セキュリティリスクやコミット範囲の妥当性をチェックしてください。
-```
+````
 
 **AI回答例**：
 ```bash
