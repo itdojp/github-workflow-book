@@ -515,7 +515,6 @@ pre-commit install
 4. CLA must be signed
 
 ## Community
-- Join our [Discord server](https://discord.gg/xxxxx)
 - Attend our monthly contributor meetings
 - Check out our [roadmap](https://github.com/itdojp/github-workflow-book-public/projects/1)
 
