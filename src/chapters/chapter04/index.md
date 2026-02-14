@@ -150,7 +150,7 @@ Title: [FEATURE] データ拡張機能の追加
 ```
 
 #### AI協働型バグ報告の例（第2章のテンプレート適用）
-```markdown
+````markdown
 Title: [BUG] バッチサイズ1でモデル推論時にエラー発生
 
 ## 環境情報
@@ -193,7 +193,7 @@ BatchNorm層がtraining=Trueの状態でバッチサイズ1を処理できない
 - bug
 - high-priority
 - ai-investigation
-```text
+````
 
 #### Issueテンプレートの活用
 `.github/ISSUE_TEMPLATE/`にテンプレートを配置：
@@ -324,7 +324,7 @@ Fixes #5
 #### レビューコメントの例
 
 **レビュアー1のコメント：**
-```markdown
+````markdown
 Line 15 in data_loader.py:
 
 ```python
@@ -332,7 +332,7 @@ transforms.RandomCrop(224, padding=4),
 ```
 
 画像サイズが224固定になっていますが、設定可能にした方が良いのでは？
-```text
+````
 
 **対応方法1：コードの修正**
 ```python
@@ -367,7 +367,7 @@ def get_train_transforms(image_size=224):
 ```
 
 **対応方法2：議論**
-```markdown
+````markdown
 確かにタスクによって適切な拡張の強度は異なりますね。
 現在は画像分類を想定していますが、将来的に他のタスクにも対応することを考えると、
 拡張の強度も設定可能にすべきでしょうか？
@@ -383,7 +383,7 @@ def get_train_transforms(image_size=224, aug_strength='medium'):
 ```
 
 どう思われますか？
-```text
+````
 
 #### 修正の追加コミット
 ```bash
