@@ -51,7 +51,7 @@ AIレビューを「運用」に落とすには、レビューの前提を成果
 - 人間が最終確認した観点：
 
 ## 受入条件（Issue）
-- Closes #xxxx
+- Closes #<issue-number>
 ```
 
 ### `.github/copilot-instructions.md` 例（抜粋）
