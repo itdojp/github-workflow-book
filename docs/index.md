@@ -194,9 +194,9 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 
 **著者**: 太田和彦（株式会社アイティードゥ）  
 **ライセンス**: CC BY-NC-SA 4.0（商用は別契約）  
-**リポジトリ**: [GitHub](https://github.com/itdojp/github-workflow-book-private)
+**リポジトリ**: [GitHub](https://github.com/itdojp/github-workflow-book)
 
 ---
 
-*Built with [Book Publishing Template v2.0](https://github.com/itdojp/book-publishing-template2)*
+*Built with [book-formatter](https://github.com/itdojp/book-formatter)*
 {% include page-navigation.html %}
