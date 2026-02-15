@@ -146,7 +146,7 @@ Medium severity (5)
 ```
 
 #### アラートの詳細情報
-```markdown
+````markdown
 ## Path traversal in file upload
 
 **Severity**: High
@@ -170,7 +170,7 @@ filepath = os.path.join(UPLOAD_DIR, filename)
 ### References
 - CWE-22: Path Traversal
 - OWASP: Path Traversal
-```text
+````
 
 ## 7.2 Secret scanningの活用
 

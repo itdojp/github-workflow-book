@@ -275,7 +275,7 @@ Protect matching branches:
 
 ### 効果的なREADMEの構造
 
-```markdown
+````markdown
 # Project Name
 
 [![Build Status](https://travis-ci.org/username/repo.svg?branch=main)](https://travis-ci.org/username/repo)
@@ -315,13 +315,13 @@ predictions = model.predict(image)
 Full documentation is available at [https://docs.example.com](https://docs.example.com)
 
 ## Examples
-See the [examples/](../../../examples/) directory for more examples.
+See the [examples/](examples/) directory for more examples.
 
 ## Contributing
-Please read [CONTRIBUTING.md](../../../CONTRIBUTING.md) for details on our code of conduct.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](../../../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Citation
 If you use this software in your research, please cite:
@@ -337,7 +337,7 @@ If you use this software in your research, please cite:
 ## Acknowledgments
 - Acknowledgment 1
 - Acknowledgment 2
-```text
+````
 
 ### ライセンスの選択
 
@@ -369,7 +369,7 @@ If you use this software in your research, please cite:
 Settings → Template repository にチェック
 
 #### 標準構造
-```
+```text
 ml-project-template/
 ├── .github/
 │   ├── workflows/
@@ -390,7 +390,7 @@ ml-project-template/
 ├── LICENSE
 ├── CONTRIBUTING.md
 └── .gitignore
-```text
+```
 
 ### セキュリティポリシー
 
