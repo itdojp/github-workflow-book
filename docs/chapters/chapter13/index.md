@@ -731,7 +731,9 @@ jobs:
 ```
 
 ### 13.4.1 Codex GitHub Action で「差分レビューコメント」を自動投稿する（例）
-エージェントを「手動利用」から「品質ゲート/自動化」へ接続する入口として、Codex GitHub Action を使い、PR差分に対するレビューコメント（要約、リスク、追加検証案）を投稿する例を示します（#204の方針）。
+エージェントを「手動利用」から「品質ゲート/自動化」へ接続する入口として、Codex GitHub Action を使い、PR差分に対するレビューコメント（要約、リスク、追加検証案）を投稿する例を示します。
+
+注: ここで示す Codex GitHub Action は **GitHub Copilot のネイティブ機能ではなく**、OpenAI の Codex CLI を GitHub Actions から実行する third-party の例です。`OPENAI_API_KEY`（または同等のAPIキー）をSecretsとして扱い、データ送信範囲と課金を前提に導入可否を判断してください。
 
 ポイントは次のとおりです。
 

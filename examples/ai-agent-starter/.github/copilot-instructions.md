@@ -8,6 +8,5 @@
 ## Review focus
 
 - 仕様/受入基準との整合
-- セキュリティ（`examples/ai-agent-starter/security-checklist.md` を参照）
+- セキュリティ（`security-checklist.md` を参照）
 - 破壊的変更の有無とロールバック手順
-

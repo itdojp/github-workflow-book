@@ -79,6 +79,8 @@ Copilotは「エディタ内で補完する」だけでなく、GitHub上で **I
 
 本書では、これらを **“橋渡し” として最小限** 扱います（運用設計の詳細は別冊 Book3 に委譲します）。
 
+注: Book3（AgentOps）の公開時期・URLは本書執筆時点で未確定です。最新情報は本リポジトリ（https://github.com/itdojp/github-workflow-book）を参照してください。
+
 #### 用語の整理（最小）
 - **coding agent**: Issue（実行仕様）を入力に、ブランチ作成→実装→テスト→PR作成までを実行するエージェント運用
 - **third-party agents**: GitHubの外部から提供されるエージェント（例: 別ベンダー/別モデル/別実装）。権限・Secrets・外部送信の境界を先に設計する必要がある

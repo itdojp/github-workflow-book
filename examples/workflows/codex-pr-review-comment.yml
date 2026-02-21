@@ -1,3 +1,8 @@
+# NOTE:
+# - このworkflowは `openai/codex-action` を利用する third-party の例です（GitHub Copilotのネイティブ機能ではありません）。
+# - `OPENAI_API_KEY`（または同等のAPIキー）をSecretsに格納し、外部送信範囲と課金を前提に導入可否を判断してください。
+# - 意図しない実行を避けるため、ラベル（例: `codex-review`）で実行をゲートしています。
+
 name: Codex PR Review Comment (on label)
 
 on:
@@ -66,4 +71,3 @@ jobs:
               issue_number: context.payload.pull_request.number,
               body: process.env.CODEX_FINAL_MESSAGE,
             });
-
