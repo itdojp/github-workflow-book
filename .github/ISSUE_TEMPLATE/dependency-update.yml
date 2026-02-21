@@ -1,0 +1,93 @@
+name: ⬆️ Dependency Update / 依存関係更新（Agent対応）
+description: 依存更新を安全に進めるための実行仕様（受入基準/テスト/ロールバックを必須化）
+title: "[DEPENDENCY] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        依存更新は「変更理由」「互換性リスク」「テスト」「ロールバック」を先に固定します。
+
+  - type: dropdown
+    id: ecosystem
+    attributes:
+      label: Ecosystem / 対象
+      options:
+        - npm
+        - pip
+        - github-actions
+        - docker
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: target
+    attributes:
+      label: Target / 更新対象（必須）
+      description: パッケージ名と現在/目標バージョン、範囲を明記する。
+      placeholder: |
+        例:
+        - package: markdownlint-cli
+          from: 0.33.0
+          to: 0.40.x
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason / 変更理由（必須）
+      description: 脆弱性対応、互換性、機能追加など（一次情報があればURLも）。
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria / 受入基準（必須）
+      placeholder: |
+        - [ ] CI が PASS する
+        - [ ] 破壊的変更がない（または影響と対応が明記されている）
+        - [ ] ロールバック手順が明記されている
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints / 制約（必須）
+      description: 互換性、サポートバージョン、変更禁止領域、利用環境の制約を書く。
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test plan / テスト（必須）
+      description: "実行コマンド（例: `npm ci && npm test`）と期待結果を書く。"
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback / ロールバック（必須）
+      description: 失敗時に戻す手順（pin、revert、lockfile復元など）。
+      placeholder: |
+        例:
+        - 該当PRを revert
+        - lockfile を以前の版へ戻す
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden
+    attributes:
+      label: Do not change / 変更禁止領域（必須）
+      placeholder: |
+        例:
+        - 公開物（docs/**）の本文以外は触らない
+    validations:
+      required: true

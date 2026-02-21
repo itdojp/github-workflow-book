@@ -5,78 +5,77 @@
 ### 第2章の品質ゲートを統合したCI/CD
 本章では、第2章で学んだAI協働品質ゲートをCI/CDパイプラインに統合します。
 
+### coding agent とCI/CD（補足）
+Copilot coding agent を使ってPRを作る場合でも、CI/CDの基本は変わりません。AI生成PRだけを特別扱いするよりも、**同じ品質ゲート（必須チェック）に乗せる**方が運用が安定します。
+
+- PRテンプレで「AI利用の開示」と「人間の検証責任」を固定する（例：`examples/ai-agent-starter/`）
+- 受入条件（Issue）とテスト手順がPRから追える状態にする
+- 重要な変更は、AIレビューだけでなくCI（テスト/静的解析）でブロックできるようにする
+
+### この章の例の読み方
+本章では、例を次の2種類に分けて示します。
+
+- **実運用例（このまま使える）**：`examples/` 配下にあるワークフロー例。必要に応じて自分のリポジトリ事情に合わせて調整して使います。
+- **概念例（擬似/抜粋）**：考え方や構造を説明するための例。ワークフロー全体ではない「抜粋」も含むため、コピペ前提では扱いません。
+
 ### ワークフローの基本要素
 
-#### AI協働品質ゲート統合のワークフロー構造
+### merge queue を使う場合の注意（`merge_group`）
+
+merge queue を有効にしている場合、必須チェック（required status checks）は「PRの先にある最終的なマージ結果」に対しても通る必要があります。GitHub Actions を必須チェックにしている場合、ワークフローが `pull_request` だけで起動する設計だと、merge queue 側のチェックが満たせずに詰まることがあります。
+
+そのため、必須チェックにしているワークフローは `merge_group` イベントにも対応させます。
+
 ```yaml
-# .github/workflows/ai-collaboration-pipeline.yml
-name: AI Collaboration ML Pipeline
-
-# トリガー条件
 on:
-  push:
-    branches: [ main, develop ]
-    paths:
-      - 'src/**'
-      - 'configs/**'
-      - 'requirements.txt'
   pull_request:
-    types: [opened, synchronize]
+  merge_group:
+    types: [checks_requested]
+```
+
+参考:
+- merge queue: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
+- `merge_group` イベント: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group
+- サンプル: `examples/merge-queue-ci-example/`
+
+#### AI協働品質ゲート統合のワークフロー構造
+**実運用例（このまま使える）**：全文は `examples/ai-collaboration-pipeline-example/` を参照してください。以下は最小構成の例です（チェック内容はプロジェクトに合わせて置き換えます）。
+```yaml
+# .github/workflows/ai-collaboration-quality-gate.yml
+name: AI Collaboration Quality Gate
+
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
-  # 第2章で学んだAI協働品質チェック
-  ai-collaboration-quality:
+  quality-gate:
     runs-on: ubuntu-latest
-    steps:
-      - name: Check AI Collaboration Metadata
-        run: |
-          # PR説明にAI協働履歴があることを確認
-          if ! echo "${{ github.event.pull_request.body }}" | grep -q "🤖 AI協働履歴"; then
-            echo "❌ AI協働履歴が記載されていません"
-            exit 1
-          fi
-          
-      - name: Validate AI Generated Code Quality  
-        run: |
-          # AI生成コード部分の品質チェック
-          python scripts/check_ai_code_quality.py
-
-# 環境変数
-env:
-  PYTHON_VERSION: '3.9'
-  CUDA_VERSION: '11.8'
-  CACHE_NUMBER: 1  # キャッシュをリセットする場合に増やす
-
-# ジョブ定義
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      python-version: ${{ steps.setup.outputs.python-version }}
-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
-    
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        id: setup
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      
-      - name: Cache dependencies
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.cache/torch
-          key: ${{ runner.os }}-pip-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}
+
+      - name: Run checks
+        run: |
+          echo "Replace this step with your test/lint/security checks."
+
+      - name: Validate AI disclosure (pull_request only)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          if ! echo "${{ github.event.pull_request.body }}" | grep -q "AI利用の開示"; then
+            echo "PR本文に「AI利用の開示」がありません"
+            exit 1
+          fi
 ```
 
 ### マトリックスビルド
 
 #### 複数環境でのテスト
+**概念例（抜粋）**：`jobs.test` の構造例です（ワークフロー全体ではありません）。
 ```yaml
 test:
   needs: setup
@@ -124,6 +123,7 @@ test:
 ### カスタムアクション
 
 #### 再利用可能なアクション
+**概念例（参考実装）**：カスタムアクションの構造例です。依存関係やOS差分は環境に合わせて要調整です。
 ```yaml
 # .github/actions/setup-ml-env/action.yml
 name: 'Setup ML Environment'
@@ -188,7 +188,7 @@ runs:
         fi
 ```
 
-## 12.2 AIモデル学習の自動化
+## 13.2 AIモデル学習の自動化
 
 ### 学習パイプライン
 
@@ -402,7 +402,7 @@ jobs:
             });
 ```
 
-## 12.3 テストとリンターの統合
+## 13.3 テストとリンターの統合
 
 ### 包括的なテストスイート
 
@@ -654,7 +654,7 @@ class CodeQualityReporter:
         return report
 ```
 
-## 12.4 Copilotを活用したワークフロー作成
+## 13.4 Copilotを活用したワークフロー作成
 
 ### AI支援ワークフロー開発
 
@@ -725,6 +725,92 @@ jobs:
             --config config/distributed_training.yaml
 ```
 
+### 13.4.1 Codex GitHub Action で「差分レビューコメント」を自動投稿する（例）
+エージェントを「手動利用」から「品質ゲート/自動化」へ接続する入口として、Codex GitHub Action を使い、PR差分に対するレビューコメント（要約、リスク、追加検証案）を投稿する例を示します。
+
+注: ここで示す Codex GitHub Action は **GitHub Copilot のネイティブ機能ではなく**、OpenAI の Codex CLI を GitHub Actions から実行する third-party の例です。`OPENAI_API_KEY`（または同等のAPIキー）をSecretsとして扱い、データ送信範囲と課金を前提に導入可否を判断してください。
+
+ポイントは次のとおりです。
+
+- **権限を最小化**: 差分レビュー用途なら `contents: read` と、コメント投稿用の `pull-requests: write` 程度に絞る
+- **Secrets境界を明記**: `OPENAI_API_KEY` などは GitHub Actions secrets に格納し、ログ/PR本文へ出さない
+- **実行範囲を制御**: ラベル付与などで実行を明示し、意図しないタイミングでの課金・外部送信を避ける
+
+以下はサンプルです（導入時は、モデル/課金/ポリシー・データ送信範囲を組織の基準に合わせて設計してください）。
+
+```yaml
+name: Codex PR Review Comment (on label)
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  codex_review:
+    if: github.event.label.name == 'codex-review'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      final_message: ${{ steps.run_codex.outputs.final-message }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Pre-fetch base and head refs
+        run: |
+          git fetch --no-tags origin \
+            ${{ github.event.pull_request.base.ref }} \
+            +refs/pull/${{ github.event.pull_request.number }}/head
+
+      - name: Run Codex (read-only)
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          sandbox: read-only
+          prompt: |
+            Review ONLY the changes introduced by the PR.
+            Be concise and specific. Include risk and suggested verification.
+
+            Pull request title and body:
+            ----
+            ${{ github.event.pull_request.title }}
+            ${{ github.event.pull_request.body }}
+
+  post_comment:
+    runs-on: ubuntu-latest
+    needs: codex_review
+    if: needs.codex_review.outputs.final_message != ''
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Post review comment
+        uses: actions/github-script@v7
+        env:
+          CODEX_FINAL_MESSAGE: ${{ needs.codex_review.outputs.final_message }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: process.env.CODEX_FINAL_MESSAGE,
+            });
+```
+
+### 13.4.2 注意：Secrets/権限/外部送信の線引き
+CodexのようなエージェントをCIに組み込む場合、失敗の大半は「実装」ではなく「権限境界/Secrets運用」で発生します。
+
+- **Actions権限**: `permissions:` を明示し、用途ごとにワークフローを分ける
+- **Secrets**: ログ/Artifacts/コメントへの混入を前提にレビュー観点へ入れる
+- **外部送信**: どの情報が外部へ送られるか（プロンプト、差分、ログ）を定義し、許容範囲を決める
+
+詳細は第11章（Secrets/権限境界/監査）を参照してください。
+
 ### ワークフロー最適化
 
 #### キャッシングとアーティファクト管理
@@ -790,7 +876,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 ```
 
-## 12.5 デプロイメントの自動化
+## 13.5 デプロイメントの自動化
 
 ### モデルデプロイメントパイプライン
 
@@ -1060,7 +1146,7 @@ class DeploymentMonitor:
 
 ## まとめ
 
-本章では、GitHub ActionsによるCI/CDパイプラインの構築を学習しました：
+本章では、GitHub ActionsによるCI/CDパイプラインの構築を学習しました。主なポイントは次のとおりです。
 - GitHub Actionsの基本構造とカスタムアクション
 - AIモデル学習の自動化とハイパーパラメータ探索
 - 包括的なテストスイートと品質管理

@@ -1,0 +1,100 @@
+name: ✨ Improvement / 改善提案（Agent対応）
+description: 受入基準・制約・テストまで含めた改善Issue（エージェント割当可能な粒度）
+title: "[IMPROVEMENT] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        改善の目的（誰の何が良くなるか）と、完了条件（受入基準）を先に固定します。
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal / 目的
+      description: 改善の狙い（読者体験、運用、品質、セキュリティ等）を明確化する。
+      placeholder: |
+        例: 第2章のIssueテンプレを「エージェントがPRを作れる粒度」に規格化する
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / 背景
+      description: 現状の課題、発生条件、影響範囲（どこが困るか）。
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / 対象・非対象
+      description: 対象範囲と、明確にやらないこと（スコープ外）を書く。
+      placeholder: |
+        対象:
+        - ...
+        非対象:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria / 受入基準（必須）
+      description: PRが「完了」と判断できる条件をチェックリストで記載する。
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints / 制約（必須）
+      description: 互換性、方針、表記、性能、セキュリティなどの制約を書く。
+      placeholder: |
+        例:
+        - 表記: 日本語（です/ます）を維持する
+        - 参照: 公式ドキュメントに寄せ、断定を避ける
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test plan / テスト（必須）
+      description: 実行コマンドと期待結果、確認観点を書く。
+      render: bash
+      placeholder: |
+        例:
+        - python3 scripts/validate_links.py docs
+        - GitHub Actions: Book QA が PASS
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden
+    attributes:
+      label: Do not change / 変更禁止領域（必須）
+      description: 触れてはいけない範囲（自動生成物、公開構造、互換性など）。
+      placeholder: |
+        例:
+        - docs/assets/** は編集しない
+        - 既存章の主張と矛盾させない
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References / 参照（任意）
+      description: 関連Issue、外部資料、既存章の位置を列挙する。
+      placeholder: |
+        - #123
+        - docs/chapters/chapter02/index.md
+    validations:
+      required: false
+

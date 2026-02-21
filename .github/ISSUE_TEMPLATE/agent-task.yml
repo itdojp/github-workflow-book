@@ -1,18 +1,17 @@
 name: 🤖 Agent Task / エージェント実行仕様
-description: Issue を「実行仕様」に落とし、Agent に割り当てる前提のテンプレ
+description: Issue を「実行仕様」に落とし、エージェント割当を前提にしたテンプレ
 title: "[AGENT] "
-labels: ["agent-task"]
 body:
   - type: markdown
     attributes:
       value: |
-        このテンプレートは「Issue=実行仕様」を最小で表現します。
-        受入基準・制約・テスト・変更禁止領域が埋まっていることを前提に、Agent が PR を作成します。
+        このテンプレートは「Issue=実行仕様（Agent前提）」の最小形です。
+        受入基準・制約・テスト・変更禁止領域が埋まっていることを前提に、エージェントが PR を作成します。
 
   - type: textarea
     id: goal
     attributes:
-      label: Goal / ゴール
+      label: Goal / ゴール（必須）
       description: 何を完了とするか（成果物）を 1〜3 行で書く。
     validations:
       required: true
@@ -20,7 +19,7 @@ body:
   - type: textarea
     id: context
     attributes:
-      label: Context / 背景
+      label: Context / 背景（必須）
       description: なぜ必要か、現状の課題、影響範囲を書く。
     validations:
       required: true

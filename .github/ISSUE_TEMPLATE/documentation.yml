@@ -1,0 +1,68 @@
+name: 📚 Documentation / 本文・付録の修正（Agent対応）
+description: 書籍本文（docs/**）の改善・追記・誤記修正用（受入基準/制約/テストを必須化）
+title: "[DOC] "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        対象ページと、読者が得る結果（何が分かるようになるか）を先に固定します。
+
+  - type: input
+    id: page_path
+    attributes:
+      label: Target page / 対象ページ（必須）
+      description: "`docs/` 配下のパス、または公開パス（例: /chapters/chapter02/）。"
+      placeholder: "docs/chapters/chapter02/index.md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: change
+    attributes:
+      label: Change / 変更内容（必須）
+      description: 何を追記/修正/削除するか。章間整合（参照先）も書く。
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria / 受入基準（必須）
+      placeholder: |
+        - [ ] 読者が期待する結論/手順が本文だけで分かる
+        - [ ] 章参照・内部リンク・アンカーが壊れていない
+        - [ ] Book QA が PASS する
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints / 制約（必須）
+      description: 表記、用語、範囲、断定の禁止（変動要素は公式参照へ）など。
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test plan / テスト（必須）
+      render: bash
+      placeholder: |
+        例:
+        - python3 scripts/validate_links.py docs
+        - GitHub Actions: Book QA が PASS
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden
+    attributes:
+      label: Do not change / 変更禁止領域（必須）
+      placeholder: |
+        例:
+        - docs/assets/** は編集しない
+        - 章番号体系は維持する
+    validations:
+      required: true

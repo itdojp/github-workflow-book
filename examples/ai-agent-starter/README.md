@@ -17,7 +17,7 @@
 
 ## 使い方（コピー）
 
-1. 自分のリポジトリに `.github/` と `security-checklist.md` をコピーします。
+1. 自分のリポジトリに `examples/ai-agent-starter/.github/` を `.github/` としてコピーし、`examples/ai-agent-starter/security-checklist.md` をリポジトリ直下へ `security-checklist.md` として配置します。
 2. `copilot-instructions.md` の「プロジェクト固有の手順（ビルド/テスト/禁止事項）」を追記します。
 3. Issue作成時に `agent-task.yml` を使い、Copilot coding agent に割り当てます。
 
