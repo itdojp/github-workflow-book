@@ -1,0 +1,111 @@
+name: 🐛 Bug Report / バグ報告（Agent対応）
+description: 再現手順・受入基準まで含めて報告（エージェント割当可能な粒度）
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        このテンプレートは「Issue=実行仕様（Agent前提）」の最小形です。
+        受入基準・制約・テスト・変更禁止領域が埋まっていれば、エージェントに割り当てて PR 作成まで進められます。
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / 背景
+      description: 何が問題で、なぜ重要か。影響（ユーザー/運用/コスト）も書く。
+      placeholder: |
+        例: ログインAPIで401がランダムに発生し、ユーザーがログインできない。発生率20%。
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Repro steps / 再現手順
+      description: 最小の再現手順（コマンド、URL、入力例）。可能なら期待/実際を添える。
+      render: bash
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected / 期待する動作
+      placeholder: |
+        例: 正しい認証情報では 100% 認証成功する
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual / 実際の動作
+      description: エラーログ、レスポンス、スクリーンショット（必要なら）を添える。
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria / 受入基準（必須）
+      description: PRが「完了」と判断できる条件をチェックリストで記載する。
+      placeholder: |
+        - [ ] 再現手順で問題が再現しない
+        - [ ] 回帰がない（既存のXXが壊れない）
+        - [ ] テストが追加/更新され、CIがPASSする
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints / 制約（必須）
+      description: 変更してよい範囲、性能、互換性、セキュリティ、依存関係の制約を書く。
+      placeholder: |
+        例:
+        - 互換性: API仕様は変更しない
+        - 性能: 追加処理でp95を悪化させない
+        - セキュリティ: Secretsをログに出さない
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test plan / テスト（必須）
+      description: 実行コマンドと期待結果、手動確認が必要なら手順を書く。
+      render: bash
+      placeholder: |
+        例:
+        - npm test
+        - npm run build
+        - 手動: /login で 10回試行し401が出ない
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden
+    attributes:
+      label: Do not change / 変更禁止領域（必須）
+      description: "触れてはいけないファイル/ディレクトリ/仕様（例: 自動生成物、公開URL、互換性）。"
+      placeholder: |
+        例:
+        - docs/assets/** は編集しない
+        - 公開URLとページ構造は維持する
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_files
+    attributes:
+      label: Related files / 関連ファイル（任意）
+      description: "目星があればパスを列挙する（例: docs/chapters/chapter02/index.md）。"
+      placeholder: |
+        - path/to/file.md
+    validations:
+      required: false
