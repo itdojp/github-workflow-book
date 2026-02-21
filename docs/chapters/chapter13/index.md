@@ -730,6 +730,90 @@ jobs:
             --config config/distributed_training.yaml
 ```
 
+### 13.4.1 Codex GitHub Action で「差分レビューコメント」を自動投稿する（例）
+エージェントを「手動利用」から「品質ゲート/自動化」へ接続する入口として、Codex GitHub Action を使い、PR差分に対するレビューコメント（要約、リスク、追加検証案）を投稿する例を示します（#204の方針）。
+
+ポイントは次のとおりです。
+
+- **権限を最小化**: 差分レビュー用途なら `contents: read` と、コメント投稿用の `pull-requests: write` 程度に絞る
+- **Secrets境界を明記**: `OPENAI_API_KEY` などは GitHub Actions secrets に格納し、ログ/PR本文へ出さない
+- **実行範囲を制御**: ラベル付与などで実行を明示し、意図しないタイミングでの課金・外部送信を避ける
+
+以下はサンプルです（導入時は、モデル/課金/ポリシー・データ送信範囲を組織の基準に合わせて設計してください）。
+
+```yaml
+name: Codex PR Review Comment (on label)
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  codex_review:
+    if: github.event.label.name == 'codex-review'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      final_message: ${{ steps.run_codex.outputs.final-message }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Pre-fetch base and head refs
+        run: |
+          git fetch --no-tags origin \
+            ${{ github.event.pull_request.base.ref }} \
+            +refs/pull/${{ github.event.pull_request.number }}/head
+
+      - name: Run Codex (read-only)
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          sandbox: read-only
+          prompt: |
+            Review ONLY the changes introduced by the PR.
+            Be concise and specific. Include risk and suggested verification.
+
+            Pull request title and body:
+            ----
+            ${{ github.event.pull_request.title }}
+            ${{ github.event.pull_request.body }}
+
+  post_comment:
+    runs-on: ubuntu-latest
+    needs: codex_review
+    if: needs.codex_review.outputs.final_message != ''
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Post review comment
+        uses: actions/github-script@v7
+        env:
+          CODEX_FINAL_MESSAGE: ${{ needs.codex_review.outputs.final_message }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: process.env.CODEX_FINAL_MESSAGE,
+            });
+```
+
+### 13.4.2 注意：Secrets/権限/外部送信の線引き
+CodexのようなエージェントをCIに組み込む場合、失敗の大半は「実装」ではなく「権限境界/Secrets運用」で発生します。
+
+- **Actions権限**: `permissions:` を明示し、用途ごとにワークフローを分ける
+- **Secrets**: ログ/Artifacts/コメントへの混入を前提にレビュー観点へ入れる
+- **外部送信**: どの情報が外部へ送られるか（プロンプト、差分、ログ）を定義し、許容範囲を決める
+
+詳細は第11章（Secrets/権限境界/監査）を参照してください。
+
 ### ワークフロー最適化
 
 #### キャッシングとアーティファクト管理

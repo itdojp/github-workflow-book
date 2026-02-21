@@ -79,6 +79,41 @@ Copilotで利用できるモデルや機能は、更新・追加・廃止があ�
 - Model hosting: [Model hosting](https://docs.github.com/en/copilot/reference/ai-models/model-hosting)
 - Policies: [Policies](https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-github-copilot-features-in-your-organization/managing-policies-for-copilot-in-your-organization)
 
+### 6.1.5 coding agent / third-party agents / Agent HQ（橋渡し）
+Copilotは「エディタ内で補完する」だけでなく、GitHub上で **Issueを元にPRを作る（coding agent）** 運用へ拡張されています。さらに、GitHubには **third-party agents（外部エージェント）** を統合し、タスクやセッションを集約管理するハブ（Agent HQ）も提供されます。
+
+本書では、これらを **“橋渡し” として最小限** 扱います（運用設計の詳細は別冊 Book3 に委譲します）。
+
+#### 用語の整理（最小）
+- **coding agent**: Issue（実行仕様）を入力に、ブランチ作成→実装→テスト→PR作成までを実行するエージェント運用
+- **third-party agents**: GitHubの外部から提供されるエージェント（例: 別ベンダー/別モデル/別実装）。権限・Secrets・外部送信の境界を先に設計する必要がある
+- **Agent HQ**: 複数エージェント/セッションを管理するためのハブ（名称・UIは更新され得る）
+
+コスト面では、coding agent や第三者エージェントの利用が **premium requests** として課金対象になる場合があります（付録C/D参照）。
+
+#### エージェント向きのタスク（例）
+- 反復作業（ドキュメント整備、テスト追加、依存更新、型/リンター対応）
+- 局所的で受入基準が明確な修正（小さなバグ修正、リファクタ）
+- 「調査→提案→差分」の往復が多い作業（CIの改善、ドキュメントの整合）
+
+逆に、次のタスクは人間主導が安全です。
+- 仕様が未確定（受入基準が書けない）
+- 変更範囲が広く、ドメイン判断が必要
+- Secrets/権限/外部送信の設計が未整備
+
+#### 運用フロー（Issue→Agent→PR→反復）
+1. **Issueを実行仕様として作成**（第2章: 受入基準/制約/テスト/変更禁止領域）
+2. **エージェントに割当**（coding agent / third-party agent）
+3. **PR作成**（差分を小さく。テスト結果とリスクを残す）
+4. **人間レビュー**（仕様差分が出たら、PRコメントで差分を残し、可能ならIssue本文も更新）
+5. **マージ/却下**（責任は人間側に残る）
+
+#### 失敗パターン（よくある）と対処
+- **仕様不足**: 受入基準が曖昧 → Issueを実行仕様に戻して補強する
+- **差分肥大**: 無関係なリファクタが混ざる → 変更禁止領域/スコープ外を明記し、PRを小分けにする
+- **テスト不足**: 動作確認が抜ける → テスト計画を必須欄として固定し、CIを品質ゲートにする（第13章）
+- **権限過大**: write権限やSecretsが広い → 最小権限・監査・Secrets境界を設計する（第11章）
+
 ### CLEAR方式とCopilotの組み合わせ
 第2章で学んだCLEAR方式をCopilotのコメント指示に適用することで、より精度の高いコード生成が可能になります。
 
@@ -470,6 +505,53 @@ require_review:
    - 大きなファイルでは無効化
    - 特定の拡張子で無効化
    - キャッシュのクリア
+
+## 6.7 カスタムエージェント（.agent.md）とMCP（最小導入）
+
+### 6.7.1 目的：チーム標準の「役割」と「権限境界」を固定する
+エージェント運用は、個人のプロンプトだけに依存すると再現性が落ちます。チームで運用する場合は、次の2点を成果物として固定すると安定します。
+
+- **役割（Role）**: 何をやる/やらない（スコープ）
+- **権限境界（Permissions/Secrets/Tools）**: どの操作と情報にアクセスできるか
+
+ツールによって形式は異なりますが、ここでは「カスタムエージェント定義ファイル」の例として `.agent.md` を用いて説明します。
+
+### 6.7.2 `.agent.md` の最小例
+````markdown
+# Agent: docs-maintainer
+
+## Role
+- docs/ 配下のMarkdownを整備する（文章修正、リンク修正、表記統一）
+
+## Scope
+- 対象: docs/** のみ
+- 非対象: docs/assets/**, ワークフローの有効化、Secrets設定変更
+
+## Acceptance criteria
+- Book QA（Unicode/Textlint/リンク/構造/Jekyll build）がPASSする
+
+## Test plan
+- python3 scripts/validate_links.py docs
+
+## Do not
+- 機密情報・個人情報を出力しない（ログ、PR本文、コメント、Artifactsを含む）
+````
+
+### 6.7.3 MCP（Model Context Protocol）の最小概念
+MCPは、エージェントに対して「どのツールを公開するか」を定義するためのプロトコルです。ポイントは、**ツール公開がそのまま権限付与になる**点です。
+
+- **公開するツールは最小化**（必要なものだけ allowlist）
+- **Secrets境界を先に設計**（参照可/不可、出力禁止、ログ禁止）
+- **書き込み権限は段階的に**（まず read-only、必要時のみ write）
+
+エージェントに「できること」を増やすほど便利になりますが、事故の影響範囲も増えます。第11章の「権限境界/Secrets運用/監査」をセットで設計してください。
+
+### 6.7.4 実務ユースケース（“とりあえず1体”）
+1. **テスト追加専用**: 失敗しているテストの修正や、回帰テストの追加だけを許可（コード本体の大改修は禁止）
+2. **依存更新専用**: lockfile更新、互換性確認、CI通過まで（仕様変更は禁止）
+3. **ドキュメント整備専用**: docsの表記・リンク・章参照の整備（ビルド資産/Secretsは触らない）
+
+運用の深掘り（評価、権限設計、監査、SLA/コスト最適化）は、別冊 Book3（AgentOps）で扱う想定です。
 
 ## まとめ
 

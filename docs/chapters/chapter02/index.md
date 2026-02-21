@@ -73,6 +73,138 @@ HTTP/1.1 401 Unauthorized
 3. **環境の詳細**: バージョン情報は可能な限り正確に記載（本書の例は陳腐化を避けるため簡略表記）
 4. **AI向け指示**: 明確な分析観点の提示
 
+### 2.2.1 Issueを「実行仕様」にする（Agent前提）
+AIに「調査」だけを依頼する場合は、上記のような構造化で十分なこともあります。一方で **エージェントにPR作成まで任せる** 場合、Issueは「相談」ではなく **実行仕様** として書く必要があります。
+
+最低限、次の項目を埋めることで、PR作成→レビュー→反復が成立しやすくなります（#200の方針）。
+
+- **Goal（ゴール）**: 何を満たせば完了か（成果物）
+- **Acceptance criteria（受入基準）**: 完了判定できるチェックリスト
+- **Constraints（制約）**: 互換性、性能、セキュリティ、変更してよい範囲
+- **Test plan（テスト）**: 実行コマンドと期待結果（手動確認が必要なら手順も）
+- **Do not change（変更禁止領域）**: 触れてはいけないファイル/仕様/公開構造
+- **Scope（対象/非対象）**: やらないこと（スコープ外）を明示
+
+なお、これらの項目は `.github/ISSUE_TEMPLATE/` の Issue フォームとしても提供できます（運用の標準化に有効です）。
+
+#### 実行仕様テンプレ（最小）
+````markdown
+# [TYPE] タイトル（例: [BUG] / [IMPROVEMENT] / [DEPENDENCY]）
+
+## Goal
+- （記入）
+
+## Context
+- （記入）
+
+## Acceptance criteria
+- [ ] （記入）
+
+## Constraints
+- （記入）
+
+## Test plan
+- （記入）
+
+## Do not change
+- （記入）
+
+## Scope（optional）
+- 対象:
+- 非対象:
+
+## Notes（optional）
+- 参照:
+````
+
+### 2.2.2 CLEAR → 実行仕様（Issue）対応表
+CLEARは「AIに伝わる指示の体系」ですが、エージェント運用ではそのまま Issue の欄に落とすと運用が安定します。
+
+| CLEAR | Issueの欄（例） | 目的 |
+|---|---|---|
+| Context | Context / Constraints / Do not change | 前提・制約・境界の固定 |
+| Logic | Context（原因仮説）/ Notes（設計案） | 判断に必要な筋道を共有 |
+| Example | Repro steps / Expected/Actual / Examples | 入力と期待出力の揺れを減らす |
+| Action | Goal / Scope / Test plan | 次に何をするかを実行可能にする |
+| Review | Acceptance criteria / リスク/ロールバック | 完了条件とチェック観点の固定 |
+
+### 2.2.3 例題（エージェントに割り当て可能な粒度）
+以下は「そのまま Issue に転記できる」形式の例です。実運用では、プロジェクト固有の制約（規約、ディレクトリ、ビルド/テスト）を必ず追記してください。
+
+#### 例1: バグ修正
+````markdown
+# [BUG] docs の章内リンクで 404 が発生する
+
+## Goal
+- 壊れているリンクを修正し、Book QA（リンク/アンカー）が PASS する
+
+## Context
+- 章内で参照しているページパスが変更され、公開サイトで 404 になる
+
+## Acceptance criteria
+- [ ] 公開サイト上で該当リンクが 200 になる
+- [ ] `python3 scripts/validate_links.py docs` で内部リンクエラーが出ない
+- [ ] GitHub Actions の Book QA が PASS する
+
+## Constraints
+- ページ構造（/chapters/**, /appendices/**）は変更しない
+
+## Test plan
+- `python3 scripts/validate_links.py docs`
+
+## Do not change
+- `docs/assets/**`（原則）
+````
+
+#### 例2: 小機能追加（ドキュメント改善）
+````markdown
+# [IMPROVEMENT] 第2章に「変更禁止領域」の説明を追記する
+
+## Goal
+- 第2章に、エージェント運用で必要となる「変更禁止領域」の定義と例を追記する
+
+## Context
+- Issueが薄いと差分が肥大化しやすく、意図しないファイルまで変更される
+
+## Acceptance criteria
+- [ ] 「変更禁止領域」の定義・例・運用上の線引きが本文だけで分かる
+- [ ] 章内の主張が既存節と矛盾しない
+
+## Constraints
+- 料金やモデルなど変動する要素は断定せず、公式参照に寄せる
+
+## Test plan
+- GitHub Actions の Book QA が PASS する
+
+## Do not change
+- 既存の章番号体系（見出し番号）を崩さない
+````
+
+#### 例3: 依存更新
+````markdown
+# [DEPENDENCY] markdownlint-cli を更新する
+
+## Goal
+- markdownlint-cli を更新し、`npm run lint:light` が PASS する
+
+## Context
+- 既知不具合/ルール更新に追従する必要がある
+
+## Acceptance criteria
+- [ ] `npm ci` が成功する
+- [ ] `npm run lint:light` が PASS する
+
+## Constraints
+- Node.js のサポート条件（package.json の engines）を満たすこと
+
+## Test plan
+- `npm ci`
+- `npm run lint:light`
+
+## Do not change
+- 公開物（`docs/**`）の本文以外は触らない
+````
+
 ## 2.3 AI協働を前提としたPull Request
 
 ### AI協働履歴の記録
@@ -99,6 +231,24 @@ def get_cached_user(user_id: int) -> Optional[User]:
 - **バグ発見率**: AI提案での事前発見 3件
 - **コードレビュー効率**: レビュー時間 1.5時間短縮
 ````
+
+### 2.3.1 PRレビューで「仕様」をステアする（コメントで差分を残す）
+エージェント運用では、Issue が実行仕様として書かれていても、レビュー中に仕様が追加・変更されることがあります。重要なのは、**仕様差分をPR上に残す**ことです（後続の改善や監査で根拠になります）。
+
+推奨する運用は次のとおりです。
+
+1. **仕様差分はPRコメントに残す**（「何が変わったか」「受入基準がどう変わるか」まで書く）
+2. 可能であれば **Issue本文も更新**し、最新仕様を1か所に集約する
+3. PR本文（テンプレ）に「受入基準チェック」「テスト」「リスク/ロールバック」を残し、レビュー観点を固定する
+
+例（レビューコメントの書き方）:
+
+```markdown
+仕様差分:
+- 変更: 「Aを追加」→「Aは追加しない。代わりにBのログを追加」
+- 受入基準: 「BのログがX条件で出る」を追加
+- 制約: 「ログに個人情報を含めない」を明記
+```
 
 ## 2.4 AI指示の体系的手法（CLEAR方式）
 
