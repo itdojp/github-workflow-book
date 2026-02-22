@@ -23,6 +23,7 @@ title: "第8章：GitHub Advanced SecurityとAI統合"
 
 #### AI協働対応のCodeQL設定
 `.github/workflows/codeql-ai-analysis.yml`:
+{% raw %}
 ```yaml
 name: "CodeQL with AI Code Analysis"
 
@@ -83,6 +84,7 @@ jobs:
         # - 過度に広い例外キャッチ
         python scripts/ai_vulnerability_patterns.py
 ```
+{% endraw %}
 
 ### AI生成コード向けカスタムクエリ
 
@@ -412,6 +414,7 @@ def read_file(filename):
 ### セキュリティパッチの自動生成
 
 #### GitHub Actionsワークフロー
+{% raw %}
 ```yaml
 name: Auto Security Fix
 
@@ -451,6 +454,7 @@ jobs:
           branch: security/auto-fix-${{ github.run_id }}
           labels: security, automated
 ```
+{% endraw %}
 
 ### 修正の検証
 

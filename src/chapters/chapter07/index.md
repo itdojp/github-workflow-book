@@ -379,6 +379,7 @@ logger.info(f"User login attempt: {username}")
 ### 自動化ルールの設定
 
 #### GitHub Actions統合
+{% raw %}
 ```yaml
 name: AI-Assisted Code Review
 
@@ -415,6 +416,7 @@ jobs:
               body: summary
             });
 ```
+{% endraw %}
 
 ### レビューダッシュボード
 

@@ -162,6 +162,7 @@ on:
 ### 問題：Secretsが機能しない
 
 **解決方法：**
+{% raw %}
 ```yaml
 # 正しい参照方法
 env:
@@ -175,6 +176,7 @@ env:
       echo "Secret is empty!"
     fi
 ```
+{% endraw %}
 
 ### 問題：アーティファクトのアップロードが失敗
 
@@ -261,6 +263,7 @@ git remote set-url origin git@github.com:user/repo.git
 ### 問題：GitHub Actionsの実行時間が長い
 
 **最適化方法：**
+{% raw %}
 ```yaml
 # 1. キャッシュの活用
 - uses: actions/cache@v4
@@ -284,6 +287,7 @@ strategy:
 # 4. self-hosted runnerの使用
 runs-on: [self-hosted, gpu]
 ```
+{% endraw %}
 
 ## セキュリティ関連
 
@@ -433,6 +437,7 @@ curl -v -H "Authorization: token YOUR_TOKEN" \
 ```
 
 ### Actions のデバッグ
+{% raw %}
 ```yaml
 # デバッグログを有効化
 env:
@@ -444,6 +449,7 @@ env:
   uses: mxschmitt/action-tmate@v3
   if: ${{ failure() }}
 ```
+{% endraw %}
 
 ## よくあるエラーメッセージ
 

@@ -357,6 +357,7 @@ CLEAR の各要素が欠けていると、AI は前提を誤解したり、過�
 5. **品質チェック**: 人間とAIの協働レビュー
 
 ### 品質ゲートの設定
+{% raw %}
 ```yaml
 # .github/workflows/ai-collaboration-quality.yml
 name: AI Collaboration Quality Gates
@@ -391,6 +392,7 @@ jobs:
           # AI協働効果の測定
           python scripts/collect_ai_metrics.py
 ```
+{% endraw %}
 
 上記のワークフローは、本章で紹介した品質基準を GitHub Actions の自動チェックとして表現したサンプルです。実際に導入する際は、`scripts/` 以下のスクリプトを自組織の環境やルールに合わせて実装・調整したうえで、まずは検証用リポジトリで動作確認を行い、その後に本番リポジトリへの適用可否を検討してください。
 

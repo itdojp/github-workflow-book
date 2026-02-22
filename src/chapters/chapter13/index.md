@@ -40,6 +40,7 @@ on:
 
 #### AI協働品質ゲート統合のワークフロー構造
 **実運用例（このまま使える）**：全文は `examples/ai-collaboration-pipeline-example/` を参照してください。以下は最小構成の例です（チェック内容はプロジェクトに合わせて置き換えます）。
+{% raw %}
 ```yaml
 # .github/workflows/ai-collaboration-quality-gate.yml
 name: AI Collaboration Quality Gate
@@ -71,11 +72,13 @@ jobs:
             exit 1
           fi
 ```
+{% endraw %}
 
 ### マトリックスビルド
 
 #### 複数環境でのテスト
 **概念例（抜粋）**：`jobs.test` の構造例です（ワークフロー全体ではありません）。
+{% raw %}
 ```yaml
 test:
   needs: setup
@@ -119,11 +122,13 @@ test:
         flags: unittests
         name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
 ```
+{% endraw %}
 
 ### カスタムアクション
 
 #### 再利用可能なアクション
 **概念例（参考実装）**：カスタムアクションの構造例です。依存関係やOS差分は環境に合わせて要調整です。
+{% raw %}
 ```yaml
 # .github/actions/setup-ml-env/action.yml
 name: 'Setup ML Environment'
@@ -187,12 +192,14 @@ runs:
           pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu${{ inputs.cuda-version }}
         fi
 ```
+{% endraw %}
 
 ## 13.2 AIモデル学習の自動化
 
 ### 学習パイプライン
 
 #### GPU対応ワークフロー
+{% raw %}
 ```yaml
 # .github/workflows/train-model.yml
 name: Model Training
@@ -304,10 +311,12 @@ jobs:
             --registry ${{ secrets.MODEL_REGISTRY_URL }} \
             --version ${{ github.sha }}
 ```
+{% endraw %}
 
 ### ハイパーパラメータチューニング
 
 #### 並列実験の実行
+{% raw %}
 ```yaml
 # .github/workflows/hyperparameter-search.yml
 name: Hyperparameter Search
@@ -401,6 +410,7 @@ jobs:
               body: report
             });
 ```
+{% endraw %}
 
 ## 13.3 テストとリンターの統合
 
@@ -659,6 +669,7 @@ class CodeQualityReporter:
 ### AI支援ワークフロー開発
 
 #### Copilotプロンプト活用
+{% raw %}
 ```yaml
 # Copilotへのプロンプト例
 # "Create a GitHub Actions workflow that runs distributed training on multiple GPUs"
@@ -724,20 +735,23 @@ jobs:
             train_distributed.py \
             --config config/distributed_training.yaml
 ```
+{% endraw %}
 
 ### 13.4.1 Codex GitHub Action で「差分レビューコメント」を自動投稿する（例）
 エージェントを「手動利用」から「品質ゲート/自動化」へ接続する入口として、Codex GitHub Action を使い、PR差分に対するレビューコメント（要約、リスク、追加検証案）を投稿する例を示します。
 
-注: ここで示す Codex GitHub Action は **GitHub Copilot のネイティブ機能ではなく**、OpenAI の Codex CLI を GitHub Actions から実行する third-party の例です。`OPENAI_API_KEY`（または同等のAPIキー）をSecretsとして扱い、データ送信範囲と課金を前提に導入可否を判断してください。
+注: ここで示す Codex GitHub Action は **GitHub Copilot のネイティブ機能ではなく**、OpenAI の Codex CLI を GitHub Actions から実行する third-party の例です。Secrets（例: `OPENAI_API_KEY`）や外部送信範囲、課金を前提に導入可否を判断してください。
 
 ポイントは次のとおりです。
 
 - **権限を最小化**: 差分レビュー用途なら `contents: read` と、コメント投稿用の `pull-requests: write` 程度に絞る
-- **Secrets境界を明記**: `OPENAI_API_KEY` などは GitHub Actions secrets に格納し、ログ/PR本文へ出さない
+- **Secrets境界を明記**: `secrets.OPENAI_API_KEY` を `with.openai-api-key` に渡し、ログ/PR本文へ出さない
 - **実行範囲を制御**: ラベル付与などで実行を明示し、意図しないタイミングでの課金・外部送信を避ける
+- **安全策を明示**: `sandbox`（FS/network）と `safety-strategy`（OS権限）を明示し、権限境界を固定する
 
 以下はサンプルです（導入時は、モデル/課金/ポリシー・データ送信範囲を組織の基準に合わせて設計してください）。
 
+{% raw %}
 ```yaml
 name: Codex PR Review Comment (on label)
 
@@ -754,7 +768,7 @@ jobs:
     outputs:
       final_message: ${{ steps.run_codex.outputs.final-message }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.pull_request.number }}/merge
 
@@ -770,6 +784,7 @@ jobs:
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           sandbox: read-only
+          safety-strategy: drop-sudo
           prompt: |
             Review ONLY the changes introduced by the PR.
             Be concise and specific. Include risk and suggested verification.
@@ -801,6 +816,7 @@ jobs:
               body: process.env.CODEX_FINAL_MESSAGE,
             });
 ```
+{% endraw %}
 
 ### 13.4.2 注意：Secrets/権限/外部送信の線引き
 CodexのようなエージェントをCIに組み込む場合、失敗の大半は「実装」ではなく「権限境界/Secrets運用」で発生します。
@@ -809,11 +825,14 @@ CodexのようなエージェントをCIに組み込む場合、失敗の大半�
 - **Secrets**: ログ/Artifacts/コメントへの混入を前提にレビュー観点へ入れる
 - **外部送信**: どの情報が外部へ送られるか（プロンプト、差分、ログ）を定義し、許容範囲を決める
 
+注: `sandbox` / `safety-strategy` は補助策であり、Secretsの露出（ログ/コメント）を自動でゼロにするものではありません。Secrets運用（出さない/残さない）と監査設計（根拠の記録）を組み合わせて境界を設計してください。
+
 詳細は第11章（Secrets/権限境界/監査）を参照してください。
 
 ### ワークフロー最適化
 
 #### キャッシングとアーティファクト管理
+{% raw %}
 ```yaml
 # .github/workflows/optimized-pipeline.yml
 name: Optimized ML Pipeline
@@ -875,12 +894,14 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 ```
+{% endraw %}
 
 ## 13.5 デプロイメントの自動化
 
 ### モデルデプロイメントパイプライン
 
 #### 段階的デプロイメント
+{% raw %}
 ```yaml
 # .github/workflows/deploy-model.yml
 name: Model Deployment
@@ -1011,6 +1032,7 @@ jobs:
           text: 'Model ${{ github.ref_name }} deployed to production'
           webhook_url: ${{ secrets.SLACK_WEBHOOK }}
 ```
+{% endraw %}
 
 ### 監視とロールバック
 

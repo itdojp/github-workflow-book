@@ -44,6 +44,77 @@ jobs:
             echo "dir=." >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Invisible Unicode check (bidi / zero-width; fail)
+        shell: bash
+        run: |
+          python3 - << 'PY'
+          import sys
+          import unicodedata
+          from pathlib import Path
+          import re
+
+          scan_dir = Path("${{ steps.scan.outputs.dir }}").resolve()
+
+          banned = [
+            "\u061c",  # ARABIC LETTER MARK
+            "\u00ad",  # SOFT HYPHEN
+            "\u180e",  # MONGOLIAN VOWEL SEPARATOR (deprecated)
+            "\u200b",  # ZERO WIDTH SPACE
+            "\u200c",  # ZERO WIDTH NON-JOINER
+            "\u200d",  # ZERO WIDTH JOINER
+            "\u200e",  # LEFT-TO-RIGHT MARK
+            "\u200f",  # RIGHT-TO-LEFT MARK
+            "\u2060",  # WORD JOINER
+            "\u202a",  # LEFT-TO-RIGHT EMBEDDING
+            "\u202b",  # RIGHT-TO-LEFT EMBEDDING
+            "\u202c",  # POP DIRECTIONAL FORMATTING
+            "\u202d",  # LEFT-TO-RIGHT OVERRIDE
+            "\u202e",  # RIGHT-TO-LEFT OVERRIDE
+            "\u2066",  # LEFT-TO-RIGHT ISOLATE
+            "\u2067",  # RIGHT-TO-LEFT ISOLATE
+            "\u2068",  # FIRST STRONG ISOLATE
+            "\u2069",  # POP DIRECTIONAL ISOLATE
+            "\ufeff",  # ZERO WIDTH NO-BREAK SPACE (BOM)
+          ]
+
+          pattern = re.compile("[" + "".join(banned) + "]")
+
+          def file_candidates():
+            yield from Path(".github").rglob("*.yml")
+            yield from Path(".github").rglob("*.yaml")
+            if scan_dir.exists():
+              yield from scan_dir.rglob("*.md")
+            if Path("src").exists():
+              yield from Path("src").rglob("*.md")
+
+          hits = []
+          for path in sorted({p for p in file_candidates() if p.is_file()}):
+            try:
+              text = path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+              print(f"::error file={path}::Failed to decode as UTF-8")
+              sys.exit(1)
+
+            for m in pattern.finditer(text):
+              cp = ord(m.group(0))
+              name = unicodedata.name(m.group(0), "UNKNOWN")
+              line = text.count("\n", 0, m.start()) + 1
+              last_nl = text.rfind("\n", 0, m.start())
+              col = (m.start() - last_nl) if last_nl != -1 else (m.start() + 1)
+              hits.append((path.as_posix(), line, col, cp, name))
+              if len(hits) >= 50:
+                break
+            if len(hits) >= 50:
+              break
+
+          if hits:
+            for path, line, col, cp, name in hits:
+              print(f"::error file={path},line={line},col={col}::Invisible Unicode detected: U+{cp:04X} {name}")
+            sys.exit(1)
+
+          print("OK: no bidi/hidden Unicode characters detected")
+          PY
+
       - name: Unicode check (fail on warnings)
         run: node book-formatter/scripts/check-unicode.js "${{ steps.scan.outputs.dir }}" --allowlist .book-formatter/unicode-allowlist.json --fail-on warn
 
@@ -232,6 +303,49 @@ jobs:
               print("::error::Missing assets in built site:")
               for a in missing_assets:
                 print(f"  - {a}")
+            sys.exit(1)
+
+          # Detect Liquid-eaten GitHub Actions expressions after Jekyll build.
+          import re
+
+          expr_re = re.compile(r"\$\{\{[^}]+\}\}")
+          expressions = set()
+          for md in scan_dir.rglob("*.md"):
+            try:
+              src = md.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+              continue
+            expressions.update(expr_re.findall(src))
+
+          html = ""
+          for f in site_dir.rglob("*.html"):
+            try:
+              html += f.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+              continue
+
+          import html as html_mod
+
+          rendered_text = html_mod.unescape(re.sub(r"<[^>]+>", "", html))
+
+          missing_expr = [e for e in sorted(expressions) if e and e not in rendered_text]
+          broken_patterns = [
+            "refs/pull/$/merge",
+            "refs/pull/$/head",
+          ]
+          found_broken = [p for p in broken_patterns if p in rendered_text]
+
+          if found_broken or missing_expr:
+            if found_broken:
+              print("::error::Broken GitHub Actions expression rendering detected:")
+              for p in found_broken:
+                print(f"  - {p}")
+            if missing_expr:
+              print(f"::error::GitHub Actions expressions missing in built site: {len(missing_expr)}")
+              for e in missing_expr[:20]:
+                print(f"  - {e}")
+              if len(missing_expr) > 20:
+                print("  - ...")
             sys.exit(1)
 
           print(f"OK: built site smoke check passed ({len(paths)} paths, {len(required_assets)} assets)")

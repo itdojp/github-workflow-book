@@ -189,6 +189,7 @@ Let us know if you need any help!
 ### CLAの実装
 
 #### CLA自動化ボット
+{% raw %}
 ```python
 # .github/workflows/cla.yml
 name: "CLA Assistant"
@@ -232,6 +233,7 @@ jobs:
             All contributors have signed the CLA ✅
             Thank you for your contribution!
 ```
+{% endraw %}
 
 ### CLAドキュメント
 
@@ -1004,6 +1006,7 @@ Generated: {datetime.now().strftime('%Y-%m-%d')}
 ### リリース管理
 
 #### 自動リリースワークフロー
+{% raw %}
 ```yaml
 # .github/workflows/release.yml
 name: Release
@@ -1078,6 +1081,7 @@ jobs:
           git commit -m "Update documentation for ${{ github.ref_name }}"
           git push
 ```
+{% endraw %}
 
 ## まとめ
 
