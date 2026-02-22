@@ -53,6 +53,7 @@ git push origin gh-pages
 ```
 
 3. **GitHub Actions経由**
+{% raw %}
 ```yaml
 # .github/workflows/pages.yml
 name: Deploy to GitHub Pages
@@ -97,6 +98,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 ```
+{% endraw %}
 
 ### カスタムドメインの設定
 
@@ -918,6 +920,7 @@ jobs:
 ### CI/CDパイプライン
 
 #### 完全な自動デプロイワークフロー
+{% raw %}
 ```yaml
 # .github/workflows/deploy-docs.yml
 name: Deploy Documentation
@@ -984,12 +987,13 @@ jobs:
             -o {} {} \;
             
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e  # v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
           cname: ml-docs.example.com
 ```
+{% endraw %}
 
 ### パフォーマンス最適化
 

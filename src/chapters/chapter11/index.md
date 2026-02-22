@@ -61,7 +61,7 @@ secrets_hierarchy:
       - DOCKERHUB_TOKEN
       - NPM_AUTH_TOKEN
       - SONAR_TOKEN
-      - GITHUB_COPILOT_API_TOKEN  # Copilot API利用時のトークン（Enterprise設定の自動化用）
+      - COPILOT_ADMIN_GH_TOKEN  # Copilot管理（seat/metrics等）の自動化に使う GitHub トークン（PAT/GitHub App 等）
     ai_safety:
       - scan_for_hardcoded: true
       - ai_generation_block: true
@@ -91,9 +91,11 @@ secrets_hierarchy:
           ai_access: "full"  # 開発環境はAI支援許可
 ```
 
-**注意：GitHub Copilot APIトークンについて**
+**注意：Copilot管理APIの認証について**
 
-`GITHUB_COPILOT_API_TOKEN`は、GitHub Copilot Enterprise環境でAPI経由での設定自動化や使用状況監視を行う場合に必要となるトークンです。一般的なCopilotの利用では不要ですが、大規模組織でのCopilot設定の一括管理や、使用統計の自動収集を行う際に使用されます。
+Copilotの seat/metrics 等の管理をAPI経由で自動化する場合に必要になるのは、「Copilot専用のAPIキー」ではなく GitHub API を呼び出すための認証情報（PAT や GitHub App トークン等）です。必要権限/スコープは運用対象（org/enterprise）に依存するため、GitHub公式ドキュメントで確認してください。
+
+一方、Copilot BYOK（LLMプロバイダのAPIキー）を扱う場合は、Enterprise側にプロバイダキーを登録する運用であり、リポジトリSecretsに直接置かない設計を優先してください（該当機能を使う場合のみ）。
 
 ### Secretsの作成と管理
 
@@ -191,6 +193,7 @@ class SecretsManager:
 ### Secretsの使用パターン
 
 #### AI生成コードセキュリティチェックを含むワークフロー
+{% raw %}
 ```yaml
 name: Deploy to Production with AI Security
 
@@ -247,6 +250,7 @@ jobs:
           # Secretsは環境変数として利用可能
           ./deploy.sh
 ```
+{% endraw %}
 
 ## 11.2 Environment設定と環境変数
 
@@ -490,6 +494,7 @@ updates:
 ### 脆弱性対応の自動化
 
 #### 自動マージ設定
+{% raw %}
 ```yaml
 name: Auto-merge Dependabot PRs
 
@@ -534,6 +539,7 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+{% endraw %}
 
 ### 脆弱性レポートの生成
 
@@ -766,6 +772,7 @@ class VulnerabilityReporter:
 ### セキュリティスキャンの統合
 
 #### 複数スキャナーの統合
+{% raw %}
 ```yaml
 name: Security Scan
 
@@ -828,6 +835,7 @@ jobs:
         python scripts/security_check.py
         bash scripts/secret_scan.sh
 ```
+{% endraw %}
 
 ## 11.5 セキュリティインシデント対応
 
