@@ -121,7 +121,7 @@ test:
         pytest tests/ -v --cov=src --cov-report=xml
         
     - name: Upload coverage
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5
       with:
         file: ./coverage.xml
         flags: unittests
@@ -772,8 +772,8 @@ jobs:
       contents: read
     outputs:
       final_message: ${{ steps.run_codex.outputs.final-message }}
-    - uses: actions/checkout@v4
-      - uses: actions/checkout@v5
+    steps:
+      - uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.pull_request.number }}/merge
 
@@ -788,8 +788,8 @@ jobs:
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          safety-strategy: drop-sudo
           sandbox: read-only
+          safety-strategy: drop-sudo
           prompt: |
             Review ONLY the changes introduced by the PR.
             Be concise and specific. Include risk and suggested verification.
@@ -828,9 +828,9 @@ CodexのようなエージェントをCIに組み込む場合、失敗の大半�
 
 - **Actions権限**: `permissions:` を明示し、用途ごとにワークフローを分ける
 - **Secrets**: ログ/Artifacts/コメントへの混入を前提にレビュー観点へ入れる
-注: `sandbox` / `safety-strategy` は補助策であり、Secretsの露出（ログ/コメント）を自動でゼロにするものではありません。Secrets運用（出さない/残さない）と監査設計（根拠の記録）を組み合わせて境界を設計してください。
-
 - **外部送信**: どの情報が外部へ送られるか（プロンプト、差分、ログ）を定義し、許容範囲を決める
+
+注: `sandbox` / `safety-strategy` は補助策であり、Secretsの露出（ログ/コメント）を自動でゼロにするものではありません。Secrets運用（出さない/残さない）と監査設計（根拠の記録）を組み合わせて境界を設計してください。
 
 詳細は第11章（Secrets/権限境界/監査）を参照してください。
 

@@ -446,7 +446,7 @@ env:
 
 # tmate でSSHデバッグ
 - name: Setup tmate session
-  uses: mxschmitt/action-tmate@v3
+  uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101  # v3
   if: ${{ failure() }}
 ```
 {% endraw %}

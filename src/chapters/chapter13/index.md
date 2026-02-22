@@ -116,7 +116,7 @@ test:
         pytest tests/ -v --cov=src --cov-report=xml
         
     - name: Upload coverage
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5
       with:
         file: ./coverage.xml
         flags: unittests
