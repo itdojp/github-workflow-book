@@ -1329,7 +1329,7 @@ permissions:
 
 第11章（11.1.4）も参照してください： [第11章：セキュリティ実践](../chapter11/)。全文例は `examples/oidc-aws-sts-example/` を参照してください。
 
-## 13.9 self-hosted runner 運用設計（信頼境界・隔離・フォークPR）
+## 13.9 self-hosted runner 運用設計（信頼境界・隔離・fork PR）
 
 self-hosted runner は、ビルド時間短縮やGPUなど特殊要件に有効ですが、運用設計を誤ると「任意コード実行」のリスクが直接ホストに波及します。
 

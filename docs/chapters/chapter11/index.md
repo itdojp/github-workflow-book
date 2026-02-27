@@ -106,13 +106,13 @@ Copilotの seat/metrics 等の管理をAPI経由で自動化する場合に必�
 
 クラウド操作/デプロイのために長期のアクセスキー（例：`AWS_ACCESS_KEY_ID`）を Secrets に置くと、漏えい時の影響が大きくなります。可能な限り **OIDC による短命クレデンシャル**へ寄せます。
 
-ポイント（最低限）:
+ポイント（最低限）：
 - 推奨：OIDC（短命トークン）を使い、長期キーをリポジトリに置かない
 - `permissions: id-token: write` が必要（`contents: read` も併記するのが無難）
 - クラウド側（例：AWS IAM）に GitHub OIDC provider と role を用意し、信頼ポリシー（`aud`/`sub` 等）で対象を絞る
 - fork PR 等の不特定入力では、そもそもクラウド操作をしない設計にする（信頼境界）
 
-最小例（AWSで `sts:GetCallerIdentity` を実行）:
+最小例（AWSで `sts:GetCallerIdentity` を実行）：
 
 {% raw %}
 ```yaml
