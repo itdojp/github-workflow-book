@@ -178,6 +178,57 @@ env:
 ```
 {% endraw %}
 
+### 問題：`workflow_call`（Reusable workflow）が動かない
+
+**チェック項目：**
+- 呼び出し先に `on: workflow_call` があるか
+- 呼び出し側の `uses:` が正しいか
+  - 同一リポジトリ: `uses: ./.github/workflows/<file>.yml`
+  - 別リポジトリ: `uses: <OWNER>/<REPO>/.github/workflows/<file>.yml@<ref>`
+- `inputs` の型（`type: string` 等）とデフォルト値が一致しているか
+- `secrets` の受け渡しが必要な場合、呼び出し側で `secrets: inherit` または個別指定をしているか
+
+参考：`examples/reusable-workflows-ci-example/`
+
+### 問題：`GITHUB_TOKEN` の権限不足（`Resource not accessible by integration`）
+
+**原因の典型：**
+- `permissions:` が未指定で、既定が読み取りになっている
+- fork PR など、イベントの性質上「書き込み」が許可されない
+
+**解決方法（最小）：**
+- ワークフロー/ジョブの `permissions:` を明示する（例：Release作成なら `contents: write`）
+- fork PR では Secrets/書き込みが必要な処理を実行しない設計に分離する
+
+参考：`examples/release-automation-example/`
+
+### 問題：fork PR で Secrets が渡らず期待通り動かない
+
+**仕様/設計ポイント：**
+- `pull_request`（fork）では Secrets が原則渡らない
+- `pull_request_target` は Secrets を扱える一方、設計を誤ると外部から悪用され得る（チェックアウト対象とSecretsの扱いを固定する）
+
+**推奨：**
+- デプロイ/公開など「外部操作」は fork PR では走らせない（main ブランチや手動実行へ分離）
+
+### 問題：OIDC が失敗する（`id-token` 権限不足 / 信頼ポリシー条件ミス）
+
+**チェック項目：**
+- `permissions: id-token: write` を付与しているか（ジョブ/ワークフロー）
+- クラウド側の信頼ポリシー（`aud`/`sub`）が想定と一致しているか
+  - `sub` はブランチ/タグ/環境で変わるため、過度に広げない
+
+参考：`examples/oidc-aws-sts-example/`
+
+### 問題：self-hosted runner でジョブがスケジュールされない（runner offline / ラベル不一致）
+
+**チェック項目：**
+- `runs-on: [self-hosted, <label>]` の `<label>` が runner 側と一致しているか
+- runner が online か（GitHub UI の状態、サービス稼働、ネットワーク）
+- Runner グループ/リポジトリ許可範囲に含まれているか
+
+参考：`examples/self-hosted-runner-ops-checklist/`
+
 ### 問題：アーティファクトのアップロードが失敗
 
 **解決方法：**

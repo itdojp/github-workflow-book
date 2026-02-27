@@ -1166,6 +1166,178 @@ class DeploymentMonitor:
         }
 ```
 
+## 13.6 再利用の設計：Composite Actions vs Reusable Workflows
+
+実運用でCI/CDを育てていくと、「同じ処理を複数のワークフローで再利用したい」局面が頻繁に発生します。GitHub Actions では主に次の2つの再利用手段があります。
+
+- Composite Action：**step（手順）単位**の再利用（同一 job 内）
+- Reusable Workflow：**job/ワークフロー単位**の再利用（`workflow_call` で呼び出す）
+
+### 使い分けの目安（最小）
+
+- Composite Action が向く
+  - どのワークフローでも繰り返す「手順の塊」（例：セットアップ、キャッシュ、lint 実行）
+  - 呼び出し側の job が持つ権限/runner をそのまま使いたい
+- Reusable Workflow が向く
+  - job 構成（`runs-on` / `needs` / `permissions` / `concurrency` / `environment`）まで含めて共通化したい
+  - 複数リポジトリで同じCIを共有したい（`owner/repo/.github/workflows/...@ref` で呼び出す）
+
+### 最小例（`workflow_call`）
+
+全文は `examples/reusable-workflows-ci-example/` を参照してください。以下は概念を示す最小例です。
+
+{% raw %}
+```yaml
+# .github/workflows/reusable-ci.yml
+name: Reusable CI
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: false
+        type: string
+        default: "20"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+      - run: npm ci
+      - run: npm test
+```
+{% endraw %}
+
+呼び出し側は `uses:` でジョブごと呼び出します。
+
+{% raw %}
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+jobs:
+  call:
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      node-version: "20"
+```
+{% endraw %}
+
+注意：
+- 呼び出し側の `permissions:` が不足すると、呼び出し先の処理が失敗します（`GITHUB_TOKEN` の権限設計は付録Bも参照）。
+- fork PR では Secrets が渡らない/制限されるため、再利用設計の前提として「どのイベントで何を実行するか」を分離してください。
+
+## 13.7 リリース自動化（タグ→Release notes→成果物）
+
+リリース運用を自動化すると、「リリース作業の属人化」を減らし、配布物の整合性を保ちやすくなります。最小構成は次の流れです。
+
+1. タグ（例：`v1.2.3`）を push
+2. GitHub Release を作成（Release notes 生成）
+3. 成果物（artifact）を添付
+
+最小例（Release作成 + 添付）：
+
+{% raw %}
+```yaml
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build artifact
+        run: |
+          mkdir -p dist
+          echo "build output" > dist/example.txt
+          tar -czf dist.tgz dist
+      - name: Create GitHub Release (notes + attach)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist.tgz --generate-notes
+```
+{% endraw %}
+
+補足：
+- `GITHUB_TOKEN` は既定で書き込みが禁止されている設定の場合があります。失敗する場合は `permissions:` とリポジトリ設定（Actions の既定権限）を確認します。
+- Packages（GHCR）へ公開する場合は `packages: write` が必要になることがあります。全文例は `examples/release-automation-example/` を参照してください。
+
+## 13.8 クラウド認証：OIDC を使い「長期 Secrets」を置かない（推奨）
+
+クラウドへのデプロイや操作で長期のアクセスキーを Secrets に置くと、漏えい時の影響が大きくなります。可能な限り **OIDC による短命クレデンシャル**へ寄せます。
+
+ポイント（最低限）：
+- `permissions: id-token: write` が必要
+- クラウド側（例：AWS IAM）に「GitHub OIDC provider + 役割（role）」を用意し、信頼ポリシーで発行元/対象（`aud`/`sub` 等）を絞る
+- fork PR など不特定入力の実行では、そもそもクラウド操作をしない設計にする（信頼境界）
+
+最小例（AWSで `sts:GetCallerIdentity` を実行）：
+
+{% raw %}
+```yaml
+permissions:
+  id-token: write
+  contents: read
+
+- uses: aws-actions/configure-aws-credentials@v4
+  with:
+    role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
+    aws-region: ap-northeast-1
+
+- run: aws sts get-caller-identity
+```
+{% endraw %}
+
+信頼ポリシー（例：プレースホルダ）：
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": "repo:<OWNER>/<REPO>:ref:refs/heads/<BRANCH>"
+        }
+      }
+    }
+  ]
+}
+```
+
+第11章（11.1.4）も参照してください： [第11章：セキュリティ実践](../chapter11/)。全文例は `examples/oidc-aws-sts-example/` を参照してください。
+
+## 13.9 self-hosted runner 運用設計（信頼境界・隔離・fork PR）
+
+self-hosted runner は、ビルド時間短縮やGPUなど特殊要件に有効ですが、運用設計を誤ると「任意コード実行」のリスクが直接ホストに波及します。
+
+重点ポイント（チェックリスト）：
+- 原則：**fork PR 等の不特定入力を self-hosted runner で実行しない**
+- Runner グループ/ラベルで境界を作る（用途別に分離する）
+- 使い捨て（ephemeral）/隔離（VM/コンテナ）/最小権限（ネットワーク/FS）を優先する
+- キャッシュは「汚染」を前提に扱う（Secrets 混入や改ざんを想定）
+- `concurrency` とキュー設計で過負荷/待ち行列を制御する
+- Runner 停止（offline）やラベル不一致時のオペレーションを用意する（付録B参照）
+
+運用観点の補足は `examples/self-hosted-runner-ops-checklist/` を参照してください。
+
 ## まとめ
 
 本章では、GitHub ActionsによるCI/CDパイプラインの構築を学習しました。主なポイントは次のとおりです。
@@ -1174,6 +1346,10 @@ class DeploymentMonitor:
 - 包括的なテストスイートと品質管理
 - Copilotを活用した効率的なワークフロー作成
 - 段階的デプロイメントと自動ロールバック
+- Reusable workflows / Composite actions による再利用設計
+- タグ起点のリリース自動化（Release notes/成果物）
+- OIDC によるクラウド認証（長期Secretsを置かない）
+- self-hosted runner の運用設計（信頼境界・隔離）
 
 次章では、大規模データとモデルの管理について学習します。
 
@@ -1184,3 +1360,7 @@ class DeploymentMonitor:
 - [ ] テストとコード品質チェックを統合できる
 - [ ] デプロイメントパイプラインを構築できる
 - [ ] 監視とロールバックの仕組みを実装できる
+- [ ] Reusable workflow と Composite action の使い分けを説明できる
+- [ ] タグ起点のリリース自動化（Release作成 + 成果物添付）を設計できる
+- [ ] OIDC を用いたクラウド認証の前提（`id-token` 権限/信頼ポリシー）を説明できる
+- [ ] self-hosted runner の信頼境界と運用注意点（fork PR 等）を説明できる
