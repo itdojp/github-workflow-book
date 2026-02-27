@@ -102,6 +102,35 @@ Copilotの seat/metrics 等の管理をAPI経由で自動化する場合に必�
 
 一方、Copilot BYOK（LLMプロバイダのAPIキー）を扱う場合は、Enterprise側にプロバイダキーを登録する運用であり、リポジトリSecretsに直接置かない設計を優先してください（該当機能を使う場合のみ）。
 
+### 11.1.4 OIDC によるクラウド認証（推奨）
+
+クラウド操作/デプロイのために長期のアクセスキー（例：`AWS_ACCESS_KEY_ID`）を Secrets に置くと、漏えい時の影響が大きくなります。可能な限り **OIDC による短命クレデンシャル**へ寄せます。
+
+ポイント（最低限）:
+- 推奨：OIDC（短命トークン）を使い、長期キーをリポジトリに置かない
+- `permissions: id-token: write` が必要（`contents: read` も併記するのが無難）
+- クラウド側（例：AWS IAM）に GitHub OIDC provider と role を用意し、信頼ポリシー（`aud`/`sub` 等）で対象を絞る
+- fork PR 等の不特定入力では、そもそもクラウド操作をしない設計にする（信頼境界）
+
+最小例（AWSで `sts:GetCallerIdentity` を実行）:
+
+{% raw %}
+```yaml
+permissions:
+  id-token: write
+  contents: read
+
+- uses: aws-actions/configure-aws-credentials@v4
+  with:
+    role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
+    aws-region: ap-northeast-1
+
+- run: aws sts get-caller-identity
+```
+{% endraw %}
+
+参照： [第13章：CI/CDパイプライン構築](../chapter13/)（13.8）
+
 ### Secretsの作成と管理
 
 #### GitHub CLIを使用した一括設定
@@ -115,7 +144,10 @@ gh secret set NPM_AUTH_TOKEN --org ai-research-lab < ~/.npm/token
 
 # Repository secrets
 gh secret set DATABASE_URL --repo ai-research-lab/ml-platform < .env.production
-gh secret set AWS_ACCESS_KEY_ID --repo ai-research-lab/ml-platform
+
+# (レガシー) 長期キーを使う場合のみ。可能な限りOIDCへ移行する。
+# gh secret set AWS_ACCESS_KEY_ID --repo ai-research-lab/ml-platform < path/to/aws_access_key_id
+# gh secret set AWS_SECRET_ACCESS_KEY --repo ai-research-lab/ml-platform < path/to/aws_secret_access_key
 
 # Environment secrets
 gh secret set PROD_DATABASE_URL \
@@ -230,15 +262,17 @@ jobs:
     needs: ai-security-check
     runs-on: ubuntu-latest
     environment: production
+    permissions:
+      contents: read
+      id-token: write
     
     steps:
       - uses: actions/checkout@v4
       
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
           aws-region: us-east-1
       
       - name: Login to Docker Hub

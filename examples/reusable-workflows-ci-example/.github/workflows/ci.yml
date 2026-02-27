@@ -1,0 +1,13 @@
+name: CI
+
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  call:
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      node-version: "20"
+

@@ -1,0 +1,21 @@
+name: AWS OIDC STS smoke
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sts:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
+          aws-region: ap-northeast-1
+
+      - run: aws sts get-caller-identity
+
