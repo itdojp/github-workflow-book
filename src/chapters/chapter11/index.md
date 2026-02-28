@@ -795,7 +795,7 @@ class VulnerabilityReporter:
 
 ## Security Advisories
 
-過去のセキュリティアドバイザリは[こちら](/security/advisories)で確認できます。
+過去のセキュリティアドバイザリは[こちら](advisories)で確認できます。
 
 ## Contact
 

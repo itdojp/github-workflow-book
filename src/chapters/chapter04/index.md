@@ -310,7 +310,7 @@ Fixes #5
 
 ## Screenshots
 訓練前後の画像サンプル：
-![Before](url) ![After](url)
+![Before](https://example.com/before.png) ![After](https://example.com/after.png)
 
 ## Checklist
 - [x] コードはPEP8に準拠
