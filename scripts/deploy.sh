@@ -547,7 +547,9 @@ deploy_step_sync_files() {
 deploy_step_commit_and_push() {
     log_info "📝 変更をコミット中..."
     
-    retry_command 3 1 "git add -A" || {
+    # 全変更の一括ステージングは意図しないファイルまで含めるリスクがあるため避ける。
+    # tracked の変更/削除を先に反映し、その後に新規ファイルを追加する。
+    retry_command 3 1 "git add -u && git add ." || {
         handle_error 1 $LINENO "ファイルのステージングに失敗しました" "GIT_PUSH_FAILED"
     }
 

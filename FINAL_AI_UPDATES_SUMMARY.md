@@ -156,7 +156,7 @@ print(f"ROI: {total_roi:.1f}%")
 ```bash
 # AI協働用Gitエイリアス
 git config --global alias.ai-commit '!f() { 
-    git add -A && 
+    git add -u && 
     git commit -m "$1" \
     -m "🤖 AI-assisted development" \
     -m "Co-authored-by: GitHub Copilot <copilot@github.com>"; 
