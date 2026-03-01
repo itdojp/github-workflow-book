@@ -86,8 +86,9 @@
 ### 付録E：便利なGitエイリアス集
 **AI協働向けエイリアス追加**：
 ```bash
-# AI協働コミット
-git config --global alias.ai-commit '!f() { git add -A && git commit -m "$1" -m "🤖 AI-assisted development" -m "Co-authored-by: GitHub Copilot <copilot@github.com>"; }; f'
+# AI協働コミット（追跡中ファイルの変更/削除のみ）
+# 新規/リネームファイルは別途 git add <path> などで追加する
+git config --global alias.ai-commit '!f() { git add -u && git commit -m "$1" -m "🤖 AI-assisted development" -m "Co-authored-by: GitHub Copilot <copilot@github.com>"; }; f'
 
 # AI協働ブランチ作成
 git config --global alias.ai-feature '!f() { git checkout -b "feature/ai-$1" && echo "# AI Collaboration Log" > AI_COLLAB.md; }; f'

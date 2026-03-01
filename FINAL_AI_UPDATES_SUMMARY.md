@@ -155,26 +155,12 @@ print(f"ROI: {total_roi:.1f}%")
 
 ```bash
 # AI協働用Gitエイリアス
-git config --global alias.ai-commit '!f() { 
-    git add -A && 
-    git commit -m "$1" \
-    -m "🤖 AI-assisted development" \
-    -m "Co-authored-by: GitHub Copilot <copilot@github.com>"; 
-}; f'
+# ai-commit は追跡中ファイルの変更/削除のみ（新規/リネームは別途 git add <path>）
+git config --global alias.ai-commit '!f() { git add -u && git commit -m "$1" -m "🤖 AI-assisted development" -m "Co-authored-by: GitHub Copilot <copilot@github.com>"; }; f'
 
-git config --global alias.ai-feature '!f() { 
-    git checkout -b "feature/ai-$1" && 
-    echo "# AI Collaboration Log" > AI_COLLAB.md; 
-}; f'
-
-git config --global alias.ai-check '!f() { 
-    python scripts/ai_quality_check.py && 
-    git status; 
-}; f'
-
-git config --global alias.ai-metrics '!f() { 
-    python scripts/ai_collaboration_metrics.py --report; 
-}; f'
+git config --global alias.ai-feature '!f() { git checkout -b "feature/ai-$1" && echo "# AI Collaboration Log" > AI_COLLAB.md; }; f'
+git config --global alias.ai-check '!f() { python scripts/ai_quality_check.py && git status; }; f'
+git config --global alias.ai-metrics '!f() { python scripts/ai_collaboration_metrics.py --report; }; f'
 ```
 
 ### 付録F：推奨VS Code拡張機能
