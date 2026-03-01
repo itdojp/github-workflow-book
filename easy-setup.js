@@ -330,7 +330,7 @@ ${this.config.title}へようこそ。
     console.log('==========================================');
     console.log(colors.blue('次のステップ:'));
     console.log('1. ' + colors.yellow('npm run build') + ' でコンテンツをビルド');
-    console.log('2. ' + colors.yellow('git status && git add <path...> && git commit -m "Initial commit"'));
+    console.log('2. ' + colors.yellow('git status && git add README.md .gitignore book-config.json src/ && git commit -m "Initial commit"'));
     console.log('3. GitHubにリポジトリを作成してプッシュ');
     console.log('4. Settings > Pages > Source: main branch /docs folder');
     console.log('\n詳細は README.md を参照してください。');
