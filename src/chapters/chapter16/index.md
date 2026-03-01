@@ -190,7 +190,7 @@ Let us know if you need any help!
 
 #### CLA自動化ボット
 {% raw %}
-```python
+```yaml
 # .github/workflows/cla.yml
 name: "CLA Assistant"
 
