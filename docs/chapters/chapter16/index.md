@@ -16,13 +16,13 @@ title: "第16章：外部協力者との連携"
 ## Getting Started
 
 1. **Fork the repository**
-   - Navigate to https://github.com/itdojp/github-workflow-book-public
+   - Navigate to https://github.com/itdojp/github-workflow-book
    - Click the "Fork" button
    - Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/github-workflow-book-public.git
-   cd github-workflow-book-public
-   git remote add upstream https://github.com/itdojp/github-workflow-book-public.git
+   git clone https://github.com/YOUR_USERNAME/github-workflow-book.git
+   cd github-workflow-book
+   git remote add upstream https://github.com/itdojp/github-workflow-book.git
    ```
 
 2. **Create a feature branch**
@@ -217,7 +217,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_ASSISTANT_TOKEN }}
         with:
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-document: 'https://github.com/itdojp/github-workflow-book-public/blob/main/CLA.md'
+          path-to-document: 'https://github.com/${{ github.repository }}/blob/main/CLA.md'
           branch: 'cla-signatures'
           allowlist: bot*
 
@@ -232,7 +232,7 @@ jobs:
             I have read the CLA Document and I hereby sign the CLA
             ```
             
-            You can read the full CLA here: [CLA Document](https://github.com/itdojp/github-workflow-book-public/blob/main/CLA.md)
+            You can read the full CLA here: [CLA Document](https://github.com/${{ github.repository }}/blob/main/CLA.md)
           
           custom-allsigned-prcomment: |
             All contributors have signed the CLA ✅
@@ -500,7 +500,7 @@ Follow the conventional commits specification:
 - Link related issues
 
 ## First Time Contributors
-Looking for a good first issue? Check out issues labeled [`good first issue`](https://github.com/itdojp/github-workflow-book-public/labels/good%20first%20issue).
+Looking for a good first issue? Check out issues labeled [`good first issue`](https://github.com/itdojp/github-workflow-book/labels/good%20first%20issue).
 
 ### Setting Up Development Environment
 ```bash
@@ -527,10 +527,10 @@ pre-commit install
 
 ## Community
 - Attend our monthly contributor meetings
-- Check out our [roadmap](https://github.com/itdojp/github-workflow-book-public/projects/1)
+- Check out our [roadmap](https://github.com/itdojp/github-workflow-book/projects)
 
 ## Recognition
-We recognize our contributors! Check out our [Contributors page](https://github.com/itdojp/github-workflow-book-public/graphs/contributors).
+We recognize our contributors! Check out our [Contributors page](https://github.com/itdojp/github-workflow-book/graphs/contributors).
 
 ### Contributor Levels
 - 🌱 **New Contributor**: First PR merged
