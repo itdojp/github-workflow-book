@@ -20,7 +20,7 @@ title: "第16章：外部協力者との連携"
    - Click the "Fork" button
    - Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/github-workflow-book.git
+   git clone https://github.com/<your-username>/github-workflow-book.git
    cd github-workflow-book
    git remote add upstream https://github.com/itdojp/github-workflow-book.git
    ```
@@ -505,7 +505,7 @@ Looking for a good first issue? Check out issues labeled [`good first issue`](ht
 ### Setting Up Development Environment
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/ml-project.git
+git clone https://github.com/<your-username>/ml-project.git
 cd ml-project
 
 # Create virtual environment
