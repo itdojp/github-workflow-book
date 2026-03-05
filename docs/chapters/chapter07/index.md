@@ -70,9 +70,9 @@ AIレビューを「運用」に落とすには、レビューの前提を成果
 ### 有効化・設定（公式手順への参照）
 Copilotのcode reviewは、プランや組織設定によって利用可否が変わります。設定手順は変更され得るため、公式ドキュメントを参照してください。
 
-- Copilot code review: https://docs.github.com/en/copilot/concepts/agents/code-review
-- Using Copilot code review: https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review
-- Custom instructions: https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot
+- [Copilot code review](https://docs.github.com/en/copilot/concepts/agents/code-review)
+- [Using Copilot code review](https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review)
+- [Custom instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot)
 
 ## 7.2 自動レビューコメントの活用
 
@@ -173,7 +173,7 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 ```
 
 #### 一括対応
-```python
+```text
 # Copilotの複数の指摘に対して
 """
 ## 対応内容
@@ -181,6 +181,21 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 2. ✅ パフォーマンス: バッチ処理実装 (commit: def456)
 3. ⏸️ スタイル: 次のPRで対応予定 (issue #123)
 """
+```
+
+#### レビューコメント対応テンプレ（最小）
+
+レビュー対応の要点がコメント欄に残ると、再レビューと引き継ぎが速くなります。
+
+```markdown
+## レビューコメント対応（まとめ）
+
+- 対応内容: <何を変えたか>
+- 対応コミット: <commit: <hash> または PR の差分リンク>
+- 影響/リスク: <互換性/運用影響。なければ「なし」>
+- 追加検証: <実施したテスト/手動確認>
+- 未対応: <理由> / <追跡Issue: #...> / <再確認タイミング>
+- 要確認: <レビュアーに確認したい点>
 ```
 
 ## 7.3 人間のレビューとAIレビューの使い分け

@@ -120,6 +120,21 @@ image-classification/
 
 ### ブランチ戦略
 
+#### ブランチ戦略の選び方（最小）
+
+ブランチ戦略は「分岐の作り方」だけでなく、「どの品質ゲートで統制するか（rulesets/必須チェック/CODEOWNERS/merge queue）」とセットで決めます。迷った場合は、まず **main 集約（GitHub Flow / trunk-based）** を前提にし、必要になった時点で release ブランチ等を追加します。
+
+| 典型条件 | 向く戦略（例） | ねらい | 注意点 |
+| --- | --- | --- | --- |
+| 小〜中規模、頻繁にマージしたい、CI が速い | trunk-based / GitHub Flow | 変更を小さく保ち、レビューとCIで品質を担保 | feature flag とロールバック手順が必要 |
+| リリース前の安定化期間が必要、複数バージョンを並行保守 | Git Flow（release/hotfix） | 安定化と保守の分離 | ブランチ運用コストが増える（長期化しやすい） |
+| 実験が多く、試行錯誤が本線に混ざりやすい | experiment ブランチ + main 集約 | 本線の安定性を保ちつつ試行する | 取り込み/破棄の基準（いつ捨てるか）を決める |
+
+最小の命名規約（例）:
+- `feat/<short>` / `fix/<short>` / `chore/<short>` / `docs/<short>`
+- `release/<version>`（必要になったら導入）
+- `hotfix/<short>`（本番障害対応。第11章とセット）
+
 #### ML開発向けGit Flow
 ```mermaid
 gitGraph
@@ -165,12 +180,12 @@ gitGraph
 
 - rulesets（または branch protection）で、PR必須・必須チェック（required status checks）・必須承認（CODEOWNERS等）を定義する
 - merge queue を併用し、最終的なマージ結果に対して必須チェックが通っている状態で統合する
-- merge queue を使う場合、CI は `pull_request` だけでなく `merge_group` にも対応させる（第13章を参照）
+- merge queue を使う場合、CI は `pull_request` だけでなく `merge_group` にも対応させる（[第13章](../chapter13/) を参照）
 
 参考:
-- rulesets: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets
-- merge queue: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
-- `merge_group` イベント: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group
+- [rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
+- [merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue)
+- [`merge_group` イベント](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group)
 
 ### 実装例
 
