@@ -96,9 +96,9 @@ security_settings:
 ## 📊 Key Projects
 | Project | Description | Status |
 |---------|-------------|--------|
-| [vision-transformer](https://github.com/YOUR_ORG/vision-transformer) | Vision Transformer implementation | Active |
-| [nlp-toolkit](https://github.com/YOUR_ORG/nlp-toolkit) | NLP preprocessing tools | Stable |
-| [rl-framework](https://github.com/YOUR_ORG/rl-framework) | Reinforcement learning framework | Beta |
+| [vision-transformer](https://github.com/<your-org>/vision-transformer) | Vision Transformer implementation | Active |
+| [nlp-toolkit](https://github.com/<your-org>/nlp-toolkit) | NLP preprocessing tools | Stable |
+| [rl-framework](https://github.com/<your-org>/rl-framework) | Reinforcement learning framework | Beta |
 
 ## 👥 Teams
 - **Research Team**: 基礎研究
@@ -114,7 +114,7 @@ See our [Contributing Guide](https://github.com/itdojp/github-workflow-book/blob
 
 ## 📬 Contact
 - Email: contact@ai-research-lab.org
-- Discord: [Join our server](https://discord.gg/YOUR_INVITE_CODE)
+- Discord: [Join our server](https://discord.gg/<your-invite-code>)
 ```
 
 ### 組織の可視性設定
