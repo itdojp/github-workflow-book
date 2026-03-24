@@ -1,6 +1,6 @@
 # AI開発のためのGitHubワークフロー実践ガイド
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://itdojp.github.io/github-workflow-book-private)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://itdojp.github.io/github-workflow-book/)
 [![Template](https://img.shields.io/badge/Template-v2.0-blue)](https://github.com/itdojp/book-publishing-template2)
 [![Zenn](https://img.shields.io/badge/Zenn-Published-blue)](https://zenn.dev/itdojp/books/github-workflow-ai)
 
@@ -209,7 +209,7 @@ AI協働に最適化された開発環境設定
 ## 🚀 公開プラットフォーム
 
 ### 📖 オンライン版
-- **GitHub Pages**: [https://username.github.io/github-workflow-book](https://username.github.io/github-workflow-book)
+- **GitHub Pages**: [https://itdojp.github.io/github-workflow-book/](https://itdojp.github.io/github-workflow-book/)
   - インタラクティブなナビゲーション
   - 検索機能付き
   - リアルタイム更新
@@ -221,7 +221,7 @@ AI協働に最適化された開発環境設定
   - デバイス間同期
 
 ### 📝 技術ブログ
-- **Zenn**: [https://zenn.dev/username/books/github-workflow-ai](https://zenn.dev/username/books/github-workflow-ai)
+- **Zenn**: [https://zenn.dev/itdojp/books/github-workflow-ai](https://zenn.dev/itdojp/books/github-workflow-ai)
   - 章ごとの詳細解説
   - コミュニティ・コメント機能
   - 継続的な更新・改善
