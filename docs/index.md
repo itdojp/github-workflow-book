@@ -26,8 +26,6 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 - すでにGitHubを日常的に使っており、「AIツール活用」に関心がある読者は、第1章で前提を確認したうえで、第2部（第6〜8章）から読み始めてもよい。
 - 組織としてのセキュリティや権限設計に課題を感じている読者は、第3部（第9〜11章）を先に読み、その後第1〜2部に戻って基礎やツール連携の詳細を補完する読み方も有効である。
 - 大規模開発やエンタープライズ対応を検討している読者は、第4〜5部（第12〜17章）を軸に読みつつ、自組織の現状に応じて前半章に参照を戻す形で活用することを想定している。
-- AIツールの機能名や提供範囲は変わりやすいため、第6章・第7章・第11章・付録Dのような更新追従が必要な話題は、付録Gと更新ノートを併読すると判断しやすい。
-
 ## 想定読者
 - GitHub を中心にチーム開発を行っており、AI支援開発も含めた運用を整理したいエンジニア
 - テックリード/アーキテクトとして、PR運用・CI/CD・セキュリティを含む開発標準を整備する担当者
@@ -37,11 +35,6 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 - Git/GitHub の基本操作（ブランチ、PR、差分の確認、Issue 管理）
 - CI/CD の基礎概念（自動テスト、デプロイ、品質ゲート）
 - （推奨）GitHub Actions の利用経験（第2部以降で理解が進みやすい）
-
-## 関連書籍・参考資料
-- 前提: [書籍概要（README）][book-overview] — 本書の全体像と学習順序
-- 発展: [リポジトリ管理ガイド][repo-guide] — 運用設計と権限・レビュー補足
-- 更新追従: [残りの更新作業詳細][remaining-updates] / [最終更新サマリー][final-summary] — AIツール周辺の更新対象を確認
 
 ## 所要時間
 - 通読: 約2〜2.5時間（本文量ベース概算。コードブロック除外、400〜600文字/分換算）
@@ -208,8 +201,3 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 
 *Built with [book-formatter](https://github.com/itdojp/book-formatter)*
 {% include page-navigation.html %}
-
-[book-overview]: https://github.com/itdojp/github-workflow-book/blob/main/README.md
-[repo-guide]: https://github.com/itdojp/github-workflow-book/blob/main/repository-management-guide.md
-[remaining-updates]: https://github.com/itdojp/github-workflow-book/blob/main/REMAINING_AI_UPDATES.md
-[final-summary]: https://github.com/itdojp/github-workflow-book/blob/main/FINAL_AI_UPDATES_SUMMARY.md
