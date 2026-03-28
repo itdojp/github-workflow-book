@@ -9,7 +9,7 @@ permalink: /
 
 # AI開発のためのGitHubワークフロー実践ガイド
 
-> AI協働時代に対応した、世界初の実践的GitHubワークフローガイドブック
+> AI協働時代に対応した、実践的なGitHubワークフローガイドブック
 
 ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した開発手法を体系的に解説。AI時代のソフトウェア開発に必要なワークフロー、セキュリティ、ガバナンス、大規模開発の実践的ノウハウを網羅。
 
@@ -39,9 +39,9 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 - （推奨）GitHub Actions の利用経験（第2部以降で理解が進みやすい）
 
 ## 関連書籍・参考資料
-- 前提: [書籍概要（README）][book-overview] — 本書の全体像と学習順序
-- 発展: [リポジトリ管理ガイド][repo-guide] — 運用設計と権限・レビュー補足
-- 更新追従: [残りの更新作業詳細][remaining-updates] / [最終更新サマリー][final-summary] — AIツール周辺の更新対象を確認
+- 前提: [GitHub初心者ガイド](https://itdojp.github.io/github-guide-for-beginners-book/) — Git / GitHub の基本操作と Pull Request の基礎を補強
+- 実務補強: [Issue駆動仕事術](https://itdojp.github.io/issue-driven-work-book/) — Issue 分解、進捗報告、意思決定記録を補強
+- 参考資料: [付録G：参考資料](appendices/appendix-g/) — GitHub 公式資料や参考リンクの入口
 
 ## 所要時間
 - 通読: 約2〜2.5時間（本文量ベース概算。コードブロック除外、400〜600文字/分換算）
@@ -204,12 +204,13 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 **ライセンス**: CC BY-NC-SA 4.0（商用は別契約）  
 **リポジトリ**: [GitHub](https://github.com/itdojp/github-workflow-book)
 
+## 利用と更新情報
+
+- 更新差分を追う場合は、GitHub のコミット履歴と Pull Request を参照してください。
+- GitHub の料金プラン、権限設定、AI 関連機能、画面表示は更新頻度が高いため、実運用へ適用する際は GitHub 公式ドキュメントと組織のポリシーを併せて確認してください。
+- 本書のワークフロー例を組織へ適用する場合は、ブランチ保護、レビュー承認要件、Secrets 管理、監査要件を自社ルールへ合わせて調整してください。
+
 ---
 
 *Built with [book-formatter](https://github.com/itdojp/book-formatter)*
 {% include page-navigation.html %}
-
-[book-overview]: https://github.com/itdojp/github-workflow-book/blob/main/README.md
-[repo-guide]: https://github.com/itdojp/github-workflow-book/blob/main/repository-management-guide.md
-[remaining-updates]: https://github.com/itdojp/github-workflow-book/blob/main/REMAINING_AI_UPDATES.md
-[final-summary]: https://github.com/itdojp/github-workflow-book/blob/main/FINAL_AI_UPDATES_SUMMARY.md
