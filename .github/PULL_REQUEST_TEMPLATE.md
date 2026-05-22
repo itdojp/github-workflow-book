@@ -28,10 +28,24 @@
 - リスク:
 - ロールバック手順:
 
+## Review 対応（必須）
+
+- [ ] review 本文・inline comment・suggestion を全件確認した
+- [ ] 修正した指摘には返信した
+- [ ] 修正しない指摘には理由を返信した
+- [ ] 未解決の review thread が 0 件である
+
 ## QA（必須）
 
 - [ ] Book QA（Unicode / textlint(PRH) / 内部リンク・アンカー / Jekyll build / built-site smoke）: PASS
   - 実行URL:
+- [ ] 必須 status checks が green である
+
+## merge 後確認（原則必須）
+
+- [ ] main の checks が green である
+- [ ] release / deploy / Pages など公開先の smoke test を実施した
+- [ ] 完了証跡を関連 Issue に記録した
 
 ## Pages確認（原則必須）
 

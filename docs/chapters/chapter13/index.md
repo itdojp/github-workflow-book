@@ -41,7 +41,25 @@ on:
 参考:
 - merge queue: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
 - `merge_group` イベント: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group
+- `GITHUB_TOKEN`: https://docs.github.com/en/actions/tutorials/authenticate-with-github_token
+- environments: https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments
 - サンプル: `examples/merge-queue-ci-example/`
+
+### 必須チェックと権限境界の設計
+
+GitHub Actions を PR 完了ゲートに使う場合、単に workflow を置くだけでなく、
+「どのイベントで」「どの権限で」「どの check 名を必須にするか」まで運用設計に含めます。
+
+- rulesets / branch protection で必須にする check 名は、`pull_request` と `merge_group` の双方で成功するようにする
+- merge queue を使う場合は、必須チェックの workflow に `merge_group` を追加する
+- `GITHUB_TOKEN` は `permissions:` で job ごとに最小権限へ絞り、Release 作成など write が必要な job だけに付与する
+- production deploy は `environment:`、required reviewers、deployment branches / tags、environment secrets を組み合わせる
+- fork PR や外部協力者 PR では、Secrets を使う deploy / release / publish job を実行しない
+
+2026-05-23（Asia/Tokyo）時点の GitHub Docs では、merge queue の required checks には
+`merge_group` イベント対応が必要であり、`GITHUB_TOKEN` の権限は `permissions` キーで
+workflow または job 単位に調整できます。環境ごとの deploy では environment secrets と
+保護ルールを使い、承認後にのみ secrets へアクセスできる設計にします。
 
 #### AI協働品質ゲート統合のワークフロー構造
 **実運用例（このまま使える）**：全文は `examples/ai-collaboration-pipeline-example/` を参照してください。以下は最小構成の例です（チェック内容はプロジェクトに合わせて置き換えます）。
