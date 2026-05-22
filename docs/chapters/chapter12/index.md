@@ -824,6 +824,27 @@ class ReviewAutomation:
         }
 ```
 
+### PR完了ゲートとレビュー応答の標準手順
+
+レビューを効率化しても、最終的な完了判断を曖昧にすると品質ゲートが形骸化します。PR は
+「作成」「レビュー依頼」「コメント対応」「CI」「merge 後確認」を 1 つの流れとして扱います。
+
+| ゲート | 確認すること | 証跡 |
+| --- | --- | --- |
+| PR body | Issue、受入基準、検証コマンド、リスク、ロールバック、AI利用有無が書かれている | PR body |
+| Review | review 本文、inline comment、suggestion を全件確認した | 修正 commit と返信 |
+| 変更不要判断 | 修正しない指摘に理由がある | 該当 thread への返信 |
+| Conversation | 未解決の review thread が 0 件である | GitHub の Resolve / Unresolve 状態 |
+| CI | 必須チェックが green である | Checks タブ、または merge queue の結果 |
+| merge 後 | main の checks、Pages / release / deploy 先、主要 smoke test を確認した | Issue コメントまたは監査メモ |
+
+AI生成PRでも人間作成PRでも、完了条件は同じです。AIレビューだけで完了扱いにせず、
+「指摘をどう扱ったか」「CI が何を検証したか」「merge 後にどこまで見たか」を残すことで、
+後続の `github-guide-for-beginners-book` や `issue-driven-work-book` と同じ証跡粒度に揃えられます。
+
+機密情報を含むログ、顧客データ、token は、PR body、review comment、AI/外部サービスへ貼り付けません。
+必要な場合はマスクした要約、再現用の最小ログ、またはアクセス権限を制限した内部証跡へ分離します。
+
 ### レビューの自動化とメトリクス
 
 #### レビュー効率化ダッシュボード

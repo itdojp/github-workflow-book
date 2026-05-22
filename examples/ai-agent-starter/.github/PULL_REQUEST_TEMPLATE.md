@@ -14,13 +14,24 @@
 
 ## 受入基準（Issue）
 
-- Closes #<issue-number>
+- Closes #ISSUE_NUMBER
 - [ ] Issue の受入基準を満たす
 
 ## 検証
 
 - 自動テスト:
 - 手動確認:
+
+## Review 対応
+
+- [ ] review 本文・inline comment・suggestion を全件確認した
+- [ ] 修正/変更不要理由を返信した
+- [ ] 未解決の review thread が 0 件である
+
+## merge 後確認
+
+- [ ] main checks / release / deploy / Pages の必要な確認を実施した
+- [ ] 関連 Issue に完了証跡を記録した
 
 ## ロールバック
 
