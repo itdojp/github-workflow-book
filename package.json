@@ -13,7 +13,7 @@
   },
   "scripts": {
     "setup": "node easy-setup.js",
-    "build": "cd docs && bundle exec jekyll build --config _config.yml --source . --destination ../_site",
+    "build": "cd docs && (bundle check || bundle install) && bundle exec jekyll build --config _config.yml --source . --destination ../_site",
     "build:full": "node scripts/build.js",
     "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "bash scripts/deploy.sh",
