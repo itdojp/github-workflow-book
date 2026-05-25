@@ -1,8 +1,8 @@
 {
-  "name": "book-publishing-template-improved",
-  "version": "2.0.0",
-  "description": "Improved Book Publishing Template with Easy Setup",
-  "author": "Book Publishing Template Contributors",
+  "name": "github-workflow-book",
+  "version": "1.1.0",
+  "description": "ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した開発手法を体系的に解説。AI時代のソフトウェア開発に必要なワークフロー、セキュリティ、ガバナンス、大規模開発の実践的ノウハウを網羅。",
+  "author": "太田和彦（株式会社アイティードゥ） <knowledge@itdo.jp>",
   "license": "CC-BY-NC-SA-4.0",
   "repository": {
     "type": "git",
@@ -13,14 +13,16 @@
   },
   "scripts": {
     "setup": "node easy-setup.js",
-    "build": "node scripts/build-simple.js",
+    "build": "cd docs && bundle exec jekyll build --config _config.yml --source . --destination ../_site",
     "build:full": "node scripts/build.js",
-    "preview": "npm run build && npx http-server public -p 8080 --silent",
+    "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "bash scripts/deploy.sh",
-    "clean": "rm -rf public output temp",
-    "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
-    "test:light": "npm run lint:light && npm run build",
-    "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'"
+    "clean": "rm -rf _site public output temp",
+    "lint:light": "markdownlint --config .markdownlint-src.json 'src/**/*.md' --ignore node_modules",
+    "test:light": "npm run check:metadata && npm run lint:light && npm run build",
+    "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
+    "build:generate": "node scripts/build-simple.js",
+    "check:metadata": "node scripts/check-metadata-consistency.js"
   },
   "dependencies": {
     "fs-extra": "^11.3.0",
@@ -38,15 +40,14 @@
     "minimatch": "^10.2.1"
   },
   "keywords": [
+    "github",
+    "workflow",
+    "ai-development",
     "book",
-    "publishing",
-    "markdown",
-    "github-pages",
-    "template",
-    "easy-setup"
+    "github-pages"
   ],
   "bugs": {
     "url": "https://github.com/itdojp/github-workflow-book/issues"
   },
-  "homepage": "https://github.com/itdojp/github-workflow-book#readme"
+  "homepage": "https://itdojp.github.io/github-workflow-book/"
 }

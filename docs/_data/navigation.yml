@@ -51,3 +51,6 @@ appendices:
   path: /appendices/appendix-f/
 - title: 付録G：参考資料
   path: /appendices/appendix-g/
+afterword:
+- title: あとがき
+  path: /afterword/

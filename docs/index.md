@@ -2,8 +2,8 @@
 layout: book
 order: 1
 title: "AI開発のためのGitHubワークフロー実践ガイド"
-author: "株式会社アイティードゥ"
-version: "1.0.0"
+author: "太田和彦"
+version: "1.1.0"
 permalink: /
 ---
 
@@ -195,6 +195,10 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 #### [付録E：便利なGitエイリアス集](appendices/appendix-e/)
 #### [付録F：推奨VS Code拡張機能](appendices/appendix-f/)
 #### [付録G：参考資料](appendices/appendix-g/)
+
+### あとがき
+
+#### [あとがき](afterword/)
 
 ---
 
