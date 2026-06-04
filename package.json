@@ -19,22 +19,23 @@
     "deploy": "bash scripts/deploy.sh",
     "clean": "rm -rf _site public output temp",
     "lint:light": "markdownlint --config .markdownlint-src.json 'src/**/*.md' --ignore node_modules",
-    "test:light": "npm run check:metadata && npm run lint:light && npm run build",
+    "test:light": "npm run check:security && npm run check:metadata && npm run lint:light && npm run build",
     "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
     "build:generate": "node scripts/build-simple.js",
-    "check:metadata": "node scripts/check-metadata-consistency.js"
+    "check:metadata": "node scripts/check-metadata-consistency.js",
+    "check:security": "npm audit"
   },
   "dependencies": {
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.5",
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
     "http-server": "^14.1.1",
-    "markdownlint-cli": "^0.47.0"
+    "markdownlint-cli": "^0.48.0"
   },
   "optionalDependencies": {
-    "puppeteer": "^24.37.5",
-    "sharp": "^0.34.2"
+    "puppeteer": "^24.43.1",
+    "sharp": "^0.34.5"
   },
   "overrides": {
     "minimatch": "^10.2.1"

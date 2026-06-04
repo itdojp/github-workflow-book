@@ -19,7 +19,7 @@
 ### 📋 クイックスタート
 ```bash
 PUPPETEER_SKIP_DOWNLOAD=true npm ci  # 依存関係インストール
-npm run test:light                  # メタデータ確認 + 軽量QA + Jekyllビルド
+npm run test:light                  # npm audit + メタデータ確認 + 軽量QA + Jekyllビルド
 npm run preview                     # ローカルプレビュー
 ```
 
@@ -27,8 +27,9 @@ npm run preview                     # ローカルプレビュー
 
 ### 🧪 品質確認
 
+- `npm run check:security`: `package-lock.json` を対象に `npm audit` を実行し、依存関係の既知脆弱性を確認します。
 - `npm run check:metadata`: `package.json`、`book-config.json`、`docs/_config.yml`、`docs/index.md`、公開ナビゲーションの整合性を確認します。
-- `npm run test:light`: メタデータ確認、legacy `src/` Markdown lint、公開 `docs/` の Jekyll ビルドをまとめて実行します。Jekyll build 前に `docs/Gemfile` の bundle を確認し、未導入ならインストールします。
+- `npm run test:light`: 依存関係監査、メタデータ確認、legacy `src/` Markdown lint、公開 `docs/` の Jekyll ビルドをまとめて実行します。Jekyll build 前に `docs/Gemfile` の bundle を確認し、未導入ならインストールします。
 - `npm run build:generate`: `src/` から `docs/` を再生成する旧テンプレート用コマンドです。通常の公開確認は `npm run build` を使用します。
 
 ## 📚 書籍概要
