@@ -52,6 +52,10 @@ __pycache__/
 .pytest_cache/
 
 # Documentation build
+Gemfile.lock
+docs/_site/
+.bundle/
+vendor/bundle/
 docs/Gemfile.lock
 _site/
 .sass-cache/
