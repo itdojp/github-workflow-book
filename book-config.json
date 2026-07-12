@@ -192,13 +192,13 @@
     "profile": "B",
     "modules": {
       "quickStart": false,
-      "readingGuide": false,
-      "checklistPack": true,
+      "readingGuide": true,
+      "checklistPack": false,
       "troubleshootingFlow": true,
       "conceptMap": false,
-      "figureIndex": true,
-      "legalNotice": false,
-      "glossary": false
+      "figureIndex": false,
+      "legalNotice": true,
+      "glossary": true
     }
   },
   "shared": {
