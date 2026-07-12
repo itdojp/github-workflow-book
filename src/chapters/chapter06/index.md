@@ -79,7 +79,7 @@ Copilotは「エディタ内で補完する」だけでなく、GitHub上で **I
 
 本書では、これらを **“橋渡し” として最小限** 扱います（運用設計の詳細は別冊 Book3 に委譲します）。
 
-注: Book3（AgentOps）の公開時期・URLは本書執筆時点で未確定です。最新情報は本リポジトリ（https://github.com/itdojp/github-workflow-book）を参照してください。
+注: 運用設計の詳細は、公開済みの [Book3『GitHub AgentOps 実践ガイド』](https://itdojp.github.io/GitHub-AgentOps-book/) を参照してください。
 
 #### 用語の整理（最小）
 - **coding agent**: Issue（実行仕様）を入力に、ブランチ作成→実装→テスト→PR作成までを実行するエージェント運用
@@ -548,7 +548,7 @@ MCPは、エージェントに対して「どのツールを公開するか」�
 2. **依存更新専用**: lockfile更新、互換性確認、CI通過まで（仕様変更は禁止）
 3. **ドキュメント整備専用**: docsの表記・リンク・章参照の整備（ビルド資産/Secretsは触らない）
 
-運用の深掘り（評価、権限設計、監査、SLA/コスト最適化）は、別冊 Book3（AgentOps）で扱う想定です。
+運用の深掘り（評価、権限設計、監査、SLA/コスト最適化）は、[Book3『GitHub AgentOps 実践ガイド』](https://itdojp.github.io/GitHub-AgentOps-book/) で扱います。
 
 ## まとめ
 
