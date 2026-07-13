@@ -20,7 +20,12 @@ const expect = (condition, message) => { if (!condition) errors.push(message); }
 const normalize = (content) => content.replace(/\r\n/g, '\n');
 const stripFrontMatter = (content) => normalize(content).replace(/^---\n[\s\S]*?\n---\n/, '');
 
-const config = JSON.parse(read('book-config.json'));
+let config = {};
+try {
+  config = JSON.parse(read('book-config.json'));
+} catch (error) {
+  errors.push(`book-config.json: JSON parse failed (${error.message})`);
+}
 expect(config.ux?.modules?.checklistPack === true, 'book-config.json: checklistPack must be true');
 expect(config.ux?.modules?.figureIndex === true, 'book-config.json: figureIndex must be true');
 
@@ -94,9 +99,14 @@ expect(checklistItems.every((item) => item.includes('根拠:') && /\.\.\/\.\.\/c
 expect(publicChecklist.includes('実施済み項目ではありません'),
   'checklist pack must distinguish repository examples from completed checks');
 
-const css = read('docs/assets/css/main.css');
-expect(css.includes('.book-figure:not(.book-figure--narrow)') && css.includes('min-width: 720px'),
-  'mobile figure CSS must preserve text readability with a horizontal scroll viewport');
+const hasMobileFigureCss = (content) =>
+  content.includes('.book-figure:not(.book-figure--narrow)') && content.includes('min-width: 720px');
+const publicCss = read('docs/assets/css/main.css');
+const sourceCss = read('templates/styles/main.css');
+expect(hasMobileFigureCss(publicCss),
+  'public mobile figure CSS must preserve text readability with a horizontal scroll viewport');
+expect(hasMobileFigureCss(sourceCss),
+  'generated stylesheet source must preserve the mobile figure horizontal scroll contract');
 const workflow = read('.github/workflows/book-qa.yml');
 expect(workflow.includes('node scripts/check-issue-240-ux.js'),
   'Book QA must execute the Issue #240 UX contract');

@@ -353,6 +353,23 @@ img {
   box-shadow: var(--shadow-md);
 }
 
+.book-figure {
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 640px) {
+  .book-figure:not(.book-figure--narrow) {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-bottom: 0.5rem;
+  }
+
+  .book-figure:not(.book-figure--narrow) > svg {
+    min-width: 720px;
+    max-width: none !important;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   :root {
