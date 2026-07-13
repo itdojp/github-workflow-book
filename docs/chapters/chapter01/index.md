@@ -149,17 +149,22 @@ main
 
 ### 同期の仕組み
 
-```mermaid
-graph LR
-    A[作業ディレクトリ] -->|add| B[ステージングエリア]
-    B -->|commit| C[ローカルリポジトリ]
-    C <-->|push/pull| D[リモートリポジトリ<br/>GitHub]
-    
-    style A fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style B fill:#e1f5e1,stroke:#333,stroke-width:2px
-    style C fill:#e1e5f5,stroke:#333,stroke-width:2px
-    style D fill:#ffe1e1,stroke:#333,stroke-width:2px
-```
+<figure id="figure-chapter01-repository-sync" class="book-figure">
+  <svg style="display: block; max-width: 100%; height: auto; margin: 0 auto;" viewBox="0 0 960 260" width="960" height="260" role="img" aria-labelledby="figure-chapter01-repository-sync-title figure-chapter01-repository-sync-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="figure-chapter01-repository-sync-title">ローカルとリモートの同期</title>
+    <desc id="figure-chapter01-repository-sync-desc">作業ディレクトリからステージングエリア、ローカルリポジトリへ進み、ローカルリポジトリとGitHub上のリモートリポジトリをpushとpullで双方向に同期する流れ。</desc>
+    <defs><marker id="sync-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#1f2937"/></marker></defs>
+    <style>.sync-box{stroke:#1f2937;stroke-width:3}.sync-text{fill:#111827;font:600 18px sans-serif}.sync-label{fill:#111827;font:16px sans-serif}.sync-line{stroke:#1f2937;stroke-width:3;marker-end:url(#sync-arrow)}</style>
+    <rect class="sync-box" x="25" y="80" width="180" height="80" rx="10" fill="#f9fafb"/><text class="sync-text" x="115" y="112" text-anchor="middle">作業</text><text class="sync-text" x="115" y="137" text-anchor="middle">ディレクトリ</text>
+    <rect class="sync-box" x="270" y="80" width="180" height="80" rx="10" fill="#dcfce7"/><text class="sync-text" x="360" y="123" text-anchor="middle">ステージングエリア</text>
+    <rect class="sync-box" x="515" y="80" width="180" height="80" rx="10" fill="#dbeafe"/><text class="sync-text" x="605" y="112" text-anchor="middle">ローカル</text><text class="sync-text" x="605" y="137" text-anchor="middle">リポジトリ</text>
+    <rect class="sync-box" x="760" y="70" width="175" height="100" rx="10" fill="#fee2e2"/><text class="sync-text" x="847" y="101" text-anchor="middle">リモート</text><text class="sync-text" x="847" y="126" text-anchor="middle">リポジトリ</text><text class="sync-label" x="847" y="150" text-anchor="middle">（GitHub）</text>
+    <line class="sync-line" x1="205" y1="120" x2="260" y2="120"/><text class="sync-label" x="232" y="68" text-anchor="middle">add</text>
+    <line class="sync-line" x1="450" y1="120" x2="505" y2="120"/><text class="sync-label" x="477" y="68" text-anchor="middle">commit</text>
+    <line class="sync-line" x1="695" y1="105" x2="750" y2="105"/><line class="sync-line" x1="760" y1="140" x2="705" y2="140"/><text class="sync-label" x="727" y="68" text-anchor="middle">push</text><text class="sync-label" x="727" y="190" text-anchor="middle">pull</text>
+  </svg>
+  <figcaption>図1.1：ローカル作業からGitHub上のリモートリポジトリまでの同期。矢印のラベルは実行するGit操作を示す。</figcaption>
+</figure>
 
 ### リモートブランチの追跡
 - ローカルブランチとリモートブランチの対応

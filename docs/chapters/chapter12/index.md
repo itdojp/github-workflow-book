@@ -136,43 +136,22 @@ image-classification/
 - `hotfix/<short>`（本番障害対応。第11章とセット）
 
 #### ML開発向けGit Flow
-```mermaid
-gitGraph
-    commit id: "Initial"
-    branch develop
-    checkout develop
-    commit id: "Setup"
-    
-    branch feature/data-pipeline
-    checkout feature/data-pipeline
-    commit id: "Add loader"
-    commit id: "Add augmentation"
-    checkout develop
-    merge feature/data-pipeline
-    
-    branch experiment/resnet50
-    checkout experiment/resnet50
-    commit id: "ResNet50 base"
-    commit id: "Tune hyperparams"
-    
-    branch experiment/efficientnet
-    checkout experiment/efficientnet
-    commit id: "EfficientNet base"
-    commit id: "Optimize"
-    
-    checkout develop
-    merge experiment/resnet50
-    
-    branch release/v1.0
-    checkout release/v1.0
-    commit id: "Prepare release"
-    
-    checkout main
-    merge release/v1.0 tag: "v1.0"
-    
-    checkout develop
-    merge release/v1.0
-```
+<figure id="figure-chapter12-ml-git-flow" class="book-figure book-figure--narrow">
+  <svg style="display: block; max-width: 100%; height: auto; margin: 0 auto;" viewBox="0 0 360 650" width="360" height="650" role="img" aria-labelledby="figure-chapter12-ml-git-flow-title figure-chapter12-ml-git-flow-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="figure-chapter12-ml-git-flow-title">ML開発向けGit Flow</title>
+    <desc id="figure-chapter12-ml-git-flow-desc">mainからdevelopを作成する。data pipelineのfeatureブランチ、ResNet50とEfficientNetのexperimentブランチをdevelopから分岐する。採用した実験をdevelopへ統合し、release v1.0をmainへマージしてタグ付けし、developへ戻す流れ。</desc>
+    <defs><marker id="gitflow-arrow" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#1f2937"/></marker></defs>
+    <style>.gitflow-line{stroke-width:4;fill:none}.gitflow-main{stroke:#1d4ed8}.gitflow-dev{stroke:#047857}.gitflow-feature{stroke:#7c3aed}.gitflow-experiment{stroke:#c2410c}.gitflow-release{stroke:#be123c}.gitflow-dot{stroke:#111827;stroke-width:1.5}.gitflow-text{fill:#111827;font:600 14px sans-serif}.gitflow-note{fill:#111827;font:12px sans-serif}.gitflow-merge{fill:none;stroke:#1f2937;stroke-width:2.5;marker-end:url(#gitflow-arrow)}</style>
+    <text class="gitflow-text" x="12" y="65">main</text><path class="gitflow-line gitflow-main" d="M125 60 H335"/><circle class="gitflow-dot" cx="145" cy="60" r="6" fill="#1d4ed8"/><circle class="gitflow-dot" cx="315" cy="60" r="6" fill="#1d4ed8"/><text class="gitflow-note" x="132" y="43">Initial</text><text class="gitflow-note" x="300" y="43">v1.0</text>
+    <text class="gitflow-text" x="12" y="145">develop</text><path class="gitflow-line gitflow-dev" d="M125 140 H335"/><circle class="gitflow-dot" cx="145" cy="140" r="6" fill="#047857"/><circle class="gitflow-dot" cx="245" cy="140" r="6" fill="#047857"/><circle class="gitflow-dot" cx="315" cy="140" r="6" fill="#047857"/><text class="gitflow-note" x="132" y="123">Setup</text>
+    <text class="gitflow-text" x="12" y="225">feature/</text><text class="gitflow-text" x="12" y="243">data-pipeline</text><path class="gitflow-line gitflow-feature" d="M125 230 H235"/><circle class="gitflow-dot" cx="160" cy="230" r="6" fill="#7c3aed"/><circle class="gitflow-dot" cx="215" cy="230" r="6" fill="#7c3aed"/><text class="gitflow-note" x="142" y="258">loader・augmentation</text>
+    <text class="gitflow-text" x="12" y="325">experiment/</text><text class="gitflow-text" x="12" y="343">resnet50</text><path class="gitflow-line gitflow-experiment" d="M125 330 H235"/><circle class="gitflow-dot" cx="160" cy="330" r="6" fill="#c2410c"/><circle class="gitflow-dot" cx="215" cy="330" r="6" fill="#c2410c"/><text class="gitflow-note" x="138" y="358">base・tuning</text>
+    <text class="gitflow-text" x="12" y="425">experiment/</text><text class="gitflow-text" x="12" y="443">efficientnet</text><path class="gitflow-line gitflow-experiment" d="M125 430 H235"/><circle class="gitflow-dot" cx="160" cy="430" r="6" fill="#c2410c"/><circle class="gitflow-dot" cx="215" cy="430" r="6" fill="#c2410c"/><text class="gitflow-note" x="138" y="458">base・optimize</text>
+    <text class="gitflow-text" x="12" y="525">release/</text><text class="gitflow-text" x="12" y="543">v1.0</text><path class="gitflow-line gitflow-release" d="M125 530 H235"/><circle class="gitflow-dot" cx="180" cy="530" r="6" fill="#be123c"/><text class="gitflow-note" x="142" y="558">Prepare release</text>
+    <path class="gitflow-merge" d="M145 140 V220 H125"/><path class="gitflow-merge" d="M145 140 V320 H125"/><path class="gitflow-merge" d="M145 140 V420 H125"/><path class="gitflow-merge" d="M235 230 V140 H245"/><path class="gitflow-merge" d="M235 330 V140 H245"/><path class="gitflow-merge" d="M245 140 V520 H125"/><path class="gitflow-merge" d="M235 530 V60 H315"/><path class="gitflow-merge" d="M235 530 V140 H315"/>
+  </svg>
+  <figcaption>図12.1：ML開発向けGit Flow。実験ブランチをdevelopから分岐し、採用した実験だけを統合してrelease経由でmainへリリースする。</figcaption>
+</figure>
 
 ### rulesets と merge queue を前提にした統制
 
