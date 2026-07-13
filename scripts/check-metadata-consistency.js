@@ -24,7 +24,11 @@ const EXPECTED = {
 const EXPECTED_NAV = {
   introduction: ['/introduction/'],
   chapters: Array.from({ length: 17 }, (_, i) => `/chapters/chapter${String(i + 1).padStart(2, '0')}/`),
-  appendices: ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map((letter) => `/appendices/appendix-${letter}/`),
+  appendices: [
+    ...['a', 'b', 'c', 'd', 'e', 'f', 'g'].map((letter) => `/appendices/appendix-${letter}/`),
+    '/appendices/checklist-pack/',
+    '/appendices/figure-index/'
+  ],
   afterword: ['/afterword/']
 };
 

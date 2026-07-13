@@ -195,6 +195,8 @@ ChatGPT/GitHub Copilot/Claude等のAI開発者ツールとGitHubを統合した�
 #### [付録E：便利なGitエイリアス集](appendices/appendix-e/)
 #### [付録F：推奨VS Code拡張機能](appendices/appendix-f/)
 #### [付録G：参考資料](appendices/appendix-g/)
+#### [独立チェックリスト集](appendices/checklist-pack/)
+#### [図表索引](appendices/figure-index/)
 
 ### あとがき
 

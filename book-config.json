@@ -193,10 +193,10 @@
     "modules": {
       "quickStart": false,
       "readingGuide": true,
-      "checklistPack": false,
+      "checklistPack": true,
       "troubleshootingFlow": true,
       "conceptMap": false,
-      "figureIndex": false,
+      "figureIndex": true,
       "legalNotice": true,
       "glossary": true
     }

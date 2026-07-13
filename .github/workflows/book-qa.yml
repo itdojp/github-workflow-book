@@ -39,6 +39,9 @@ jobs:
       - name: Book metadata consistency check
         run: node scripts/check-metadata-consistency.js
 
+      - name: Check reader-facing checklist and figure contracts
+        run: node scripts/check-issue-240-ux.js
+
       - name: Install dependencies (book-formatter)
         working-directory: book-formatter
         run: npm ci

@@ -233,16 +233,25 @@ def calculate_metrics(y_true, y_pred, threshold=0.5):
 
 ### ハイブリッドレビューワークフロー
 
-```mermaid
-graph LR
-    A[PR作成] --> B[AI自動レビュー]
-    B --> C{重大な問題?}
-    C -->|Yes| D[自動ブロック]
-    C -->|No| E[人間レビュー待ち]
-    E --> F[人間がAIコメント確認]
-    F --> G[追加レビュー]
-    G --> H[承認/要修正]
-```
+<!-- markdownlint-disable MD033 -->
+<figure id="figure-chapter07-hybrid-review-flow" class="book-figure">
+  <svg style="display: block; max-width: 100%; height: auto; margin: 0 auto;" viewBox="0 0 1080 300" width="1080" height="300" role="img" aria-labelledby="figure-chapter07-hybrid-review-flow-title figure-chapter07-hybrid-review-flow-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="figure-chapter07-hybrid-review-flow-title">ハイブリッドレビューワークフロー</title>
+    <desc id="figure-chapter07-hybrid-review-flow-desc">PR作成後、任意のAIレビュー、人間による仕様とリスクのレビュー、CIを順番に実施する。要修正なら修正と再レビューへ戻り、不要なら承認してマージする。</desc>
+    <defs><marker id="review-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#1f2937"/></marker></defs>
+    <style>.review-box{stroke:#1f2937;stroke-width:3}.review-text{fill:#111827;font:600 16px sans-serif}.review-label{fill:#111827;font:15px sans-serif}.review-line{fill:none;stroke:#1f2937;stroke-width:3;marker-end:url(#review-arrow)}</style>
+    <rect class="review-box" x="20" y="105" width="145" height="60" rx="10" fill="#e0f2fe"/><text class="review-text" x="92" y="141" text-anchor="middle">PR作成</text>
+    <rect class="review-box" x="205" y="90" width="185" height="90" rx="10" fill="#ede9fe"/><text class="review-text" x="297" y="125" text-anchor="middle">任意：AIレビュー</text><text class="review-label" x="297" y="151" text-anchor="middle">Copilot code review</text>
+    <rect class="review-box" x="430" y="90" width="195" height="90" rx="10" fill="#fef3c7"/><text class="review-text" x="527" y="125" text-anchor="middle">人間レビュー</text><text class="review-label" x="527" y="151" text-anchor="middle">仕様・リスク判断</text>
+    <rect class="review-box" x="665" y="90" width="145" height="90" rx="10" fill="#dbeafe"/><text class="review-text" x="737" y="125" text-anchor="middle">CI</text><text class="review-label" x="737" y="151" text-anchor="middle">テスト・静的解析</text>
+    <polygon class="review-box" points="900,90 980,135 900,180 820,135" fill="#fef3c7"/><text class="review-text" x="900" y="141" text-anchor="middle">要修正？</text>
+    <rect class="review-box" x="855" y="225" width="180" height="55" rx="10" fill="#fee2e2"/><text class="review-text" x="945" y="259" text-anchor="middle">修正・再レビュー</text>
+    <rect class="review-box" x="850" y="20" width="185" height="50" rx="10" fill="#dcfce7"/><text class="review-text" x="942" y="52" text-anchor="middle">承認・マージ</text>
+    <path class="review-line" d="M165 135 H195"/><path class="review-line" d="M390 135 H420"/><path class="review-line" d="M625 135 H655"/><path class="review-line" d="M810 135 H820"/><path class="review-line" d="M900 90 V70"/><text class="review-label" x="918" y="86">いいえ</text><path class="review-line" d="M900 180 V225"/><text class="review-label" x="918" y="205">はい</text><path class="review-line" d="M855 252 H527 V180"/>
+  </svg>
+  <figcaption>図7.1：AIレビューを補助として使い、人間の仕様・リスク判断とCIを必須の品質ゲートとして組み合わせるハイブリッドレビュー。</figcaption>
+</figure>
+<!-- markdownlint-enable MD033 -->
 
 ### レビュー優先順位の設定
 

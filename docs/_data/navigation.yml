@@ -51,6 +51,10 @@ appendices:
   path: /appendices/appendix-f/
 - title: 付録G：参考資料
   path: /appendices/appendix-g/
+- title: 独立チェックリスト集
+  path: /appendices/checklist-pack/
+- title: 図表索引
+  path: /appendices/figure-index/
 afterword:
 - title: あとがき
   path: /afterword/

@@ -147,30 +147,36 @@ policies:
 
 ### AI協働を含む判断フローチャート
 
-```mermaid
-flowchart TD
-    A[リポジトリ作成] --> B{機密情報を含むか？}
-    B -->|Yes| C[Private]
-    B -->|No| D{AI生成コードの<br/>知的財産権が懸念されるか？}
-    D -->|Yes| E[Private + AI使用ポリシー明記]
-    D -->|No| F{特許や独自アルゴリズムを含むか？}
-    F -->|Yes| G[Private]
-    F -->|No| H{オープンソースとして<br/>公開する意図があるか？}
-    H -->|Yes| I[Public + AI協働の明示]
-    H -->|No| J{AI協働の学習事例として<br/>共有したいか？}
-    J -->|Yes| K[Public + AI協働ドキュメント]
-    J -->|No| L{教育目的や<br/>ポートフォリオか？}
-    L -->|Yes| M[Public]
-    L -->|No| N[Private]
-    
-    style C fill:#ffcccc
-    style E fill:#ffcccc
-    style G fill:#ffcccc
-    style N fill:#ffcccc
-    style I fill:#ccffcc
-    style K fill:#ccffcc
-    style M fill:#ccffcc
-```
+<!-- markdownlint-disable MD033 -->
+<figure id="figure-chapter05-repository-visibility" class="book-figure">
+  <svg style="display: block; max-width: 100%; height: auto; margin: 0 auto;" viewBox="0 0 760 900" width="760" height="900" role="img" aria-labelledby="figure-chapter05-repository-visibility-title figure-chapter05-repository-visibility-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="figure-chapter05-repository-visibility-title">PublicとPrivateリポジトリの判断</title>
+    <desc id="figure-chapter05-repository-visibility-desc">機密情報、AI生成コードの知的財産権、特許・独自アルゴリズム、オープンソース公開の意図、AI協働の学習事例共有、教育・ポートフォリオの順に確認する。各質問のはい側でPrivateまたは目的別のPublicを選び、すべていいえの場合はPrivateを選ぶ判断フロー。</desc>
+    <defs><marker id="visibility-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#1f2937"/></marker></defs>
+    <style>.visibility-node{stroke:#1f2937;stroke-width:3}.visibility-text{fill:#111827;font:600 17px sans-serif}.visibility-small{fill:#111827;font:15px sans-serif}.visibility-line{fill:none;stroke:#1f2937;stroke-width:3;marker-end:url(#visibility-arrow)}.visibility-answer{fill:#111827;font:600 15px sans-serif}</style>
+    <rect class="visibility-node" x="270" y="15" width="220" height="54" rx="10" fill="#e0f2fe"/><text class="visibility-text" x="380" y="49" text-anchor="middle">リポジトリ作成</text>
+    <polygon class="visibility-node" points="380,88 570,133 380,178 190,133" fill="#fef3c7"/><text class="visibility-text" x="380" y="139" text-anchor="middle">機密情報を含むか？</text>
+    <rect class="visibility-node" x="20" y="105" width="140" height="56" rx="10" fill="#fee2e2"/><text class="visibility-text" x="90" y="140" text-anchor="middle">Private</text><path class="visibility-line" d="M190 133 H170"/><text class="visibility-answer" x="170" y="98" text-anchor="middle">はい</text>
+    <path class="visibility-line" d="M380 178 V203"/><text class="visibility-answer" x="397" y="197">いいえ</text>
+    <polygon class="visibility-node" points="380,210 590,262 380,314 170,262" fill="#fef3c7"/><text class="visibility-text" x="380" y="254" text-anchor="middle">AI生成コードの知的財産権が</text><text class="visibility-text" x="380" y="278" text-anchor="middle">懸念されるか？</text>
+    <rect class="visibility-node" x="5" y="230" width="150" height="64" rx="10" fill="#fee2e2"/><text class="visibility-small" x="80" y="256" text-anchor="middle">Private＋</text><text class="visibility-small" x="80" y="278" text-anchor="middle">AI使用ポリシー</text><path class="visibility-line" d="M170 262 H165"/><text class="visibility-answer" x="165" y="222" text-anchor="middle">はい</text>
+    <path class="visibility-line" d="M380 314 V339"/><text class="visibility-answer" x="397" y="333">いいえ</text>
+    <polygon class="visibility-node" points="380,346 580,394 380,442 180,394" fill="#fef3c7"/><text class="visibility-text" x="380" y="387" text-anchor="middle">特許や独自アルゴリズムを</text><text class="visibility-text" x="380" y="411" text-anchor="middle">含むか？</text>
+    <rect class="visibility-node" x="20" y="366" width="140" height="56" rx="10" fill="#fee2e2"/><text class="visibility-text" x="90" y="401" text-anchor="middle">Private</text><path class="visibility-line" d="M180 394 H170"/><text class="visibility-answer" x="170" y="354" text-anchor="middle">はい</text>
+    <path class="visibility-line" d="M380 442 V467"/><text class="visibility-answer" x="397" y="461">いいえ</text>
+    <polygon class="visibility-node" points="380,474 580,522 380,570 180,522" fill="#fef3c7"/><text class="visibility-text" x="380" y="515" text-anchor="middle">オープンソースとして</text><text class="visibility-text" x="380" y="539" text-anchor="middle">公開する意図があるか？</text>
+    <rect class="visibility-node" x="600" y="490" width="150" height="64" rx="10" fill="#dcfce7"/><text class="visibility-small" x="675" y="516" text-anchor="middle">Public＋</text><text class="visibility-small" x="675" y="538" text-anchor="middle">AI協働の明示</text><path class="visibility-line" d="M580 522 H590"/><text class="visibility-answer" x="590" y="480" text-anchor="middle">はい</text>
+    <path class="visibility-line" d="M380 570 V595"/><text class="visibility-answer" x="397" y="589">いいえ</text>
+    <polygon class="visibility-node" points="380,602 580,650 380,698 180,650" fill="#fef3c7"/><text class="visibility-text" x="380" y="643" text-anchor="middle">AI協働の学習事例として</text><text class="visibility-text" x="380" y="667" text-anchor="middle">共有したいか？</text>
+    <rect class="visibility-node" x="600" y="618" width="150" height="64" rx="10" fill="#dcfce7"/><text class="visibility-small" x="675" y="644" text-anchor="middle">Public＋</text><text class="visibility-small" x="675" y="666" text-anchor="middle">AI協働文書</text><path class="visibility-line" d="M580 650 H590"/><text class="visibility-answer" x="590" y="608" text-anchor="middle">はい</text>
+    <path class="visibility-line" d="M380 698 V723"/><text class="visibility-answer" x="397" y="717">いいえ</text>
+    <polygon class="visibility-node" points="380,730 570,775 380,820 190,775" fill="#fef3c7"/><text class="visibility-text" x="380" y="768" text-anchor="middle">教育目的または</text><text class="visibility-text" x="380" y="792" text-anchor="middle">ポートフォリオか？</text>
+    <rect class="visibility-node" x="600" y="747" width="140" height="56" rx="10" fill="#dcfce7"/><text class="visibility-text" x="670" y="782" text-anchor="middle">Public</text><path class="visibility-line" d="M570 775 H590"/><text class="visibility-answer" x="590" y="736" text-anchor="middle">はい</text>
+    <path class="visibility-line" d="M380 820 V844"/><text class="visibility-answer" x="397" y="839">いいえ</text><rect class="visibility-node" x="310" y="844" width="140" height="50" rx="10" fill="#fee2e2"/><text class="visibility-text" x="380" y="876" text-anchor="middle">Private</text>
+  </svg>
+  <figcaption>図5.1：Public / Private リポジトリの判断フロー。機密性、知的財産、公開意図、共有・教育目的を順に確認し、公開時はAI協働の方針を明示する。</figcaption>
+</figure>
+<!-- markdownlint-enable MD033 -->
 
 ### Publicリポジトリの利点
 - **コミュニティ貢献**: オープンソースエコシステムへの参加

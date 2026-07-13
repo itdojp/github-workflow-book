@@ -630,18 +630,22 @@ class ReviewBot:
 ### 組織からリポジトリへの権限継承
 
 #### 継承の仕組み
-```mermaid
-graph TD
-    A[Organization Owner] --> B[Organization Member]
-    B --> C[Team Member]
-    C --> D[Repository Access]
-    
-    A --> E[Direct Repository Admin]
-    E --> D
-    
-    C --> F[Team Repository Permission]
-    F --> D
-```
+<figure id="figure-chapter09-permission-inheritance" class="book-figure">
+  <svg style="display: block; max-width: 100%; height: auto; margin: 0 auto;" viewBox="0 0 920 420" width="920" height="420" role="img" aria-labelledby="figure-chapter09-permission-inheritance-title figure-chapter09-permission-inheritance-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="figure-chapter09-permission-inheritance-title">組織からリポジトリへの権限継承</title>
+    <desc id="figure-chapter09-permission-inheritance-desc">Organization OwnerからOrganization Member、Team Member、Repository Accessへ継承する経路と、直接のRepository AdminおよびTeam Repository PermissionからRepository Accessへ到達する経路。</desc>
+    <defs><marker id="permission-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#1f2937"/></marker></defs>
+    <style>.permission-box{stroke:#1f2937;stroke-width:3}.permission-text{fill:#111827;font:600 17px sans-serif}.permission-line{fill:none;stroke:#1f2937;stroke-width:3;marker-end:url(#permission-arrow)}</style>
+    <rect class="permission-box" x="350" y="20" width="220" height="60" rx="10" fill="#e0f2fe"/><text class="permission-text" x="460" y="57" text-anchor="middle">Organization Owner</text>
+    <rect class="permission-box" x="350" y="125" width="220" height="60" rx="10" fill="#dbeafe"/><text class="permission-text" x="460" y="162" text-anchor="middle">Organization Member</text>
+    <rect class="permission-box" x="350" y="230" width="220" height="60" rx="10" fill="#ede9fe"/><text class="permission-text" x="460" y="267" text-anchor="middle">Team Member</text>
+    <rect class="permission-box" x="40" y="230" width="230" height="60" rx="10" fill="#fef3c7"/><text class="permission-text" x="155" y="267" text-anchor="middle">Direct Repository Admin</text>
+    <rect class="permission-box" x="650" y="225" width="230" height="75" rx="10" fill="#fef3c7"/><text class="permission-text" x="765" y="257" text-anchor="middle">Team Repository</text><text class="permission-text" x="765" y="281" text-anchor="middle">Permission</text>
+    <rect class="permission-box" x="335" y="345" width="250" height="60" rx="10" fill="#dcfce7"/><text class="permission-text" x="460" y="382" text-anchor="middle">Repository Access</text>
+    <path class="permission-line" d="M460 80 V115"/><path class="permission-line" d="M460 185 V220"/><path class="permission-line" d="M460 290 V335"/><path class="permission-line" d="M395 80 C260 110,155 150,155 220"/><path class="permission-line" d="M570 260 H650"/><path class="permission-line" d="M155 290 C155 325,300 355,325 365"/><path class="permission-line" d="M765 300 C765 325,620 355,595 365"/>
+  </svg>
+  <figcaption>図9.1：組織、チーム、直接付与の経路からリポジトリ権限へ至る関係。実効権限は組織ポリシーとリポジトリ設定も併せて確認する。</figcaption>
+</figure>
 
 ### 権限の優先順位
 
