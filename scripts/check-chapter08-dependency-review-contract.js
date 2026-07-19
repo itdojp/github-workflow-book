@@ -82,9 +82,16 @@ function validate(section) {
     errors.push('dependency-review jobがありません');
   } else {
     if (job.name !== 'Dependency Review') errors.push('required check用job名はDependency Reviewへ固定する必要があります');
-    const uses = Array.isArray(job.steps) ? job.steps.map((step) => step?.uses).filter(Boolean) : [];
+    if (Object.hasOwn(job, 'permissions')) errors.push('job-level permissionsで最小権限を上書きできません');
+    if (Object.hasOwn(job, 'if')) errors.push('merge_groupでjobをskipし得るjob-level ifは使用できません');
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+    const uses = steps.map((step) => step?.uses).filter(Boolean);
     for (const action of ['actions/checkout@v4', 'actions/dependency-review-action@v4']) {
       if (!uses.includes(action)) errors.push(`${action}がありません`);
+    }
+    const dependencyReviewStep = steps.find((step) => step?.uses === 'actions/dependency-review-action@v4');
+    if (dependencyReviewStep && Object.hasOwn(dependencyReviewStep, 'if')) {
+      errors.push('merge_groupでDependency Review actionをskipし得るstep-level ifは使用できません');
     }
   }
 
@@ -149,6 +156,9 @@ if (process.argv.includes('--self-test')) {
   expectRejected(sourceSection, 'merge_group path filter', (value) => value.replace('    types: [checks_requested]', '    types: [checks_requested]\n    paths-ignore: ["docs/**"]'), 'path filter');
   expectRejected(sourceSection, 'job name drift', (value) => value.replace('    name: Dependency Review', '    name: Dependency Review Queue'), 'job名');
   expectRejected(sourceSection, 'broad permission', (value) => value.replace('contents: read', 'contents: write'), 'permissions');
+  expectRejected(sourceSection, 'job permission override', (value) => value.replace('    runs-on: ubuntu-latest', '    permissions:\n      contents: write\n    runs-on: ubuntu-latest'), 'job-level permissions');
+  expectRejected(sourceSection, 'job event condition', (value) => value.replace('    runs-on: ubuntu-latest', "    if: github.event_name == 'pull_request'\n    runs-on: ubuntu-latest"), 'job-level if');
+  expectRejected(sourceSection, 'dependency review event condition', (value) => value.replace('        uses: actions/dependency-review-action@v4', "        if: github.event_name == 'pull_request'\n        uses: actions/dependency-review-action@v4"), 'step-level if');
   expectRejected(sourceSection, 'missing action', (value) => value.replace('actions/dependency-review-action@v4', 'missing-dependency-review-action'), 'dependency-review-action@v4');
   console.log('Chapter 8 dependency review contract self-test passed.');
 } else {
