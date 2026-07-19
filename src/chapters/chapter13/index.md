@@ -790,16 +790,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          # checkoutの認証中に履歴を取得し、その後credentialを除去する
+          fetch-depth: 0
           persist-credentials: false
-
-      - name: Pre-fetch base and head refs
-        env:
-          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          git fetch --no-tags origin \
-            "$PR_BASE_REF" \
-            "+refs/pull/$PR_NUMBER/head"
 
       - name: Run Codex (read-only)
         id: run_codex

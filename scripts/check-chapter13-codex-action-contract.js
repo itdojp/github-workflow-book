@@ -75,26 +75,10 @@ function validateWorkflowYaml(yaml, label) {
     const checkout = steps.find((step) => step?.uses === 'actions/checkout@v4');
     if (!checkout) {
       errors.push(`${label}: actions/checkout@v4がありません`);
-    } else if (checkout.with?.['persist-credentials'] !== false) {
-      errors.push(`${label}: checkoutはpersist-credentials: falseが必要です`);
-    }
-    const preFetch = steps.find((step) => step?.name === 'Pre-fetch base and head refs');
-    if (!preFetch) {
-      errors.push(`${label}: pre-fetch stepがありません`);
     } else {
-      const expectedEnv = {
-        PR_BASE_REF: '${{ github.event.pull_request.base.ref }}',
-        PR_NUMBER: '${{ github.event.pull_request.number }}',
-      };
-      if (!exactPermissions(preFetch.env, expectedEnv)) {
-        errors.push(`${label}: pre-fetchのPR値は固定したenv境界が必要です`);
-      }
-      if (typeof preFetch.run !== 'string' || preFetch.run.includes('${{')) {
-        errors.push(`${label}: pre-fetch runへGitHub expressionを直接展開できません`);
-      }
-      if (!preFetch.run?.includes('"$PR_BASE_REF"') || !preFetch.run?.includes('"+refs/pull/$PR_NUMBER/head"')) {
-        errors.push(`${label}: pre-fetchのshell変数はquoteする必要があります`);
-      }
+      if (checkout.with?.ref !== 'refs/pull/${{ github.event.pull_request.number }}/merge') errors.push(`${label}: checkoutはPR merge refへ固定する必要があります`);
+      if (checkout.with?.['fetch-depth'] !== 0) errors.push(`${label}: private repositoryでもcheckout認証中に履歴を取得するためfetch-depth: 0が必要です`);
+      if (checkout.with?.['persist-credentials'] !== false) errors.push(`${label}: checkoutはpersist-credentials: falseが必要です`);
     }
     const codexSteps = steps.filter((step) => step?.uses?.startsWith('openai/codex-action@'));
     if (!codexSteps.length) {
@@ -200,9 +184,7 @@ if (process.argv.includes('--self-test')) {
   expectRejected(chapterYaml, 'broad permission', (value) => value.replace('contents: read', 'contents: write'), 'permissions');
   expectRejected(chapterYaml, 'missing label gate', (value) => value.replace("if: github.event.label.name == 'codex-review'", 'if: always()'), 'label gate');
   expectRejected(chapterYaml, 'persisted credentials', (value) => value.replace('persist-credentials: false', 'persist-credentials: true'), 'persist-credentials');
-  expectRejected(chapterYaml, 'missing pre-fetch env boundary', (value) => value.replace('PR_BASE_REF: ${{ github.event.pull_request.base.ref }}', 'PR_BASE_REF: main'), 'env境界');
-  expectRejected(chapterYaml, 'raw shell expression', (value) => value.replace('"$PR_BASE_REF"', '${{ github.event.pull_request.base.ref }}'), '直接展開');
-  expectRejected(chapterYaml, 'unquoted pre-fetch ref', (value) => value.replace('"$PR_BASE_REF"', '$PR_BASE_REF'), 'quote');
+  expectRejected(chapterYaml, 'shallow checkout', (value) => value.replace('fetch-depth: 0', 'fetch-depth: 1'), 'fetch-depth');
   expectRejected(chapterYaml, 'workspace permission', (value) => value.replace('permission-profile: ":read-only"', 'permission-profile: ":workspace"'), 'permission-profile');
   expectRejected(chapterYaml, 'legacy sandbox', (value) => value.replace('permission-profile: ":read-only"', 'permission-profile: ":read-only"\n          sandbox: read-only'), 'legacy sandbox');
   expectRejected(chapterYaml, 'unsafe strategy', (value) => value.replace('safety-strategy: drop-sudo', 'safety-strategy: unsafe'), 'drop-sudo');
