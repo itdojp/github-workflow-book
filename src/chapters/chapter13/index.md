@@ -765,7 +765,8 @@ jobs:
 - **権限を最小化**: 差分レビュー用途なら `contents: read` と、コメント投稿用の `pull-requests: write` 程度に絞る
 - **Secrets境界を明記**: `secrets.OPENAI_API_KEY` を `with.openai-api-key` に渡し、ログ/PR本文へ出さない
 - **実行範囲を制御**: ラベル付与などで実行を明示し、意図しないタイミングでの課金・外部送信を避ける
-- **安全策を明示**: `sandbox`（FS/network）と `safety-strategy`（OS権限）を明示し、権限境界を固定する
+- **安全策を明示**: `permission-profile: ":read-only"`（FS/network）と `safety-strategy: drop-sudo`（OS権限）を明示し、権限境界を固定する
+- **供給網を固定**: actionを監査済みfull-length commit SHAへpinし、human-readable tagとCodex CLIのexact versionを併記する
 
 以下はサンプルです（導入時は、モデル/課金/ポリシー・データ送信範囲を組織の基準に合わせて設計してください）。
 
@@ -789,19 +790,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          persist-credentials: false
 
       - name: Pre-fetch base and head refs
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           git fetch --no-tags origin \
-            ${{ github.event.pull_request.base.ref }} \
-            +refs/pull/${{ github.event.pull_request.number }}/head
+            "$PR_BASE_REF" \
+            "+refs/pull/$PR_NUMBER/head"
 
       - name: Run Codex (read-only)
         id: run_codex
-        uses: openai/codex-action@v1
+        uses: openai/codex-action@52fe01ec70a42f454c9d2ebd47598f9fd6893d56 # v1.11
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          sandbox: read-only
+          codex-version: 0.144.6
+          permission-profile: ":read-only"
           safety-strategy: drop-sudo
           prompt: |
             Review ONLY the changes introduced by the PR.
@@ -836,6 +842,23 @@ jobs:
 ```
 {% endraw %}
 
+#### pin更新手順
+
+1. upstreamのversion tagをAPIで取得し、annotated tagならtarget commitまでdereferenceする。tag名だけでなくfull SHAを記録する。
+2. 旧SHAと候補SHAの`action.yml`、`dist/`、依存lockfile、CHANGELOG、open security issueを比較し、upstream CIと依存auditを確認する。
+3. actionのfull SHA、`# v1.11`のようなversion comment、`codex-version`のexact versionを同じPRで更新する。
+4. label gate、`contents: read`、`persist-credentials: false`、`:read-only` permission profile、`drop-sudo`が維持されることをreview/CIで確認する。
+5. test PRでラベル未付与時の非実行と、ラベル付与時のread-only reviewを確認してからmergeする。
+
+この例のaction commitは`v1.11`が指す`52fe01ec70a42f454c9d2ebd47598f9fd6893d56`、Codex CLIは`0.144.6`を2026-07-19に監査したものです。同日時点のupstream source checkoutでは`pnpm audit`が10件（high 3 / moderate 5 / low 2）を指摘しましたが、`openai/codex-action`の公開Security Advisoryは確認できず、通常実行経路での到達可能性は未評価です。依存関係と新releaseを定期的に再監査してください。self-hosted/ARC、`unprivileged-user`、同一jobでの複数回実行はupstream既知issueを再確認するまで本例の対象外です。
+
+監査時に参照する一次情報:
+
+- [GitHub Actionsのsecure use](https://docs.github.com/en/actions/reference/security/secure-use)
+- [監査済みCodex Action commit](https://github.com/openai/codex-action/commit/52fe01ec70a42f454c9d2ebd47598f9fd6893d56)
+- [Codex Actionのsecurity guidance](https://github.com/openai/codex-action/blob/52fe01ec70a42f454c9d2ebd47598f9fd6893d56/docs/security.md)
+- [Codex Actionの公開Security Advisory](https://github.com/openai/codex-action/security/advisories)
+
 ### 13.4.2 注意：Secrets/権限/外部送信の線引き
 CodexのようなエージェントをCIに組み込む場合、失敗の大半は「実装」ではなく「権限境界/Secrets運用」で発生します。
 
@@ -843,7 +866,7 @@ CodexのようなエージェントをCIに組み込む場合、失敗の大半�
 - **Secrets**: ログ/Artifacts/コメントへの混入を前提にレビュー観点へ入れる
 - **外部送信**: どの情報が外部へ送られるか（プロンプト、差分、ログ）を定義し、許容範囲を決める
 
-注: `sandbox` / `safety-strategy` は補助策であり、Secretsの露出（ログ/コメント）を自動でゼロにするものではありません。Secrets運用（出さない/残さない）と監査設計（根拠の記録）を組み合わせて境界を設計してください。
+注: `permission-profile` / `safety-strategy` は補助策であり、Secretsの露出（ログ/コメント）を自動でゼロにするものではありません。Secrets運用（出さない/残さない）と監査設計（根拠の記録）を組み合わせて境界を設計してください。
 
 詳細は第11章（Secrets/権限境界/監査）を参照してください。
 
