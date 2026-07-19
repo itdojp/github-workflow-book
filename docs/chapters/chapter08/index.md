@@ -316,22 +316,27 @@ updates:
 
 ### Dependency reviewワークフロー
 
-#### PRでの依存関係チェック
+#### PRとmerge queueでの依存関係チェック
+
 ```yaml
 name: Dependency Review
 
-on: [pull_request]
+on:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
 
 permissions:
   contents: read
 
 jobs:
   dependency-review:
+    name: Dependency Review
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
@@ -339,6 +344,19 @@ jobs:
           deny-licenses: GPL-3.0, AGPL-3.0
           allow-ghsas: GHSA-xxxx-yyyy-zzzz
 ```
+
+merge queueは、queue内の変更を組み合わせたtemporary merge group commitに対して`checks_requested`を発行します。
+required checkにしたworkflowが`pull_request`だけを購読すると、このcommitに同じcheckが生成されずqueueが停止するため、`merge_group`でも同じ`Dependency Review` checkを実行します。
+required status checkの識別にはjob名が使われるため、`Dependency Review`というjob名を固定し、rulesetまたはbranch protectionではGitHubが返す正確なcheck名を選択してください。
+required checkにするworkflowへ`paths`または`paths-ignore` filterを設定すると、対象外のPRでworkflowがskipされ、checkがPendingのまま残るため設定しません。
+merge queueを使わないrepositoryでは`merge_group` eventが発火しないため、通常のPR検査を妨げません。
+全体のrequired check設計は[第13章のmerge queue節](../chapter13/)も参照してください。
+
+公式仕様:
+
+- Merge queue: <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue>
+- `merge_group` event: <https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group>
+- Required status checksのtroubleshooting: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/troubleshooting-required-status-checks>
 
 ### ライセンスコンプライアンス
 
