@@ -42,6 +42,9 @@ jobs:
       - name: Check reader-facing checklist and figure contracts
         run: node scripts/check-issue-240-ux.js
 
+      - name: Install book dependencies for contract checks
+        run: npm ci --ignore-scripts
+
       - name: Check Chapter 8 CodeQL workflow contract
         run: |
           node scripts/check-chapter08-codeql-contract.js
