@@ -42,6 +42,11 @@ jobs:
       - name: Check reader-facing checklist and figure contracts
         run: node scripts/check-issue-240-ux.js
 
+      - name: Check Chapter 8 CodeQL workflow contract
+        run: |
+          node scripts/check-chapter08-codeql-contract.js
+          node scripts/check-chapter08-codeql-contract.js --self-test
+
       - name: Install dependencies (book-formatter)
         working-directory: book-formatter
         run: npm ci

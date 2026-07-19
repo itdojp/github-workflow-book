@@ -19,11 +19,13 @@
     "deploy": "bash scripts/deploy.sh",
     "clean": "rm -rf _site public output temp",
     "lint:light": "markdownlint --config .markdownlint-src.json 'src/**/*.md' --ignore node_modules",
-    "test:light": "npm run check:security && npm run check:metadata && npm run check:issue-240-ux && npm run lint:light && npm run build",
+    "test:light": "npm run check:security && npm run check:metadata && npm run check:chapter08-codeql && npm run check:chapter08-codeql:self-test && npm run check:issue-240-ux && npm run lint:light && npm run build",
     "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
     "build:generate": "node scripts/build-simple.js",
     "check:metadata": "node scripts/check-metadata-consistency.js",
     "check:security": "npm audit",
+    "check:chapter08-codeql": "node scripts/check-chapter08-codeql-contract.js",
+    "check:chapter08-codeql:self-test": "node scripts/check-chapter08-codeql-contract.js --self-test",
     "check:issue-240-ux": "node scripts/check-issue-240-ux.js"
   },
   "dependencies": {
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "http-server": "^14.1.1",
+    "js-yaml": "4.3.0",
     "markdownlint-cli": "^0.48.0"
   },
   "optionalDependencies": {
