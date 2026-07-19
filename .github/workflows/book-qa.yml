@@ -55,6 +55,11 @@ jobs:
           node scripts/check-chapter08-dependency-review-contract.js
           node scripts/check-chapter08-dependency-review-contract.js --self-test
 
+      - name: Check Chapter 13 Codex Action supply-chain contract
+        run: |
+          node scripts/check-chapter13-codex-action-contract.js
+          node scripts/check-chapter13-codex-action-contract.js --self-test
+
       - name: Install dependencies (book-formatter)
         working-directory: book-formatter
         run: npm ci
