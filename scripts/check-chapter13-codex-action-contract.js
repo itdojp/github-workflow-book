@@ -96,16 +96,20 @@ function validateWorkflowYaml(yaml, label) {
         errors.push(`${label}: pre-fetchのshell変数はquoteする必要があります`);
       }
     }
-    const codexStep = steps.find((step) => step?.uses?.startsWith('openai/codex-action@'));
-    if (!codexStep) {
+    const codexSteps = steps.filter((step) => step?.uses?.startsWith('openai/codex-action@'));
+    if (!codexSteps.length) {
       errors.push(`${label}: openai/codex-action stepがありません`);
     } else {
-      if (codexStep.uses !== actionRef) errors.push(`${label}: Codex Actionは監査済みfull SHAへpinする必要があります`);
-      if (String(codexStep.with?.['codex-version']) !== codexVersion) errors.push(`${label}: codex-versionは${codexVersion}へ固定する必要があります`);
-      if (codexStep.with?.['permission-profile'] !== ':read-only') errors.push(`${label}: permission-profileは:read-onlyが必要です`);
-      if (Object.hasOwn(codexStep.with ?? {}, 'sandbox')) errors.push(`${label}: legacy sandboxとpermission-profileを併用できません`);
-      if (codexStep.with?.['safety-strategy'] !== 'drop-sudo') errors.push(`${label}: safety-strategyはdrop-sudoが必要です`);
-      if (codexStep.with?.['openai-api-key'] !== '${{ secrets.OPENAI_API_KEY }}') errors.push(`${label}: OPENAI_API_KEYのSecrets境界が変わっています`);
+      if (codexSteps.length !== 1) errors.push(`${label}: Codex Actionは既知制約により1 job 1 stepへ限定する必要があります`);
+      codexSteps.forEach((codexStep, index) => {
+        const stepLabel = `${label}: Codex Action step ${index + 1}`;
+        if (codexStep.uses !== actionRef) errors.push(`${stepLabel}は監査済みfull SHAへpinする必要があります`);
+        if (String(codexStep.with?.['codex-version']) !== codexVersion) errors.push(`${stepLabel}のcodex-versionは${codexVersion}へ固定する必要があります`);
+        if (codexStep.with?.['permission-profile'] !== ':read-only') errors.push(`${stepLabel}のpermission-profileは:read-onlyが必要です`);
+        if (Object.hasOwn(codexStep.with ?? {}, 'sandbox')) errors.push(`${stepLabel}はlegacy sandboxとpermission-profileを併用できません`);
+        if (codexStep.with?.['safety-strategy'] !== 'drop-sudo') errors.push(`${stepLabel}のsafety-strategyはdrop-sudoが必要です`);
+        if (codexStep.with?.['openai-api-key'] !== '${{ secrets.OPENAI_API_KEY }}') errors.push(`${stepLabel}のOPENAI_API_KEYのSecrets境界が変わっています`);
+      });
     }
   }
 
@@ -162,7 +166,7 @@ const errors = [
 if (sourceSection !== publicSection) errors.push('Codex Action section must match between src and docs');
 
 const targetContents = [exampleYaml, sourceSection, publicSection];
-const mutablePattern = /openai\/codex-action@v\d+(?:\.\d+)*\b/g;
+const mutablePattern = /openai\/codex-action@(?![0-9a-f]{40}(?:\s|$))[^\s#]+/g;
 const mutableRefs = targetContents.flatMap((content, index) => [...content.matchAll(mutablePattern)].map(() => index));
 if (mutableRefs.length) errors.push(`active workflow/sampleにmutableなCodex Action tagが${mutableRefs.length}件残っています`);
 const pinnedCount = targetContents.reduce((count, content) => count + content.split(actionRef).length - 1, 0);
@@ -190,6 +194,7 @@ if (process.argv.includes('--self-test')) {
   expectRejected(chapterYaml, 'malformed YAML', (value) => value.replace('jobs:', 'jobs'), 'parseできません');
   expectRejected(chapterYaml, 'mutable action tag', (value) => value.replace(`${actionRef} # v1.11`, 'openai/codex-action@v1 # v1'), 'full SHA');
   expectRejected(chapterYaml, 'short action SHA', (value) => value.replace(`${actionRef} # v1.11`, 'openai/codex-action@52fe01e # v1.11'), 'full SHA');
+  expectRejected(chapterYaml, 'additional mutable action step', (value) => value.replace('      - name: Run Codex (read-only)', '      - uses: openai/codex-action@main\n\n      - name: Run Codex (read-only)'), 'full SHA');
   expectRejected(chapterYaml, 'missing version comment', (value) => value.replace(`${actionRef} # v1.11`, actionRef), 'version comment');
   expectRejected(chapterYaml, 'floating Codex CLI', (value) => value.replace(`codex-version: ${codexVersion}`, 'codex-version: latest'), 'codex-version');
   expectRejected(chapterYaml, 'broad permission', (value) => value.replace('contents: read', 'contents: write'), 'permissions');
