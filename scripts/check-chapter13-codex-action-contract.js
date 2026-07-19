@@ -26,6 +26,39 @@ function readRequired(file) {
   }
 }
 
+function collectReferenceFiles() {
+  const files = [];
+  const allowedExtensions = new Set(['.md', '.yml', '.yaml']);
+  const excludedDirectories = new Set(['.git', '_site', 'node_modules']);
+
+  function walk(directory) {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        if (!excludedDirectories.has(entry.name)) walk(`${directory}/${entry.name}`);
+      } else if (entry.isFile() && allowedExtensions.has(entry.name.slice(entry.name.lastIndexOf('.')))) {
+        const path = `${directory}/${entry.name}`;
+        files.push({ path, content: readRequired(path) });
+      }
+    }
+  }
+
+  for (const root of ['.github/workflows', 'examples', 'src', 'docs']) walk(root);
+  return files.sort((left, right) => left.path.localeCompare(right.path));
+}
+
+function validateRepositoryActionReferences(files) {
+  const errors = [];
+  const usesPattern = /^\s*(?:-\s*)?uses:\s*openai\/codex-action@([^\s#]+)/gm;
+  for (const file of files) {
+    for (const match of file.content.matchAll(usesPattern)) {
+      if (match[1] !== actionSha) {
+        errors.push(`${file.path}: Codex Action ref ${match[1]} は監査済みfull SHAではありません`);
+      }
+    }
+  }
+  return errors;
+}
+
 function extractSection(content, file) {
   const start = content.indexOf(sectionStart);
   const end = content.indexOf(sectionEnd, start + sectionStart.length);
@@ -150,11 +183,10 @@ const errors = [
 if (sourceSection !== publicSection) errors.push('Codex Action section must match between src and docs');
 
 const targetContents = [exampleYaml, sourceSection, publicSection];
-const mutablePattern = /openai\/codex-action@(?![0-9a-f]{40}(?:\s|$))[^\s#]+/g;
-const mutableRefs = targetContents.flatMap((content, index) => [...content.matchAll(mutablePattern)].map(() => index));
-if (mutableRefs.length) errors.push(`active workflow/sampleにmutableなCodex Action tagが${mutableRefs.length}件残っています`);
 const pinnedCount = targetContents.reduce((count, content) => count + content.split(actionRef).length - 1, 0);
 if (pinnedCount !== 3) errors.push(`監査済みCodex Action pinは3件必要です (actual=${pinnedCount})`);
+const referenceFiles = collectReferenceFiles();
+errors.push(...validateRepositoryActionReferences(referenceFiles));
 
 const packageJson = JSON.parse(readRequired('package.json'));
 for (const command of ['npm run check:chapter13-codex-action', 'npm run check:chapter13-codex-action:self-test']) {
@@ -188,6 +220,18 @@ if (process.argv.includes('--self-test')) {
   expectRejected(chapterYaml, 'workspace permission', (value) => value.replace('permission-profile: ":read-only"', 'permission-profile: ":workspace"'), 'permission-profile');
   expectRejected(chapterYaml, 'legacy sandbox', (value) => value.replace('permission-profile: ":read-only"', 'permission-profile: ":read-only"\n          sandbox: read-only'), 'legacy sandbox');
   expectRejected(chapterYaml, 'unsafe strategy', (value) => value.replace('safety-strategy: drop-sudo', 'safety-strategy: unsafe'), 'drop-sudo');
+  for (const [name, ref] of [
+    ['repository-wide mutable ref', 'main'],
+    ['repository-wide unapproved SHA', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'],
+  ]) {
+    const scanErrors = validateRepositoryActionReferences([
+      ...referenceFiles,
+      { path: `examples/workflows/self-test-${name}.yml`, content: `steps:\n  - uses: openai/codex-action@${ref}\n` },
+    ]);
+    if (!scanErrors.some((error) => error.includes('監査済みfull SHAではありません'))) {
+      throw new Error(`self-test ${name}: repository-wide ref違反を拒否できません`);
+    }
+  }
   console.log('Chapter 13 Codex Action contract self-test passed.');
 } else {
   console.log(`Chapter 13 Codex Action contract passed: ${actionSha} (v1.11), Codex ${codexVersion}, label gate, read-only profile, and minimum permissions.`);
