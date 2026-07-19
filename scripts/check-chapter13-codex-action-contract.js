@@ -48,7 +48,7 @@ function collectReferenceFiles() {
 
 function validateRepositoryActionReferences(files) {
   const errors = [];
-  const usesPattern = /^\s*(?:-\s*)?uses:\s*openai\/codex-action@([^\s#]+)/gm;
+  const usesPattern = /^\s*(?:-\s*)?uses\s*:\s*["']?openai\/codex-action@([^\s#"']+)/gm;
   for (const file of files) {
     for (const match of file.content.matchAll(usesPattern)) {
       if (match[1] !== actionSha) {
@@ -220,13 +220,15 @@ if (process.argv.includes('--self-test')) {
   expectRejected(chapterYaml, 'workspace permission', (value) => value.replace('permission-profile: ":read-only"', 'permission-profile: ":workspace"'), 'permission-profile');
   expectRejected(chapterYaml, 'legacy sandbox', (value) => value.replace('permission-profile: ":read-only"', 'permission-profile: ":read-only"\n          sandbox: read-only'), 'legacy sandbox');
   expectRejected(chapterYaml, 'unsafe strategy', (value) => value.replace('safety-strategy: drop-sudo', 'safety-strategy: unsafe'), 'drop-sudo');
-  for (const [name, ref] of [
-    ['repository-wide mutable ref', 'main'],
-    ['repository-wide unapproved SHA', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'],
+  for (const [name, uses] of [
+    ['repository-wide mutable ref', 'uses: openai/codex-action@main'],
+    ['repository-wide double-quoted mutable ref', 'uses: "openai/codex-action@main"'],
+    ["repository-wide single-quoted mutable ref", "uses: 'openai/codex-action@main'"],
+    ['repository-wide unapproved SHA', 'uses: openai/codex-action@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'],
   ]) {
     const scanErrors = validateRepositoryActionReferences([
       ...referenceFiles,
-      { path: `examples/workflows/self-test-${name}.yml`, content: `steps:\n  - uses: openai/codex-action@${ref}\n` },
+      { path: `examples/workflows/self-test-${name}.yml`, content: `steps:\n  - ${uses}\n` },
     ]);
     if (!scanErrors.some((error) => error.includes('監査済みfull SHAではありません'))) {
       throw new Error(`self-test ${name}: repository-wide ref違反を拒否できません`);
