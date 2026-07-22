@@ -31,7 +31,9 @@ jobs:
         with:
           node-version: '20'
           cache: npm
-          cache-dependency-path: book-formatter/package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            book-formatter/package-lock.json
 
       - name: Root dependency security audit
         run: npm run check:security
@@ -44,6 +46,11 @@ jobs:
 
       - name: Install book dependencies for contract checks
         run: npm ci --ignore-scripts
+
+      - name: Check install-script allowlist contract
+        run: |
+          node scripts/check-install-script-policy.js
+          node scripts/check-install-script-policy.js --self-test
 
       - name: Check Chapter 8 CodeQL workflow contract
         run: |
