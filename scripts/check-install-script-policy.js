@@ -7,6 +7,7 @@ const EXPECTED = Object.freeze({
   sharpRange: '^0.35.3',
   sharpVersion: '0.35.3',
   puppeteerRange: '^24.43.1',
+  nodeRange: '^20.9.0 || >=22',
   defaultPdfEngine: 'pandoc',
 });
 
@@ -23,12 +24,19 @@ function validate(state) {
   const { pkg, lock, config, buildSource, imageOptimizerSource, pdfSource, readme } = state;
   const sharp = lock.packages?.['node_modules/sharp'];
   const puppeteer = lock.packages?.['node_modules/puppeteer'];
+  const installScriptPackages = Object.entries(lock.packages ?? {})
+    .filter(([, metadata]) => metadata.hasInstallScript === true)
+    .map(([path, metadata]) => `${path}@${metadata.version}`)
+    .sort();
 
   if (pkg.optionalDependencies?.sharp !== EXPECTED.sharpRange) {
     errors.push(`optionalDependencies.sharp must be ${EXPECTED.sharpRange}`);
   }
   if (pkg.optionalDependencies?.puppeteer !== EXPECTED.puppeteerRange) {
     errors.push(`optionalDependencies.puppeteer must be ${EXPECTED.puppeteerRange}`);
+  }
+  if (pkg.engines?.node !== EXPECTED.nodeRange) {
+    errors.push(`engines.node must be ${EXPECTED.nodeRange}`);
   }
   if (pkg.allowScripts?.puppeteer !== false) {
     errors.push('allowScripts must explicitly deny the Puppeteer download script');
@@ -46,11 +54,15 @@ function validate(state) {
   if (puppeteer?.version !== '24.43.1' || puppeteer?.hasInstallScript !== true) {
     errors.push('lockfile must resolve install-script-bearing puppeteer@24.43.1');
   }
+  const expectedInstallScripts = ['node_modules/puppeteer@24.43.1'];
+  if (JSON.stringify(installScriptPackages) !== JSON.stringify(expectedInstallScripts)) {
+    errors.push(`unexpected install-script package set: ${JSON.stringify(installScriptPackages)}`);
+  }
   if (!buildSource.includes("require('./image-optimizer')")) {
     errors.push('build:full must retain the active image optimizer');
   }
   if (!imageOptimizerSource.includes("require('sharp')")) {
-    errors.push('the approved Sharp install script must have an active consumer');
+    errors.push('the script-free Sharp dependency must retain an active consumer');
   }
   if (!pdfSource.includes("require('puppeteer')")) {
     errors.push('the denied Puppeteer package must remain an explicit optional consumer');
@@ -106,7 +118,9 @@ if (process.argv.includes('--self-test')) {
     ['unnecessary Sharp approval', (s) => { s.pkg.allowScripts.sharp = true; }, 'unexpected install-script approvals'],
     ['Puppeteer approval', (s) => { s.pkg.allowScripts.puppeteer = true; }, 'explicitly deny'],
     ['blanket extra approval', (s) => { s.pkg.allowScripts['unknown@1.0.0'] = true; }, 'unexpected install-script approvals'],
+    ['Node floor drift', (s) => { s.pkg.engines.node = '20 || >=22'; }, 'engines.node'],
     ['Sharp install script returns', (s) => { s.lock.packages['node_modules/sharp'].hasInstallScript = true; }, 'script-free'],
+    ['new unreviewed install script', (s) => { s.lock.packages['node_modules/unreviewed'] = { version: '1.0.0', hasInstallScript: true }; }, 'install-script package set'],
     ['Sharp version drift', (s) => { s.lock.packages['node_modules/sharp'].version = '0.35.2'; }, `sharp@${EXPECTED.sharpVersion}`],
     ['missing Sharp consumer', (s) => { s.imageOptimizerSource = s.imageOptimizerSource.replace("require('sharp')", "require('not-sharp')"); }, 'active consumer'],
     ['Puppeteer becomes default', (s) => { s.config.pdf.engine = 'puppeteer'; }, 'default PDF engine'],

@@ -9,7 +9,7 @@
     "url": "https://github.com/itdojp/github-workflow-book.git"
   },
   "engines": {
-    "node": "20 || >=22"
+    "node": "^20.9.0 || >=22"
   },
   "scripts": {
     "setup": "node easy-setup.js",

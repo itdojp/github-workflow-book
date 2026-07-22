@@ -29,7 +29,7 @@
 
 ## 5. ローカル検証（推奨）
 
-前提: Node.js `>=20`（`node --version` で確認）、Python 3 系。
+前提: Node.js `^20.9.0 || >=22`（`node --version` で確認）、Python 3 系。
 
 - `python3 scripts/validate_links.py docs`（内部/外部リンクの存在チェック）
 - `npm ci`（初回のみ）
@@ -44,4 +44,3 @@
 - 章参照や内部リンクが壊れていない
 - 変更範囲が過度に広がっていない
 - GitHub Actions の `Book QA` が PASS する
-
