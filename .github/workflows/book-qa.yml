@@ -35,15 +35,12 @@ jobs:
             package-lock.json
             book-formatter/package-lock.json
 
-      - name: Pin npm for install-script policy
+      - name: Verify pinned npm CLI
         shell: bash
-        run: |
-          set -euo pipefail
-          npm install --global npm@12.0.1
-          test "$(npm --version)" = "12.0.1"
+        run: test "$(npx --yes npm@12.0.1 --version)" = "12.0.1"
 
       - name: Root dependency security audit
-        run: npm run check:security
+        run: npx --yes npm@12.0.1 audit
 
       - name: Book metadata consistency check
         run: node scripts/check-metadata-consistency.js
@@ -51,13 +48,24 @@ jobs:
       - name: Check reader-facing checklist and figure contracts
         run: node scripts/check-issue-240-ux.js
 
-      - name: Install book dependencies for contract checks
-        run: npm ci --ignore-scripts
+      - name: Install book dependencies with policy npm
+        run: npx --yes npm@12.0.1 ci
 
       - name: Check install-script allowlist contract
+        shell: bash
         run: |
+          set -euo pipefail
           node scripts/check-install-script-policy.js
           node scripts/check-install-script-policy.js --self-test
+          report="$RUNNER_TEMP/install-scripts.json"
+          npx --yes npm@12.0.1 install-scripts ls --json > "$report"
+          node - "$report" <<'NODE'
+          const report = require(process.argv[2]);
+          if (!Array.isArray(report.allowScripts) || report.allowScripts.length !== 0) {
+            throw new Error('pending install scripts remain: ' + JSON.stringify(report));
+          }
+          console.log('npm install-scripts pending count: 0');
+          NODE
 
       - name: Check Chapter 8 CodeQL workflow contract
         run: |
