@@ -9,7 +9,7 @@
     "url": "https://github.com/itdojp/github-workflow-book.git"
   },
   "engines": {
-    "node": "20 || >=22"
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
   "scripts": {
     "setup": "node easy-setup.js",
@@ -19,7 +19,7 @@
     "deploy": "bash scripts/deploy.sh",
     "clean": "rm -rf _site public output temp",
     "lint:light": "markdownlint --config .markdownlint-src.json 'src/**/*.md' --ignore node_modules",
-    "test:light": "npm run check:security && npm run check:metadata && npm run check:chapter08-codeql && npm run check:chapter08-codeql:self-test && npm run check:chapter08-dependency-review && npm run check:chapter08-dependency-review:self-test && npm run check:chapter13-codex-action && npm run check:chapter13-codex-action:self-test && npm run check:issue-240-ux && npm run lint:light && npm run build",
+    "test:light": "npm run check:security && npm run check:install-script-policy && npm run check:install-script-policy:self-test && npm run check:metadata && npm run check:chapter08-codeql && npm run check:chapter08-codeql:self-test && npm run check:chapter08-dependency-review && npm run check:chapter08-dependency-review:self-test && npm run check:chapter13-codex-action && npm run check:chapter13-codex-action:self-test && npm run check:issue-240-ux && npm run lint:light && npm run build",
     "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
     "build:generate": "node scripts/build-simple.js",
     "check:metadata": "node scripts/check-metadata-consistency.js",
@@ -30,7 +30,9 @@
     "check:chapter08-dependency-review:self-test": "node scripts/check-chapter08-dependency-review-contract.js --self-test",
     "check:issue-240-ux": "node scripts/check-issue-240-ux.js",
     "check:chapter13-codex-action": "node scripts/check-chapter13-codex-action-contract.js",
-    "check:chapter13-codex-action:self-test": "node scripts/check-chapter13-codex-action-contract.js --self-test"
+    "check:chapter13-codex-action:self-test": "node scripts/check-chapter13-codex-action-contract.js --self-test",
+    "check:install-script-policy": "node scripts/check-install-script-policy.js",
+    "check:install-script-policy:self-test": "node scripts/check-install-script-policy.js --self-test"
   },
   "dependencies": {
     "fs-extra": "^11.3.5",
@@ -43,13 +45,14 @@
   },
   "optionalDependencies": {
     "puppeteer": "^24.43.1",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.3"
   },
   "overrides": {
     "minimatch": "10.2.5",
-    "markdown-it": "14.2.0",
-    "linkify-it": "5.0.1",
-    "js-yaml": "4.3.0"
+    "markdown-it": "14.3.0",
+    "linkify-it": "5.0.2",
+    "js-yaml": "4.3.0",
+    "brace-expansion": "5.0.7"
   },
   "keywords": [
     "github",
@@ -61,5 +64,9 @@
   "bugs": {
     "url": "https://github.com/itdojp/github-workflow-book/issues"
   },
-  "homepage": "https://itdojp.github.io/github-workflow-book/"
+  "homepage": "https://itdojp.github.io/github-workflow-book/",
+  "allowScripts": {
+    "puppeteer": false
+  },
+  "packageManager": "npm@12.0.1"
 }
