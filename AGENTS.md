@@ -29,7 +29,7 @@
 
 ## 5. ローカル検証（推奨）
 
-前提: Node.js `^20.9.0 || >=22`（`node --version` で確認）、Python 3 系。
+前提: Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` と npm `12.0.1`（`node --version` / `npm --version` で確認）、Python 3 系。npm版は `package.json#packageManager` を正本とします。
 
 - `python3 scripts/validate_links.py docs`（内部/外部リンクの存在チェック）
 - `npm ci`（初回のみ）

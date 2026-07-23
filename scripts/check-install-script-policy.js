@@ -7,7 +7,8 @@ const EXPECTED = Object.freeze({
   sharpRange: '^0.35.3',
   sharpVersion: '0.35.3',
   puppeteerRange: '^24.43.1',
-  nodeRange: '^20.9.0 || >=22',
+  nodeRange: '^22.22.2 || ^24.15.0 || >=26.0.0',
+  packageManager: 'npm@12.0.1',
   defaultPdfEngine: 'pandoc',
 });
 
@@ -37,6 +38,9 @@ function validate(state) {
   }
   if (pkg.engines?.node !== EXPECTED.nodeRange) {
     errors.push(`engines.node must be ${EXPECTED.nodeRange}`);
+  }
+  if (pkg.packageManager !== EXPECTED.packageManager) {
+    errors.push(`packageManager must be ${EXPECTED.packageManager}`);
   }
   if (pkg.allowScripts?.puppeteer !== false) {
     errors.push('allowScripts must explicitly deny the Puppeteer download script');
@@ -118,7 +122,8 @@ if (process.argv.includes('--self-test')) {
     ['unnecessary Sharp approval', (s) => { s.pkg.allowScripts.sharp = true; }, 'unexpected install-script approvals'],
     ['Puppeteer approval', (s) => { s.pkg.allowScripts.puppeteer = true; }, 'explicitly deny'],
     ['blanket extra approval', (s) => { s.pkg.allowScripts['unknown@1.0.0'] = true; }, 'unexpected install-script approvals'],
-    ['Node floor drift', (s) => { s.pkg.engines.node = '20 || >=22'; }, 'engines.node'],
+    ['Node floor drift', (s) => { s.pkg.engines.node = '>=22'; }, 'engines.node'],
+    ['npm version drift', (s) => { s.pkg.packageManager = 'npm@11.0.0'; }, 'packageManager'],
     ['Sharp install script returns', (s) => { s.lock.packages['node_modules/sharp'].hasInstallScript = true; }, 'script-free'],
     ['new unreviewed install script', (s) => { s.lock.packages['node_modules/unreviewed'] = { version: '1.0.0', hasInstallScript: true }; }, 'install-script package set'],
     ['Sharp version drift', (s) => { s.lock.packages['node_modules/sharp'].version = '0.35.2'; }, `sharp@${EXPECTED.sharpVersion}`],
