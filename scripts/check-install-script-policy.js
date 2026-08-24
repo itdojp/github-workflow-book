@@ -53,8 +53,8 @@ const SPAWN_INSTALL_PATTERN = /\b(?:spawn|spawnSync|execFile|execFileSync)\s*\(\
 const LIFECYCLE_FIXTURE = path.resolve('tests/fixtures/install-script-policy');
 const BENCHMARK_PARSE_EXCEPTION_SHA256 = '14a93540cb05c0e1af7446f8bf19c80626788efb6d81a058192fd56b51cf7420';
 
-function readJson(path) {
-  return JSON.parse(fs.readFileSync(path, 'utf8'));
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 function clone(value) {
