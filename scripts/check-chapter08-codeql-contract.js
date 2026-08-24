@@ -2,12 +2,19 @@
 'use strict';
 
 const fs = require('node:fs');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const yamlParser = require('js-yaml');
+const semver = require('semver');
 
 const sourcePath = 'src/chapters/chapter08/index.md';
 const publicPath = 'docs/chapters/chapter08/index.md';
 const sectionStart = '#### 実行可能なCodeQL scanワークフロー';
 const sectionEnd = '### 修正の検証';
+const expectedDirectYamlVersion = '4.3.1';
+const expectedMarkdownlintVersion = '0.49.1';
+const expectedMarkdownlintYamlRange = '~5.2.1';
+const expectedMarkdownlintYamlVersion = '5.2.2';
 
 function normalize(value) {
   return value.replace(/\r\n?/g, '\n');
@@ -40,6 +47,88 @@ function parseWorkflowYaml(yaml) {
   } catch (error) {
     return { workflow: null, error: `YAMLとしてparseできません: ${error.message.split('\n')[0]}` };
   }
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function validateYamlDependencyContract(packageJson, packageLock) {
+  const errors = [];
+  const lockRoot = packageLock.packages?.[''];
+  const directYaml = packageLock.packages?.['node_modules/js-yaml'];
+  const markdownlint = packageLock.packages?.['node_modules/markdownlint-cli'];
+  const markdownlintYaml = packageLock.packages?.['node_modules/markdownlint-cli/node_modules/js-yaml'];
+
+  if (packageJson.devDependencies?.['js-yaml'] !== expectedDirectYamlVersion) {
+    errors.push(`js-yaml ${expectedDirectYamlVersion} must be a direct, exact devDependency`);
+  }
+  if (lockRoot?.devDependencies?.['js-yaml'] !== expectedDirectYamlVersion
+    || directYaml?.version !== expectedDirectYamlVersion) {
+    errors.push(`lock graph must retain direct js-yaml@${expectedDirectYamlVersion}`);
+  }
+  if (Object.hasOwn(packageJson.overrides ?? {}, 'js-yaml')) {
+    errors.push('global cross-major js-yaml override must not be present');
+  }
+  if (packageJson.overrides?.['markdownlint-cli']?.['js-yaml'] !== expectedMarkdownlintYamlVersion) {
+    errors.push(`markdownlint-cli must scope its js-yaml override to v${expectedMarkdownlintYamlVersion}`);
+  }
+  if (markdownlint?.version !== expectedMarkdownlintVersion) {
+    errors.push(`lock graph must resolve markdownlint-cli@${expectedMarkdownlintVersion}`);
+  }
+  const markdownlintYamlRange = markdownlint?.dependencies?.['js-yaml'];
+  if (markdownlintYamlRange !== expectedMarkdownlintYamlRange) {
+    errors.push('markdownlint-cli lock metadata must retain its js-yaml v5 dependency edge');
+  }
+  if (markdownlintYaml?.version
+    && (!semver.valid(markdownlintYaml.version)
+      || !semver.validRange(markdownlintYamlRange)
+      || !semver.satisfies(markdownlintYaml.version, markdownlintYamlRange))) {
+    errors.push(`markdownlint-cli nested js-yaml@${markdownlintYaml.version} does not satisfy declared range ${markdownlintYamlRange}`);
+  }
+  if (markdownlintYaml?.version !== expectedMarkdownlintYamlVersion
+    || !markdownlintYaml.version.startsWith('5.')) {
+    errors.push(`markdownlint-cli lock graph must resolve nested js-yaml@${expectedMarkdownlintYamlVersion} (v5)`);
+  }
+  return errors;
+}
+
+function validateMarkdownlintYamlSmoke() {
+  const errors = [];
+  const markdownlintDirectory = path.resolve('node_modules/markdownlint-cli');
+  const cliPath = path.join(markdownlintDirectory, 'markdownlint.js');
+  const nestedYamlPackagePath = path.join(markdownlintDirectory, 'node_modules/js-yaml/package.json');
+  const temporaryDirectory = fs.mkdtempSync(path.resolve('.chapter08-markdownlint-smoke-'));
+
+  try {
+    const nestedYamlPackage = JSON.parse(fs.readFileSync(nestedYamlPackagePath, 'utf8'));
+    if (nestedYamlPackage.version !== expectedMarkdownlintYamlVersion) {
+      errors.push(`installed markdownlint-cli must load nested js-yaml@${expectedMarkdownlintYamlVersion}`);
+      return errors;
+    }
+
+    const configPath = path.join(temporaryDirectory, '.markdownlint.yaml');
+    fs.writeFileSync(configPath, 'default: false\nMD041: true\n');
+    const run = (input) => spawnSync(
+      process.execPath,
+      [cliPath, '--config', configPath, '--stdin'],
+      { cwd: temporaryDirectory, encoding: 'utf8', input },
+    );
+    const valid = run('# Heading\n');
+    if (valid.error || valid.status !== 0) {
+      errors.push(`markdownlint YAML config smoke must accept valid Markdown: ${valid.error?.message ?? valid.stderr}`);
+    }
+    const invalid = run('Not a heading\n');
+    const invalidOutput = `${invalid.stdout ?? ''}\n${invalid.stderr ?? ''}`;
+    if (invalid.error || invalid.status === 0 || !invalidOutput.includes('MD041')) {
+      errors.push('markdownlint YAML config negative smoke must reject Markdown violating MD041');
+    }
+  } catch (error) {
+    errors.push(`markdownlint YAML config smoke could not run locally: ${error.message}`);
+  } finally {
+    fs.rmSync(temporaryDirectory, { force: true, recursive: true });
+  }
+  return errors;
 }
 
 function actionIndex(steps, action) {
@@ -144,20 +233,29 @@ function expectMutationAccepted(section, name, mutate) {
   }
 }
 
+function expectDependencyMutationRejected(base, name, mutate, expected) {
+  const mutated = clone(base);
+  mutate(mutated);
+  const errors = validateYamlDependencyContract(mutated.packageJson, mutated.packageLock);
+  if (!errors.some((error) => error.includes(expected))) {
+    throw new Error(`self-test ${name}: dependency mutation was not rejected (${errors.join('; ')})`);
+  }
+}
+
 const sourceSection = extractSection(fs.readFileSync(sourcePath, 'utf8'), sourcePath);
 const publicSection = extractSection(fs.readFileSync(publicPath, 'utf8'), publicPath);
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const packageLock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
 const errors = [
   ...validateContract(sourceSection).map((error) => `${sourcePath}: ${error}`),
   ...validateContract(publicSection).map((error) => `${publicPath}: ${error}`),
+  ...validateYamlDependencyContract(packageJson, packageLock),
+  ...validateMarkdownlintYamlSmoke(),
 ];
 if (sourceSection !== publicSection) errors.push('CodeQL contract section must match between src and docs');
 
-const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 for (const required of ['npm run check:chapter08-codeql', 'npm run check:chapter08-codeql:self-test']) {
   if (!packageJson.scripts?.['test:light']?.includes(required)) errors.push(`test:light must run ${required}`);
-}
-if (packageJson.devDependencies?.['js-yaml'] !== '4.3.0') {
-  errors.push('js-yaml 4.3.0 must be a direct, exact devDependency');
 }
 const workflow = normalize(fs.readFileSync('.github/workflows/book-qa.yml', 'utf8'));
 for (const command of [
@@ -199,7 +297,22 @@ if (process.argv.includes('--self-test')) {
     'inline permissions map',
     (value) => value.replace('permissions:\n  contents: read\n  security-events: write', 'permissions: { contents: read, security-events: write }'),
   );
-  console.log('Chapter 8 CodeQL contract self-test passed.');
+  const dependencyState = { packageJson, packageLock };
+  const dependencyCases = [
+    ['direct js-yaml drift', (state) => { state.packageJson.devDependencies['js-yaml'] = '^4.3.1'; }, 'direct, exact'],
+    ['global js-yaml override restored', (state) => { state.packageJson.overrides['js-yaml'] = expectedDirectYamlVersion; }, 'global cross-major'],
+    ['scoped v5 override removed', (state) => { delete state.packageJson.overrides['markdownlint-cli']; }, 'scope its js-yaml override'],
+    ['root lock js-yaml drift', (state) => { state.packageLock.packages['node_modules/js-yaml'].version = '5.3.0'; }, 'direct js-yaml'],
+    ['markdownlint lock edge drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli'].dependencies['js-yaml'] = '4.3.1'; }, 'dependency edge'],
+    ['nested js-yaml missing', (state) => { delete state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml']; }, 'nested js-yaml'],
+    ['nested js-yaml cross-major drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '4.3.1'; }, 'does not satisfy declared range'],
+    ['nested js-yaml same-major range drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.3.0'; }, 'does not satisfy declared range'],
+    ['nested js-yaml below declared floor', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.2.0'; }, 'does not satisfy declared range'],
+  ];
+  dependencyCases.forEach(([name, mutate, marker]) => (
+    expectDependencyMutationRejected(dependencyState, name, mutate, marker)
+  ));
+  console.log(`Chapter 8 CodeQL contract self-test passed: ${dependencyCases.length} dependency mutations rejected.`);
 } else {
-  console.log('Chapter 8 CodeQL contract passed: valid YAML, init/language-dependent build/analyze order, minimum permissions, and trust boundary.');
+  console.log('Chapter 8 CodeQL contract passed: workflow YAML and split js-yaml lock graph are valid; markdownlint YAML smoke/negative passed.');
 }

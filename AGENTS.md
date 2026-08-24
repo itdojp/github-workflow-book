@@ -32,7 +32,7 @@
 前提: Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` と npm `12.0.1`（`node --version` / `npm --version` で確認）、Python 3 系。npm版は `package.json#packageManager` を正本とします。
 
 - `python3 scripts/validate_links.py docs`（内部/外部リンクの存在チェック）
-- `npm ci`（初回のみ）
+- `PUPPETEER_SKIP_DOWNLOAD=true npm ci --ignore-scripts`（初回のみ）
 - `npm run lint:light`（`src/` の Markdown lint）
 - `npm run test:light`（`lint:light` + `build`）
 

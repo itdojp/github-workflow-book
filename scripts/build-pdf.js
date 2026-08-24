@@ -235,10 +235,10 @@ async function generatePDFWithPandoc(inputPath, outputPath, config) {
   execSync(command, { stdio: 'inherit' });
 }
 
-async function generatePDFWithPuppeteer(inputPath, outputPath, config) {
+async function generatePDFWithPuppeteer(inputPath, outputPath, config, dependencies = {}) {
   // Puppeteerを使用したPDF生成（HTMLを経由）
-  const puppeteer = require('puppeteer');
-  const marked = require('marked');
+  const puppeteer = dependencies.puppeteer || require('puppeteer');
+  const marked = dependencies.marked || require('marked');
   
   const markdownContent = await fs.readFile(inputPath, 'utf-8');
   const htmlContent = marked.parse(markdownContent);
@@ -301,22 +301,28 @@ async function generatePDFWithPuppeteer(inputPath, outputPath, config) {
   `;
   
   const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(fullHtml);
-  
-  await page.pdf({
-    path: outputPath,
-    format: config.pdf.paperSize,
-    margin: {
-      top: config.pdf.margin,
-      right: config.pdf.margin,
-      bottom: config.pdf.margin,
-      left: config.pdf.margin
-    },
-    printBackground: true
-  });
-  
-  await browser.close();
+  let page;
+  try {
+    page = await browser.newPage();
+    await page.setContent(fullHtml);
+    await page.pdf({
+      path: outputPath,
+      format: config.pdf.paperSize,
+      margin: {
+        top: config.pdf.margin,
+        right: config.pdf.margin,
+        bottom: config.pdf.margin,
+        left: config.pdf.margin
+      },
+      printBackground: true
+    });
+  } finally {
+    try {
+      if (page) await page.close();
+    } finally {
+      await browser.close();
+    }
+  }
 }
 
 async function cleanup(config) {
@@ -399,4 +405,4 @@ if (require.main === module) {
   buildPDF();
 }
 
-module.exports = { buildPDF, loadConfig };
+module.exports = { buildPDF, loadConfig, generatePDFWithPuppeteer };

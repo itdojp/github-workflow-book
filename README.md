@@ -18,7 +18,7 @@
 
 ### 📋 クイックスタート
 ```bash
-PUPPETEER_SKIP_DOWNLOAD=true npm ci  # 依存関係インストール
+PUPPETEER_SKIP_DOWNLOAD=true npm ci --ignore-scripts  # 依存関係インストール
 npm run test:light                  # npm audit + メタデータ確認 + 軽量QA + Jekyllビルド
 npm run preview                     # ローカルプレビュー
 ```
