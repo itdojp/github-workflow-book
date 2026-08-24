@@ -90,7 +90,14 @@ title: "AI開発のためのGitHubワークフロー実践ガイド"
         """Zenn用の準備"""
         zenn_dir = self.source_dir / "zenn"
         zenn_dir.mkdir(exist_ok=True)
-        
+
+        legacy_manifest = zenn_dir / "package.json"
+        if legacy_manifest.exists():
+            raise RuntimeError(
+                "zenn/package.json はサポート対象外です。旧生成マニフェストを削除し、"
+                "管理者提供の固定バージョン Zenn CLI を使用してください。"
+            )
+
         book_dir = zenn_dir / "books" / "github-workflow-ai"
         book_dir.mkdir(parents=True, exist_ok=True)
         
@@ -105,24 +112,6 @@ title: "AI開発のためのGitHubワークフロー実践ガイド"
         # 各章をZenn形式に変換
         self._convert_chapters_to_zenn(chapters_dir)
         
-        # package.jsonの作成
-        package_json = {
-            "name": "github-workflow-ai-zenn",
-            "version": "1.0.0",
-            "description": "AI開発のためのGitHubワークフロー実践ガイド - Zenn版",
-            "scripts": {
-                "preview": "zenn preview",
-                "new:article": "zenn new:article",
-                "new:book": "zenn new:book"
-            },
-            "devDependencies": {
-                "zenn-cli": "^0.1.147"
-            }
-        }
-        
-        with open(zenn_dir / "package.json", "w", encoding="utf-8") as f:
-            import json
-            json.dump(package_json, f, indent=2, ensure_ascii=False)
     
     def _generate_navigation(self) -> str:
         """ナビゲーションHTMLを生成"""
@@ -410,7 +399,7 @@ echo "📁 ファイル: complete_book.html"
 
 📝 Zenn
 --------
-1. zenn/book.yaml を確認
+1. zenn/books/github-workflow-ai/config.yaml を確認
 2. zenn/ には package.json がないため、同ディレクトリでは Node.js 依存導入を実行しない
 3. 管理者が版を固定した Zenn CLI 環境で preview と publish を実行
 

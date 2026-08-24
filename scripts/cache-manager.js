@@ -8,7 +8,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 
 const INSTALL_ENVIRONMENT = Object.freeze({
   ...process.env,
@@ -54,8 +54,9 @@ function logSection(title) {
 // ディレクトリサイズを取得
 async function getDirectorySize(dirPath) {
   try {
-    const output = execSync(`du -sh "${dirPath}" 2>/dev/null || echo "0"`, { encoding: 'utf8' });
-    return output.split('\t')[0].trim();
+    const result = spawnSync('du', ['-sh', dirPath], { encoding: 'utf8' });
+    if (result.error || result.status !== 0) return '0';
+    return result.stdout.split('\t')[0].trim();
   } catch {
     return '0';
   }
@@ -67,8 +68,13 @@ async function generateCacheKey(patterns) {
   
   for (const pattern of patterns) {
     try {
-      const output = execSync(`find ${pattern} -type f 2>/dev/null | head -1000`, { encoding: 'utf8' });
-      files.push(...output.split('\n').filter(Boolean));
+      const result = spawnSync('find', [pattern, '-type', 'f'], {
+        encoding: 'utf8',
+        maxBuffer: 10 * 1024 * 1024
+      });
+      if (!result.error && result.status === 0) {
+        files.push(...result.stdout.split('\n').filter(Boolean).slice(0, 1000));
+      }
     } catch {
       // Pattern didn't match any files
     }
@@ -187,7 +193,7 @@ async function optimizeCache() {
   
   for (const pattern of tempPatterns) {
     try {
-      execSync(`find . -path "${pattern}" -type f -delete 2>/dev/null`, { stdio: 'ignore' });
+      spawnSync('find', ['.', '-path', pattern, '-type', 'f', '-delete'], { stdio: 'ignore' });
     } catch {
       // エラーは無視
     }
@@ -203,7 +209,7 @@ async function optimizeCache() {
   
   for (const [pattern, days] of Object.entries(cacheAge)) {
     try {
-      execSync(`find . -name "${pattern}" -mtime +${days} -delete 2>/dev/null`, { stdio: 'ignore' });
+      spawnSync('find', ['.', '-name', pattern, '-mtime', `+${days}`, '-delete'], { stdio: 'ignore' });
     } catch {
       // エラーは無視
     }

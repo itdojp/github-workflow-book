@@ -71,6 +71,11 @@ jobs:
           console.log('npm install-scripts pending count: 0');
           NODE
 
+      - name: Check Puppeteer 25 consumers without a browser
+        run: |
+          node scripts/check-puppeteer25-consumer-contract.js
+          node scripts/check-puppeteer25-consumer-contract.js --self-test
+
       - name: Check Chapter 8 CodeQL workflow contract
         run: |
           node scripts/check-chapter08-codeql-contract.js
