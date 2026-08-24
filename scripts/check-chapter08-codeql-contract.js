@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const yamlParser = require('js-yaml');
+const semver = require('semver');
 
 const sourcePath = 'src/chapters/chapter08/index.md';
 const publicPath = 'docs/chapters/chapter08/index.md';
@@ -12,7 +13,8 @@ const sectionStart = '#### 実行可能なCodeQL scanワークフロー';
 const sectionEnd = '### 修正の検証';
 const expectedDirectYamlVersion = '4.3.1';
 const expectedMarkdownlintVersion = '0.49.1';
-const expectedMarkdownlintYamlVersion = '5.3.0';
+const expectedMarkdownlintYamlRange = '~5.2.1';
+const expectedMarkdownlintYamlVersion = '5.2.2';
 
 function normalize(value) {
   return value.replace(/\r\n?/g, '\n');
@@ -74,8 +76,15 @@ function validateYamlDependencyContract(packageJson, packageLock) {
   if (markdownlint?.version !== expectedMarkdownlintVersion) {
     errors.push(`lock graph must resolve markdownlint-cli@${expectedMarkdownlintVersion}`);
   }
-  if (markdownlint?.dependencies?.['js-yaml'] !== '~5.2.1') {
+  const markdownlintYamlRange = markdownlint?.dependencies?.['js-yaml'];
+  if (markdownlintYamlRange !== expectedMarkdownlintYamlRange) {
     errors.push('markdownlint-cli lock metadata must retain its js-yaml v5 dependency edge');
+  }
+  if (markdownlintYaml?.version
+    && (!semver.valid(markdownlintYaml.version)
+      || !semver.validRange(markdownlintYamlRange)
+      || !semver.satisfies(markdownlintYaml.version, markdownlintYamlRange))) {
+    errors.push(`markdownlint-cli nested js-yaml@${markdownlintYaml.version} does not satisfy declared range ${markdownlintYamlRange}`);
   }
   if (markdownlintYaml?.version !== expectedMarkdownlintYamlVersion
     || !markdownlintYaml.version.startsWith('5.')) {
@@ -296,7 +305,9 @@ if (process.argv.includes('--self-test')) {
     ['root lock js-yaml drift', (state) => { state.packageLock.packages['node_modules/js-yaml'].version = '5.3.0'; }, 'direct js-yaml'],
     ['markdownlint lock edge drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli'].dependencies['js-yaml'] = '4.3.1'; }, 'dependency edge'],
     ['nested js-yaml missing', (state) => { delete state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml']; }, 'nested js-yaml'],
-    ['nested js-yaml cross-major drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '4.3.1'; }, 'nested js-yaml'],
+    ['nested js-yaml cross-major drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '4.3.1'; }, 'does not satisfy declared range'],
+    ['nested js-yaml same-major range drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.3.0'; }, 'does not satisfy declared range'],
+    ['nested js-yaml below declared floor', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.2.0'; }, 'does not satisfy declared range'],
   ];
   dependencyCases.forEach(([name, mutate, marker]) => (
     expectDependencyMutationRejected(dependencyState, name, mutate, marker)
