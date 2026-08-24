@@ -12,6 +12,29 @@ const path = require('path');
 const { execSync } = require('child_process');
 const readline = require('readline');
 
+const REQUIRED_NODE_RANGE = '^22.22.2 || ^24.15.0 || >=26.0.0';
+const REQUIRED_NPM_VERSION = '12.0.1';
+const INSTALL_ENVIRONMENT = Object.freeze({
+  ...process.env,
+  PUPPETEER_SKIP_DOWNLOAD: 'true'
+});
+
+function parseVersion(version) {
+  const match = /^v?(\d+)\.(\d+)\.(\d+)$/.exec(version);
+  return match ? match.slice(1).map(Number) : null;
+}
+
+function isSupportedNodeVersion(version) {
+  const parsed = parseVersion(version);
+  if (!parsed) return false;
+
+  const [major, minor, patch] = parsed;
+  if (major >= 26) return true;
+  if (major === 24) return minor > 15 || (minor === 15 && patch >= 0);
+  if (major === 22) return minor > 22 || (minor === 22 && patch >= 2);
+  return false;
+}
+
 // Color functions for better UX
 const colors = {
   green: (text) => `\x1b[32m${text}\x1b[0m`,
@@ -74,11 +97,13 @@ class EasySetup {
     
     // Node.js version check
     const nodeVersion = process.version;
-    const majorVersion = parseInt(nodeVersion.slice(1).split('.')[0]);
-    
-    // Keep aligned with package.json engines.node (>=20.0.0)
-    if (majorVersion < 20) {
-      throw new Error(`Node.js 20以上が必要です。現在: ${nodeVersion}`);
+    if (!isSupportedNodeVersion(nodeVersion)) {
+      throw new Error(`Node.js ${REQUIRED_NODE_RANGE} が必要です。現在: ${nodeVersion}`);
+    }
+
+    const npmVersion = execSync('npm --version', { encoding: 'utf8' }).trim();
+    if (npmVersion !== REQUIRED_NPM_VERSION) {
+      throw new Error(`npm ${REQUIRED_NPM_VERSION} が必要です。現在: ${npmVersion}`);
     }
     
     // Git check
@@ -126,7 +151,10 @@ class EasySetup {
       ];
       
       this.log('必要最小限の依存関係をインストール中...');
-      execSync(`npm install ${essentialDeps.join(' ')}`, { stdio: 'pipe' });
+      execSync(`npm install --ignore-scripts ${essentialDeps.join(' ')}`, {
+        stdio: 'pipe',
+        env: INSTALL_ENVIRONMENT
+      });
       
       this.log('依存関係のセットアップ完了', 'success');
     } catch (error) {
@@ -203,7 +231,7 @@ ${this.config.author}
 
 \`\`\`bash
 # 依存関係をインストール
-npm install
+PUPPETEER_SKIP_DOWNLOAD=true npm install --ignore-scripts
 
 # ビルド
 npm run build
@@ -345,3 +373,5 @@ if (require.main === module) {
 }
 
 module.exports = EasySetup;
+module.exports.isSupportedNodeVersion = isSupportedNodeVersion;
+module.exports.REQUIRED_NODE_RANGE = REQUIRED_NODE_RANGE;

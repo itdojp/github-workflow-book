@@ -4,7 +4,7 @@
 
 ### 1. 依存関係のインストール
 ```bash
-npm install
+PUPPETEER_SKIP_DOWNLOAD=true npm ci --ignore-scripts
 ```
 
 ### 2. 初回ビルド

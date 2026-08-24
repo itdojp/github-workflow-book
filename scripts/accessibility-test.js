@@ -7,12 +7,12 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const puppeteer = require('puppeteer');
-const { AxePuppeteer } = require('@axe-core/puppeteer');
-const glob = require('glob');
 
 class AccessibilityTester {
-  constructor() {
+  constructor(dependencies = {}) {
+    this.puppeteer = dependencies.puppeteer || require('puppeteer');
+    this.AxePuppeteer = dependencies.AxePuppeteer || require('@axe-core/puppeteer').AxePuppeteer;
+    this.glob = dependencies.glob || require('glob');
     this.results = {
       passed: [],
       failed: [],
@@ -22,7 +22,7 @@ class AccessibilityTester {
   }
 
   async init() {
-    this.browser = await puppeteer.launch({
+    this.browser = await this.puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
@@ -34,7 +34,7 @@ class AccessibilityTester {
     try {
       await page.goto(`file://${path.resolve(filePath)}`);
       
-      const results = await new AxePuppeteer(page)
+      const results = await new this.AxePuppeteer(page)
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
       
@@ -65,7 +65,7 @@ class AccessibilityTester {
   }
 
   async testDirectory(dir) {
-    const htmlFiles = glob.sync('**/*.html', {
+    const htmlFiles = this.glob.sync('**/*.html', {
       cwd: dir,
       absolute: true,
       ignore: ['node_modules/**', '.git/**']

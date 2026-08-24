@@ -300,7 +300,7 @@ class ErrorRecoverySystem {
                   `Try: Increase file descriptor limits or break down the build.`;
     } else if (message.includes('Module not found')) {
       enhanced += `Missing dependency.\n` +
-                  `Try: npm install to install missing packages.`;
+                  `Try: PUPPETEER_SKIP_DOWNLOAD=true npm install --ignore-scripts to install missing packages.`;
     } else {
       enhanced += `Build step failed: ${context.step || 'unknown'}\n` +
                   `Check the build logs for more details.`;
@@ -421,7 +421,7 @@ class ErrorRecoverySystem {
           {
             type: 'dependency_install',
             action: 'Reinstall dependencies',
-            command: 'npm install',
+            command: 'PUPPETEER_SKIP_DOWNLOAD=true npm install --ignore-scripts',
             confidence: 60,
             autoRecoverable: true
           }

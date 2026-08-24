@@ -8,7 +8,12 @@
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
+
+const INSTALL_ENVIRONMENT = Object.freeze({
+  ...process.env,
+  PUPPETEER_SKIP_DOWNLOAD: 'true'
+});
 
 // カラー出力
 const colors = {
@@ -49,11 +54,22 @@ function logSection(title) {
 // ディレクトリサイズを取得
 async function getDirectorySize(dirPath) {
   try {
-    const output = execSync(`du -sh "${dirPath}" 2>/dev/null || echo "0"`, { encoding: 'utf8' });
-    return output.split('\t')[0].trim();
+    const result = spawnSync('du', ['-sh', dirPath], { encoding: 'utf8' });
+    if (result.error || result.status !== 0) return '0';
+    return result.stdout.split('\t')[0].trim();
   } catch {
     return '0';
   }
+}
+
+function findArgumentsForPattern(pattern) {
+  const wildcardIndex = pattern.search(/[?*\[]/);
+  if (wildcardIndex === -1) return [pattern, '-type', 'f'];
+
+  const prefix = pattern.slice(0, wildcardIndex);
+  const separatorIndex = prefix.lastIndexOf('/');
+  const root = separatorIndex === -1 ? '.' : (prefix.slice(0, separatorIndex) || '.');
+  return [root, '-type', 'f', '-path', pattern];
 }
 
 // キャッシュキーを生成
@@ -62,16 +78,23 @@ async function generateCacheKey(patterns) {
   
   for (const pattern of patterns) {
     try {
-      const output = execSync(`find ${pattern} -type f 2>/dev/null | head -1000`, { encoding: 'utf8' });
-      files.push(...output.split('\n').filter(Boolean));
+      const result = spawnSync('find', findArgumentsForPattern(pattern), {
+        encoding: 'utf8',
+        maxBuffer: 10 * 1024 * 1024
+      });
+      if (!result.error && result.status === 0) {
+        files.push(...result.stdout.split('\n').filter(Boolean).slice(0, 1000));
+      }
     } catch {
       // Pattern didn't match any files
     }
   }
+
+  const uniqueFiles = [...new Set(files)].sort();
   
   // ファイル内容のハッシュを計算
   const hashes = await Promise.all(
-    files.slice(0, 100).map(async (file) => {
+    uniqueFiles.slice(0, 100).map(async (file) => {
       try {
         const content = await fs.readFile(file);
         return crypto.createHash('md5').update(content).digest('hex');
@@ -182,7 +205,7 @@ async function optimizeCache() {
   
   for (const pattern of tempPatterns) {
     try {
-      execSync(`find . -path "${pattern}" -type f -delete 2>/dev/null`, { stdio: 'ignore' });
+      spawnSync('find', ['.', '-path', pattern, '-type', 'f', '-delete'], { stdio: 'ignore' });
     } catch {
       // エラーは無視
     }
@@ -198,7 +221,7 @@ async function optimizeCache() {
   
   for (const [pattern, days] of Object.entries(cacheAge)) {
     try {
-      execSync(`find . -name "${pattern}" -mtime +${days} -delete 2>/dev/null`, { stdio: 'ignore' });
+      spawnSync('find', ['.', '-name', pattern, '-mtime', `+${days}`, '-delete'], { stdio: 'ignore' });
     } catch {
       // エラーは無視
     }
@@ -219,7 +242,10 @@ async function warmCache() {
   // 1. 依存関係をインストール（NPMキャッシュ）
   if (!await exists('node_modules')) {
     log('📦 依存関係をインストール中...', 'cyan');
-    execSync('npm ci', { stdio: 'inherit' });
+    execSync('npm ci --ignore-scripts', {
+      stdio: 'inherit',
+      env: INSTALL_ENVIRONMENT
+    });
   }
   
   // 2. フルビルドを実行（ビルドキャッシュ）
@@ -347,4 +373,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { CACHE_CONFIG, analyzeCache, clearCache, optimizeCache };
+module.exports = { CACHE_CONFIG, analyzeCache, clearCache, optimizeCache, generateCacheKey };
