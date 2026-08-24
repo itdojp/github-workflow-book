@@ -725,15 +725,29 @@ function validatePuppeteerApiContract(errors, lock, pkg) {
   }
 }
 
+function resolveBootstrapNpmCli() {
+  if (process.env.npm_execpath && fs.existsSync(process.env.npm_execpath)) {
+    return process.env.npm_execpath;
+  }
+  const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const globalRoot = spawnSync(npm, ['root', '--global'], { encoding: 'utf8' });
+  if (globalRoot.error || globalRoot.status !== 0) return null;
+  const candidate = path.join(globalRoot.stdout.trim(), 'npm', 'bin', 'npm-cli.js');
+  return fs.existsSync(candidate) ? candidate : null;
+}
+
 function runLifecycleIsolationIntegration() {
   const versions = ['10.9.7', '12.0.1'];
+  const bootstrapNpmCli = resolveBootstrapNpmCli();
+  if (!bootstrapNpmCli) {
+    throw new Error('could not locate the administrator-provided npm CLI for lifecycle test preparation');
+  }
   for (const version of versions) {
     const temporaryRoot = fs.mkdtempSync(path.resolve(`.install-policy-lifecycle-npm-${version}-`));
     const cacheDirectory = path.join(temporaryRoot, 'empty-npm-cache');
     const cliDirectory = path.join(temporaryRoot, 'npm-cli');
     const fixtureDirectory = path.join(temporaryRoot, 'fixture');
     const markerPath = path.join(fixtureDirectory, 'side-effect-marker');
-    const bootstrapNpmCli = process.env.npm_execpath;
     const environment = {
       ...process.env,
       npm_config_cache: cacheDirectory,
@@ -744,9 +758,6 @@ function runLifecycleIsolationIntegration() {
       fs.mkdirSync(cacheDirectory);
       if (fs.readdirSync(cacheDirectory).length !== 0) {
         throw new Error(`npm ${version} preparation cache was not empty`);
-      }
-      if (!bootstrapNpmCli || !fs.existsSync(bootstrapNpmCli)) {
-        throw new Error('lifecycle self-test must be started through npm run');
       }
       const preparation = spawnSync(
         process.execPath,
