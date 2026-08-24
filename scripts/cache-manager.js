@@ -10,6 +10,11 @@ const path = require('path');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
 
+const INSTALL_ENVIRONMENT = Object.freeze({
+  ...process.env,
+  PUPPETEER_SKIP_DOWNLOAD: 'true'
+});
+
 // カラー出力
 const colors = {
   reset: '\x1b[0m',
@@ -219,7 +224,10 @@ async function warmCache() {
   // 1. 依存関係をインストール（NPMキャッシュ）
   if (!await exists('node_modules')) {
     log('📦 依存関係をインストール中...', 'cyan');
-    execSync('npm ci', { stdio: 'inherit' });
+    execSync('npm ci --ignore-scripts', {
+      stdio: 'inherit',
+      env: INSTALL_ENVIRONMENT
+    });
   }
   
   // 2. フルビルドを実行（ビルドキャッシュ）

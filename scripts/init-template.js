@@ -285,7 +285,7 @@ ${config.bookDescription}
 
 \`\`\`bash
 # 依存関係のインストール
-npm install
+PUPPETEER_SKIP_DOWNLOAD=true npm install --ignore-scripts
 
 # ビルド
 npm run build
