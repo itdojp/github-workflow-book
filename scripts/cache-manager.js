@@ -62,13 +62,23 @@ async function getDirectorySize(dirPath) {
   }
 }
 
+function findArgumentsForPattern(pattern) {
+  const wildcardIndex = pattern.search(/[?*\[]/);
+  if (wildcardIndex === -1) return [pattern, '-type', 'f'];
+
+  const prefix = pattern.slice(0, wildcardIndex);
+  const separatorIndex = prefix.lastIndexOf('/');
+  const root = separatorIndex === -1 ? '.' : (prefix.slice(0, separatorIndex) || '.');
+  return [root, '-type', 'f', '-path', pattern];
+}
+
 // キャッシュキーを生成
 async function generateCacheKey(patterns) {
   const files = [];
   
   for (const pattern of patterns) {
     try {
-      const result = spawnSync('find', [pattern, '-type', 'f'], {
+      const result = spawnSync('find', findArgumentsForPattern(pattern), {
         encoding: 'utf8',
         maxBuffer: 10 * 1024 * 1024
       });
@@ -79,10 +89,12 @@ async function generateCacheKey(patterns) {
       // Pattern didn't match any files
     }
   }
+
+  const uniqueFiles = [...new Set(files)].sort();
   
   // ファイル内容のハッシュを計算
   const hashes = await Promise.all(
-    files.slice(0, 100).map(async (file) => {
+    uniqueFiles.slice(0, 100).map(async (file) => {
       try {
         const content = await fs.readFile(file);
         return crypto.createHash('md5').update(content).digest('hex');
@@ -361,4 +373,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { CACHE_CONFIG, analyzeCache, clearCache, optimizeCache };
+module.exports = { CACHE_CONFIG, analyzeCache, clearCache, optimizeCache, generateCacheKey };

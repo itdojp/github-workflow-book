@@ -885,6 +885,47 @@ function runPublicationManagerIntegration() {
   }
 }
 
+function runCacheKeyPatternIntegration() {
+  const temporaryDirectory = fs.mkdtempSync(path.resolve('.cache-manager-pattern-contract-'));
+  try {
+    const nestedDirectory = path.join(temporaryDirectory, 'src', 'chapters', 'chapter01');
+    fs.mkdirSync(nestedDirectory, { recursive: true });
+    const fixturePath = path.join(nestedDirectory, 'index.md');
+    fs.writeFileSync(fixturePath, '# First\n');
+
+    const cacheManagerPath = path.resolve('scripts/cache-manager.js');
+    const probe = spawnSync(
+      process.execPath,
+      [
+        '-e',
+        [
+          "const fs = require('node:fs');",
+          'process.chdir(process.argv[1]);',
+          'const { generateCacheKey } = require(process.argv[2]);',
+          '(async () => {',
+          "  const first = await generateCacheKey(['src/**/*.md']);",
+          "  fs.writeFileSync('src/chapters/chapter01/index.md', '# Second\\n');",
+          "  const second = await generateCacheKey(['src/**/*.md']);",
+          '  console.log(JSON.stringify({ first, second }));',
+          '})().catch((error) => { console.error(error); process.exit(1); });',
+        ].join('\n'),
+        temporaryDirectory,
+        cacheManagerPath,
+      ],
+      { encoding: 'utf8' },
+    );
+    if (probe.error || probe.status !== 0) {
+      throw new Error(`cache-key glob integration failed: ${probe.error?.message ?? probe.stderr}`);
+    }
+    const result = JSON.parse(probe.stdout.trim());
+    if (result.first === 'd41d8cd98f00b204' || result.first === result.second) {
+      throw new Error('cache-key glob integration did not hash nested Markdown content deterministically');
+    }
+  } finally {
+    fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+  }
+}
+
 function validate(state) {
   const errors = [];
   const {
@@ -1072,8 +1113,9 @@ if (process.argv.includes('--self-test')) {
   ];
   cases.forEach(([name, mutate, marker]) => expectRejected(state, name, mutate, marker));
   runPublicationManagerIntegration();
+  runCacheKeyPatternIntegration();
   const npmVersions = runLifecycleIsolationIntegration();
-  console.log(`Install-script policy self-test passed: ${cases.length} negative mutations rejected; publication manager created no Zenn manifest and rejected a legacy manifest; clean-cache local lifecycle fixture isolated with npm ${npmVersions.join(' and npm ')}.`);
+  console.log(`Install-script policy self-test passed: ${cases.length} negative mutations rejected; publication manager created no Zenn manifest and rejected a legacy manifest; cache-key glob hashed nested Markdown; clean-cache local lifecycle fixture isolated with npm ${npmVersions.join(' and npm ')}.`);
 } else {
   const classifiedCount = Object.entries(state.surfaces)
     .filter(([file, source]) => containsSurfaceInstallIntent(file, source))
