@@ -373,3 +373,5 @@ if (require.main === module) {
 }
 
 module.exports = EasySetup;
+module.exports.isSupportedNodeVersion = isSupportedNodeVersion;
+module.exports.REQUIRED_NODE_RANGE = REQUIRED_NODE_RANGE;

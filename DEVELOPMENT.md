@@ -36,6 +36,9 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # 依存関係のインストール
 pip install -r requirements.txt
+
+# root Node.js依存関係（package-lock.jsonを使用）
+PUPPETEER_SKIP_DOWNLOAD=true npm ci --ignore-scripts
 ```
 
 ### 2. 新しい章の追加
@@ -109,10 +112,8 @@ cd kindle
 
 #### Zenn
 ```bash
-# Zenn CLIのインストール（要npm）
-npm install -g zenn-cli
-
-# プレビュー
+# Zenn CLIは管理者が版を固定した環境を使用する
+# このリポジトリのzenn/にはpackage.jsonがないため、zenn/でnpm installしない
 cd zenn
 zenn preview
 ```

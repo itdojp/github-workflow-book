@@ -410,9 +410,9 @@ echo "📁 ファイル: complete_book.html"
 
 📝 Zenn
 --------
-1. cd zenn && npm install
-2. npx zenn preview でプレビュー確認
-3. npx zenn publish book github-workflow-ai で公開
+1. zenn/book.yaml を確認
+2. zenn/ には package.json がないため、同ディレクトリでは Node.js 依存導入を実行しない
+3. 管理者が版を固定した Zenn CLI 環境で preview と publish を実行
 
 🔗 便利なリンク
 ---------------

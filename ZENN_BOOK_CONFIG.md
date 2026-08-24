@@ -184,14 +184,24 @@ chapters:
 
 ## Zenn 投稿用スクリプト
 
+リポジトリの Node.js 依存関係は、root の lockfile から lifecycle script と
+Puppeteer の browser download を無効化して導入します。
+
+```bash
+PUPPETEER_SKIP_DOWNLOAD=true npm ci --ignore-scripts
+```
+
+`zenn/` には `package.json` がないため、同ディレクトリでは Node.js 依存導入を実行しません。
+Zenn CLI は、管理者が版を固定して用意した公開環境を使用します。
+
 ```bash
 #!/bin/bash
 # zenn_publish.sh
 
 # Zenn CLIのインストール確認
 if ! command -v zenn &> /dev/null; then
-    echo "Zenn CLIをインストールしています..."
-    npm install -g zenn-cli
+    echo "Zenn CLIがありません。管理者が版を固定した公開環境を使用してください。" >&2
+    exit 1
 fi
 
 # 書籍ディレクトリの作成

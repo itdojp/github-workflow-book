@@ -1,0 +1,8 @@
+{
+  "name": "install-policy-integration-root",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "lifecycle-side-effect": "file:./lifecycle-side-effect"
+  }
+}
