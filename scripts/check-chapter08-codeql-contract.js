@@ -156,8 +156,8 @@ const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 for (const required of ['npm run check:chapter08-codeql', 'npm run check:chapter08-codeql:self-test']) {
   if (!packageJson.scripts?.['test:light']?.includes(required)) errors.push(`test:light must run ${required}`);
 }
-if (packageJson.devDependencies?.['js-yaml'] !== '4.3.0') {
-  errors.push('js-yaml 4.3.0 must be a direct, exact devDependency');
+if (packageJson.devDependencies?.['js-yaml'] !== '4.3.1') {
+  errors.push('js-yaml 4.3.1 must be a direct, exact devDependency');
 }
 const workflow = normalize(fs.readFileSync('.github/workflows/book-qa.yml', 'utf8'));
 for (const command of [

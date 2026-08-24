@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const EXPECTED = Object.freeze({
   sharpRange: '^0.35.3',
   sharpVersion: '0.35.3',
-  puppeteerRange: '^24.43.1',
+  puppeteerRange: '^25.8.0',
   nodeRange: '^22.22.2 || ^24.15.0 || >=26.0.0',
   packageManager: 'npm@12.0.1',
   defaultPdfEngine: 'pandoc',
@@ -55,10 +55,10 @@ function validate(state) {
   if (sharp?.version !== EXPECTED.sharpVersion || sharp?.hasInstallScript === true) {
     errors.push(`lockfile must resolve script-free sharp@${EXPECTED.sharpVersion}`);
   }
-  if (puppeteer?.version !== '24.43.1' || puppeteer?.hasInstallScript !== true) {
-    errors.push('lockfile must resolve install-script-bearing puppeteer@24.43.1');
+  if (puppeteer?.version !== '25.8.0' || puppeteer?.hasInstallScript !== true) {
+    errors.push('lockfile must resolve install-script-bearing puppeteer@25.8.0');
   }
-  const expectedInstallScripts = ['node_modules/puppeteer@24.43.1'];
+  const expectedInstallScripts = ['node_modules/puppeteer@25.8.0'];
   if (JSON.stringify(installScriptPackages) !== JSON.stringify(expectedInstallScripts)) {
     errors.push(`unexpected install-script package set: ${JSON.stringify(installScriptPackages)}`);
   }
