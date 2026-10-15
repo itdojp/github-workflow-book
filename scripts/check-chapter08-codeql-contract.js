@@ -11,10 +11,19 @@ const sourcePath = 'src/chapters/chapter08/index.md';
 const publicPath = 'docs/chapters/chapter08/index.md';
 const sectionStart = '#### 実行可能なCodeQL scanワークフロー';
 const sectionEnd = '### 修正の検証';
-const expectedDirectYamlVersion = '4.3.1';
+const expectedDirectYamlVersion = '4.3.2';
 const expectedMarkdownlintVersion = '0.49.1';
 const expectedMarkdownlintYamlRange = '~5.2.1';
-const expectedMarkdownlintYamlVersion = '5.2.2';
+const expectedMarkdownlintYamlVersion = '5.4.1';
+
+// Issue #257: the patched v5 release is outside the CLI's upstream range.
+// This reviewed tuple is the only exception; do not widen upstream metadata.
+function isAuditedMarkdownlintYamlOverride(cliVersion, declaredRange, resolvedVersion, overrideVersion) {
+  return cliVersion === expectedMarkdownlintVersion
+    && declaredRange === expectedMarkdownlintYamlRange
+    && resolvedVersion === expectedMarkdownlintYamlVersion
+    && overrideVersion === expectedMarkdownlintYamlVersion;
+}
 
 function normalize(value) {
   return value.replace(/\r\n?/g, '\n');
@@ -80,11 +89,19 @@ function validateYamlDependencyContract(packageJson, packageLock) {
   if (markdownlintYamlRange !== expectedMarkdownlintYamlRange) {
     errors.push('markdownlint-cli lock metadata must retain its js-yaml v5 dependency edge');
   }
+  const auditedOverride = isAuditedMarkdownlintYamlOverride(
+    markdownlint?.version,
+    markdownlintYamlRange,
+    markdownlintYaml?.version,
+    packageJson.overrides?.['markdownlint-cli']?.['js-yaml'],
+  );
   if (markdownlintYaml?.version
-    && (!semver.valid(markdownlintYaml.version)
+    && (typeof markdownlintYaml.version !== 'string'
+      || !semver.valid(markdownlintYaml.version)
+      || typeof markdownlintYamlRange !== 'string'
       || !semver.validRange(markdownlintYamlRange)
-      || !semver.satisfies(markdownlintYaml.version, markdownlintYamlRange))) {
-    errors.push(`markdownlint-cli nested js-yaml@${markdownlintYaml.version} does not satisfy declared range ${markdownlintYamlRange}`);
+      || (!semver.satisfies(markdownlintYaml.version, markdownlintYamlRange) && !auditedOverride))) {
+    errors.push(`markdownlint-cli nested js-yaml@${markdownlintYaml.version} does not satisfy declared range ${markdownlintYamlRange} or the exact audited override tuple`);
   }
   if (markdownlintYaml?.version !== expectedMarkdownlintYamlVersion
     || !markdownlintYaml.version.startsWith('5.')) {
@@ -101,6 +118,12 @@ function validateMarkdownlintYamlSmoke() {
   const temporaryDirectory = fs.mkdtempSync(path.resolve('.chapter08-markdownlint-smoke-'));
 
   try {
+    const cliPackage = JSON.parse(fs.readFileSync(path.join(markdownlintDirectory, 'package.json'), 'utf8'));
+    if (cliPackage.version !== expectedMarkdownlintVersion
+      || cliPackage.dependencies?.['js-yaml'] !== expectedMarkdownlintYamlRange) {
+      errors.push('installed markdownlint-cli version and upstream js-yaml declaration must match the audited tuple');
+      return errors;
+    }
     const nestedYamlPackage = JSON.parse(fs.readFileSync(nestedYamlPackagePath, 'utf8'));
     if (nestedYamlPackage.version !== expectedMarkdownlintYamlVersion) {
       errors.push(`installed markdownlint-cli must load nested js-yaml@${expectedMarkdownlintYamlVersion}`);
@@ -122,6 +145,12 @@ function validateMarkdownlintYamlSmoke() {
     const invalidOutput = `${invalid.stdout ?? ''}\n${invalid.stderr ?? ''}`;
     if (invalid.error || invalid.status === 0 || !invalidOutput.includes('MD041')) {
       errors.push('markdownlint YAML config negative smoke must reject Markdown violating MD041');
+    }
+    fs.writeFileSync(configPath, 'default: [unterminated\n');
+    const malformed = run('# Heading\n');
+    if (malformed.error || malformed.status === 0
+      || !`${malformed.stdout ?? ''}\n${malformed.stderr ?? ''}`.includes('Cannot read or parse config file')) {
+      errors.push('markdownlint YAML config smoke must fail closed on malformed YAML');
     }
   } catch (error) {
     errors.push(`markdownlint YAML config smoke could not run locally: ${error.message}`);
@@ -299,7 +328,7 @@ if (process.argv.includes('--self-test')) {
   );
   const dependencyState = { packageJson, packageLock };
   const dependencyCases = [
-    ['direct js-yaml drift', (state) => { state.packageJson.devDependencies['js-yaml'] = '^4.3.1'; }, 'direct, exact'],
+    ['direct js-yaml drift', (state) => { state.packageJson.devDependencies['js-yaml'] = `^${expectedDirectYamlVersion}`; }, 'direct, exact'],
     ['global js-yaml override restored', (state) => { state.packageJson.overrides['js-yaml'] = expectedDirectYamlVersion; }, 'global cross-major'],
     ['scoped v5 override removed', (state) => { delete state.packageJson.overrides['markdownlint-cli']; }, 'scope its js-yaml override'],
     ['root lock js-yaml drift', (state) => { state.packageLock.packages['node_modules/js-yaml'].version = '5.3.0'; }, 'direct js-yaml'],
@@ -308,10 +337,29 @@ if (process.argv.includes('--self-test')) {
     ['nested js-yaml cross-major drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '4.3.1'; }, 'does not satisfy declared range'],
     ['nested js-yaml same-major range drift', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.3.0'; }, 'does not satisfy declared range'],
     ['nested js-yaml below declared floor', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.2.0'; }, 'does not satisfy declared range'],
+    ['unreviewed nested patch', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.4.2'; }, 'does not satisfy declared range'],
+    ['unreviewed nested patch and override', (state) => {
+      state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = '5.4.2';
+      state.packageJson.overrides['markdownlint-cli']['js-yaml'] = '5.4.2';
+    }, 'does not satisfy declared range'],
+    ['different CLI cannot use exception', (state) => { state.packageLock.packages['node_modules/markdownlint-cli'].version = '0.49.0'; }, 'does not satisfy declared range'],
+    ['different upstream range cannot use exception', (state) => { state.packageLock.packages['node_modules/markdownlint-cli'].dependencies['js-yaml'] = '~5.3.0'; }, 'does not satisfy declared range'],
+    ['widened upstream metadata', (state) => { state.packageLock.packages['node_modules/markdownlint-cli'].dependencies['js-yaml'] = '^5.2.1'; }, 'dependency edge'],
+    ['ranged override cannot use exception', (state) => { state.packageJson.overrides['markdownlint-cli']['js-yaml'] = '^5.4.1'; }, 'does not satisfy declared range'],
+    ['malformed nested version', (state) => { state.packageLock.packages['node_modules/markdownlint-cli/node_modules/js-yaml'].version = 'invalid'; }, 'does not satisfy declared range'],
+    ['malformed upstream range', (state) => { state.packageLock.packages['node_modules/markdownlint-cli'].dependencies['js-yaml'] = 'invalid'; }, 'does not satisfy declared range'],
   ];
   dependencyCases.forEach(([name, mutate, marker]) => (
     expectDependencyMutationRejected(dependencyState, name, mutate, marker)
   ));
+  const tuple = [expectedMarkdownlintVersion, expectedMarkdownlintYamlRange,
+    expectedMarkdownlintYamlVersion, expectedMarkdownlintYamlVersion];
+  if (!isAuditedMarkdownlintYamlOverride(...tuple)) throw new Error('audited tuple must be accepted');
+  for (const [index, replacement] of [[0, '0.49.0'], [1, '^5.2.1'], [2, '5.4.2'], [3, '^5.4.1']]) {
+    const changed = [...tuple];
+    changed[index] = replacement;
+    if (isAuditedMarkdownlintYamlOverride(...changed)) throw new Error(`audited tuple guard failed at ${index}`);
+  }
   console.log(`Chapter 8 CodeQL contract self-test passed: ${dependencyCases.length} dependency mutations rejected.`);
 } else {
   console.log('Chapter 8 CodeQL contract passed: workflow YAML and split js-yaml lock graph are valid; markdownlint YAML smoke/negative passed.');
