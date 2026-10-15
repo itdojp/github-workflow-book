@@ -10,7 +10,7 @@ const yamlParser = require('js-yaml');
 
 const EXPECTED = Object.freeze({
   sharpRange: '^0.35.3',
-  sharpVersion: '0.35.3',
+  sharpVersion: '0.35.5',
   puppeteerRange: '^25.8.0',
   puppeteerVersion: '25.8.0',
   nodeRange: '^22.22.2 || ^24.15.0 || >=26.0.0',
